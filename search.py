@@ -1,8 +1,7 @@
 from xml.etree.ElementTree import Element, SubElement
 from random import randint
-from datetime import date
 
-from Share import FileShare, DirectoryShare
+from Share import FileShare, DirectoryShare, AnalyseShare
 from Client import Client
 from DefaultHandler import DefaultHandler
 
@@ -16,34 +15,17 @@ class AnalyseResults(DefaultHandler):
         DefaultHandler.startElement(self, name, attrs)
         if name == "results":
             self.share_results  = []
-
         elif name == "share":
-            self.data = {'name': '', 'client_address': '', 'path': '',
-                    'type': 'file', 'size': '0', 'port': '-1',
-                    'nickname': '', 'last_modified': '0', 
-                    'protocol': 'FTP'}
+            self.analyse_share = AnalyseShare()
 
-        buffer = ''
+        if "share" in self.opened:
+            self.analyse_share.open(name, attrs)
+
     def endElement(self, name):
         if "share" in self.opened:
-            if name == "share":
-                if self.data["type"] == 'file':
-                    self.share_results.append(FileShare(
-                            self.data['name'], self.data['client_address'], 
-                            int(self.data['port']), self.data['path'], 
-                            self.data['protocol'], float(self.data['size']),
-                            date.fromtimestamp(int(self.data['last_modified']) / 1000),
-                            self.data['nickname']))
-                else:
-                    self.share_results.append(DirectoryShare(
-                            self.data['name'], self.data['client_address'], 
-                            int(self.data['port']), self.data['path'], 
-                            self.data['protocol'], float(self.data['size']),
-                            date.fromtimestamp(int(self.data['last_modified']) / 1000),
-                            self.data['nickname']))
-            else:
-                self.data[name] = self.buf
-
+            self.analyse_share.close(name, self.buf)
+            if self.analyse_share.share:
+                self.share_results.append(self.analyse_share.share)
         else:
             if name == "results":
                 self.callback(self.share_results)

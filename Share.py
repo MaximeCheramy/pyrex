@@ -1,4 +1,37 @@
 from Tools import convert_size_str
+from datetime import date
+
+class AnalyseShare(object):
+    def __init__(self):
+        self.share = None
+
+    def open(self, name, attrs):
+        if name == 'share':
+            self.data = {'name': '', 'client_address': '', 'path': '',
+                    'type': 'file', 'size': '0', 'port': '-1',
+                    'nickname': '', 'last_modified': '0', 
+                    'protocol': 'FTP'}
+
+
+    def close(self, name, buf):
+         if name == "share":
+             if self.data["type"] == 'file':
+                 self.share = FileShare(
+                         self.data['name'], self.data['client_address'], 
+                         int(self.data['port']), self.data['path'], 
+                         self.data['protocol'], float(self.data['size']),
+                         date.fromtimestamp(int(self.data['last_modified']) / 1000),
+                         self.data['nickname'])
+             else:
+                 self.share = DirectoryShare(
+                         self.data['name'], self.data['client_address'], 
+                         int(self.data['port']), self.data['path'], 
+                         self.data['protocol'], float(self.data['size']),
+                         date.fromtimestamp(int(self.data['last_modified']) / 1000),
+                         self.data['nickname'])
+         else:
+             self.data[name] = buf
+
 
 class Share(object):
 
