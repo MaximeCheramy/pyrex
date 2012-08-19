@@ -2,8 +2,10 @@ import PyQt4.uic
 from PyQt4.QtGui import QWidget, QTabWidget, QTableWidgetItem
 from PyQt4.QtCore import *
 
-from ftp import Ftp
-from TabDownloads import Download, TabDownloads
+from downloads import Download
+from TabDownloads import TabDownloads
+
+from datetime import date
 
 class MyQTableWidgetItem(QTableWidgetItem):
     def __init__(self, string, share):
@@ -37,7 +39,9 @@ class TabResults(QWidget):
         self.download(self.table_results.item(row, 0).share)
 
     def download(self, share):
-        TabDownloads.instance.add_download(Download(share, share.name))
+        dl = Download.get_download(share, share.name, date.today())
+        TabDownloads.instance.add_download(dl)
+        dl.start_download()
 
 class TabsResults(QTabWidget):
     def __init__(self, parent):
