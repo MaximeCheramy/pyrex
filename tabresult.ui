@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TabResults</class>
+ <widget class="QWidget" name="TabResults">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>560</width>
+    <height>330</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTableWidget" name="table_results">
+     <property name="autoScroll">
+      <bool>false</bool>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>20</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Nom Fichier</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Taille</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Pseudo</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Score</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Dernière modification</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Protocole</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>table_results</sender>
+   <signal>cellDoubleClicked(int,int)</signal>
+   <receiver>TabResults</receiver>
+   <slot>double_clicked(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>279</x>
+     <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>double_clicked(int,int)</slot>
+ </slots>
+</ui>
