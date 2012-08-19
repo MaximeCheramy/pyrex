@@ -1,10 +1,11 @@
 # coding=utf-8
 
+from datetime import date
+from PyQt4.QtCore import QUrl
+
 from ftp import Ftp
 from Share import AnalyseShare
 from DefaultHandler import DefaultHandler
-
-from PyQt4.QtCore import QUrl
 
 class Download(object):
     def __init__(self, file_share, local_path):
