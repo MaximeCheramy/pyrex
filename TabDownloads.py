@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import os
 import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem
@@ -24,7 +25,7 @@ class TabDownloads(QWidget):
         import xml.sax
         parser = xml.sax.make_parser()
         parser.setContentHandler(AnalyseDownloads(self.add_downloads))
-        for line in open('/home/max/.rex/downloads.xml'):
+        for line in open(os.path.expanduser("~") + '/.rex/downloads.xml'):
           parser.feed(line)
 
     def add_download(self, download):
