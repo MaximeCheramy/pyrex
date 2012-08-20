@@ -3,7 +3,7 @@
 
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QWidget, QTableWidgetItem, QTabWidget, QMainWindow, QApplication
+from PyQt4.QtGui import QMainWindow, QApplication
 
 import images
 from search import Search
@@ -12,6 +12,7 @@ from version import VersionGet
 from TabResults import TabResults, TabsResults
 from TabPeers import TabPeers
 from TabDownloads import TabDownloads
+from TabOptions import TabOptions
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -21,9 +22,11 @@ class MainWindow(QMainWindow):
 
         self.peers = TabPeers(self.tabs)
         self.downloads = TabDownloads(self.tabs)
+        self.options = TabOptions(self.tabs)
 
         self.tabs.insertTab(2, self.downloads, u"Téléchargements")
         self.tabs.insertTab(3, self.peers, u"Utilisateurs")
+        self.tabs.insertTab(4, self.options, u'Options')
 
         self.tabs_results = TabsResults(self.widget_recherches)
         self.widget_recherches.layout().addWidget(self.tabs_results)
