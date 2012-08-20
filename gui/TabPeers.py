@@ -6,7 +6,7 @@ from peers import PeersGet
 class TabPeers(QWidget):
     def __init__(self, parent):
         QWidget.__init__(self, parent)
-        PyQt4.uic.loadUi('peers.ui', self)
+        PyQt4.uic.loadUi('ui/peers.ui', self)
         self.peers_get = None
 
     def update_peers(self):

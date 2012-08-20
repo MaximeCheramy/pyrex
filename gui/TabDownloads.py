@@ -14,7 +14,7 @@ class TabDownloads(QWidget):
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
 
-        PyQt4.uic.loadUi('telechargements.ui', self)
+        PyQt4.uic.loadUi('ui/downloads.ui', self)
 
         TabDownloads.instance = self
         self.downloads = []

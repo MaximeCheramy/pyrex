@@ -11,5 +11,5 @@ class TabOptions(QWidget):
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
 
-        PyQt4.uic.loadUi('options.ui', self)
+        PyQt4.uic.loadUi('ui/options.ui', self)
 

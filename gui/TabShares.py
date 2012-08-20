@@ -11,5 +11,5 @@ class TabShares(QWidget):
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
 
-        PyQt4.uic.loadUi('shares.ui', self)
+        PyQt4.uic.loadUi('ui/shares.ui', self)
 

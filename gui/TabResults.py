@@ -17,7 +17,7 @@ class TabResults(QWidget):
     def __init__(self, search, parent=None):
         super(TabResults, self).__init__(parent)
 
-        PyQt4.uic.loadUi('tabresult.ui', self)
+        PyQt4.uic.loadUi('ui/tabresult.ui', self)
 
         search.do_search(self.add_results)
 
