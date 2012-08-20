@@ -13,6 +13,7 @@ from TabResults import TabResults, TabsResults
 from TabPeers import TabPeers
 from TabDownloads import TabDownloads
 from TabOptions import TabOptions
+from TabShares import TabShares
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -23,10 +24,12 @@ class MainWindow(QMainWindow):
         self.peers = TabPeers(self.tabs)
         self.downloads = TabDownloads(self.tabs)
         self.options = TabOptions(self.tabs)
+        self.shares = TabShares(self.tabs)
 
         self.tabs.insertTab(2, self.downloads, u"Téléchargements")
         self.tabs.insertTab(3, self.peers, u"Utilisateurs")
         self.tabs.insertTab(4, self.options, u'Options')
+        self.tabs.insertTab(5, self.shares, u'Mes partages')
 
         self.tabs_results = TabsResults(self.widget_recherches)
         self.widget_recherches.layout().addWidget(self.tabs_results)

@@ -436,61 +436,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_6">
-       <attribute name="title">
-        <string>Mes partages</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <widget class="QTableWidget" name="tableWidget_3">
-          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-           <bool>false</bool>
-          </attribute>
-          <attribute name="horizontalHeaderStretchLastSection">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="verticalHeaderVisible">
-           <bool>false</bool>
-          </attribute>
-          <column>
-           <property name="text">
-            <string>Nom du partage</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Chemin local</string>
-           </property>
-          </column>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QPushButton" name="btn_ajouter_partage">
-            <property name="text">
-             <string>Ajouter</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_8">
-            <property name="text">
-             <string>Supprimer</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_7">
-            <property name="text">
-             <string>Modifier</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>Informations</string>
@@ -644,10 +589,6 @@
   <tabstop>lineEdit_6</tabstop>
   <tabstop>search_edit2</tabstop>
   <tabstop>search_btn2</tabstop>
-  <tabstop>btn_ajouter_partage</tabstop>
-  <tabstop>pushButton_7</tabstop>
-  <tabstop>pushButton_8</tabstop>
-  <tabstop>tableWidget_3</tabstop>
   <tabstop>btn_download</tabstop>
   <tabstop>btn_copy_url</tabstop>
  </tabstops>
