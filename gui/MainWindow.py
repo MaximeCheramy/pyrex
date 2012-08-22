@@ -14,6 +14,7 @@ from TabPeers import TabPeers
 from TabDownloads import TabDownloads
 from TabOptions import TabOptions
 from TabShares import TabShares
+from TabAdvSearch import TabAdvSearch
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -21,11 +22,13 @@ class MainWindow(QMainWindow):
 
         PyQt4.uic.loadUi('ui/pyrex.ui', self)
 
+        self.adv_search = TabAdvSearch(self.tabs)
         self.peers = TabPeers(self.tabs)
         self.downloads = TabDownloads(self.tabs)
         self.options = TabOptions(self.tabs)
         self.shares = TabShares(self.tabs)
 
+        self.tabs.insertTab(1, self.adv_search, u"Recherche avancée")
         self.tabs.insertTab(2, self.downloads, u"Téléchargements")
         self.tabs.insertTab(3, self.peers, u"Utilisateurs")
         self.tabs.insertTab(4, self.options, u'Options')

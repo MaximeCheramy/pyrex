@@ -21,7 +21,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="recherches">
        <attribute name="title">
@@ -52,7 +52,7 @@
              <string>Copier l'URL</string>
             </property>
             <property name="icon">
-             <iconset resource="images.qrc">
+             <iconset>
               <normaloff>:/button/res/button_copy.png</normaloff>:/button/res/button_copy.png</iconset>
             </property>
            </widget>
@@ -69,7 +69,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="images.qrc">
+             <iconset>
               <normaloff>:/button/res/button_download.png</normaloff>:/button/res/button_download.png</iconset>
             </property>
            </widget>
@@ -86,353 +86,6 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_9"/>
          </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="rechercheavancee">
-       <attribute name="title">
-        <string>Recherche avancée</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="2">
-           <spacer name="horizontalSpacer_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <layout class="QFormLayout" name="formLayout">
-            <item row="2" column="1">
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Type de partage :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Fichiers/Dossiers :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Types de fichiers :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Autre types de fichiers :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>Adresse IP :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>Taille (en mo) :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Date :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QComboBox" name="combo_type_partage">
-              <item>
-               <property name="text">
-                <string>FTP + SMB</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>FTP uniquement</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>SMB uniquement</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QComboBox" name="combo_fichier_dossier">
-              <item>
-               <property name="text">
-                <string>Fichiers et dossiers</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Fichiers uniquement</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Dossiers uniquement</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QComboBox" name="combo_type_fichier">
-              <item>
-               <property name="text">
-                <string>Tous</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Vidéos</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Musiques</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Images</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Documents</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Archives</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QLineEdit" name="ext_edit"/>
-            </item>
-            <item row="7" column="1">
-             <widget class="QLineEdit" name="ip_edit"/>
-            </item>
-            <item row="9" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_3">
-              <item>
-               <widget class="QComboBox" name="combo_date">
-                <item>
-                 <property name="text">
-                  <string>Pas de restriction sur la date</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>À partir du</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Jusqu'au</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Entre</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_11">
-                <property name="text">
-                 <string>entre</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDateEdit" name="start_date">
-                <property name="calendarPopup">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_12">
-                <property name="text">
-                 <string>et</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDateEdit" name="end_date">
-                <property name="calendarPopup">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer_2">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="8" column="1">
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
-              <item>
-               <widget class="QLabel" name="label_9">
-                <property name="text">
-                 <string>entre</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="lineEdit_4"/>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_8">
-                <property name="text">
-                 <string>et</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLineEdit" name="lineEdit_6"/>
-              </item>
-              <item>
-               <spacer name="horizontalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="search_edit2"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Recherche :</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="search_btn2">
-            <property name="text">
-             <string>Rechercher</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
         </item>
        </layout>
       </widget>
@@ -467,7 +120,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap resource="images.qrc">:/rex_logo/res/Rex.png</pixmap>
+           <pixmap>:/rex_logo/res/Rex.png</pixmap>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -577,18 +230,6 @@
   <tabstop>tabs</tabstop>
   <tabstop>search_edit1</tabstop>
   <tabstop>search_btn1</tabstop>
-  <tabstop>combo_type_partage</tabstop>
-  <tabstop>combo_fichier_dossier</tabstop>
-  <tabstop>combo_type_fichier</tabstop>
-  <tabstop>ext_edit</tabstop>
-  <tabstop>ip_edit</tabstop>
-  <tabstop>combo_date</tabstop>
-  <tabstop>start_date</tabstop>
-  <tabstop>end_date</tabstop>
-  <tabstop>lineEdit_4</tabstop>
-  <tabstop>lineEdit_6</tabstop>
-  <tabstop>search_edit2</tabstop>
-  <tabstop>search_btn2</tabstop>
   <tabstop>btn_download</tabstop>
   <tabstop>btn_copy_url</tabstop>
  </tabstops>
@@ -597,38 +238,6 @@
   <include location="images.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>search_edit2</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>search_edit1</receiver>
-   <slot>setText(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>478</x>
-     <y>67</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>315</x>
-     <y>63</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>search_edit1</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>search_edit2</receiver>
-   <slot>setText(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>315</x>
-     <y>63</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>478</x>
-     <y>67</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>search_edit1</sender>
    <signal>returnPressed()</signal>
@@ -670,22 +279,6 @@
     <hint type="sourcelabel">
      <x>680</x>
      <y>52</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>search_btn2</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>adv_search()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>400</x>
-     <y>547</y>
     </hint>
     <hint type="destinationlabel">
      <x>399</x>
