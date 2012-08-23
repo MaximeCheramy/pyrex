@@ -69,8 +69,6 @@ class MainWindow(QMainWindow):
             tab_result = TabResults(search, parent=self.tabs_results)
             self.tabs_results.addTab(tab_result, query)
 
-    def adv_search(self):
-        print "hello world"
 
 
 

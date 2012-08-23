@@ -32,14 +32,35 @@ class AnalyseResults(DefaultHandler):
         DefaultHandler.endElement(self, name)
 
 class Search(object):
-    def __init__(self, query):
+    def __init__(self, query, protocol=None, Type=None, extensions=[], sizeinf=None, sizesup=None):
         self.query = query
+	self.protocol = protocol
+	self.Type = Type
+	self.extensions = extensions
+	self.sizeinf = sizeinf
+	self.sizesup = sizesup
         
     def do_search(self, callback):
-        search_element = Element('search', 
-                        {'ttl': '3', 'id': str(randint(1, 10000000))})
+  	search_element = Element('search', 
+               	        {'ttl': '3', 'id': str(randint(1, 10000000))})
         query_element = SubElement(search_element, 'query')
         query_element.text = self.query
-    
+	if self.protocol != None: 
+		protocol_element = SubElement(search_element, 'protocol')
+		protocol_element.text = self.protocol
+	elif self.Type != None:
+		Type_element = SubElement(search_element, 'type')
+		Type_element.text = self.Type
+	elif self.extensions != []:
+		extensions_element = SubElement(search_element, 'extensions')
+		extensions_element.text = ''
+		for e in self.extensions:
+			extensions_element.text += e
+	elif self.sizeinf != None:
+		sizeinf_element = SubElement(search_element, 'sizeinf')
+		sizeinf_element.text = str(self.sizeinf)
+	elif self.sizesup != None:
+		sizesup_element = SubElement(search_element, 'sizesup')
+		sizesup_element.text = str(self.sizesup)			
         self.client = Client(search_element, AnalyseResults(callback))
         self.client.start()

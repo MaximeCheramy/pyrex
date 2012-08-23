@@ -43,7 +43,8 @@ class AnalyseVersion(DefaultHandler):
     def startElement(self, name, attrs):
         DefaultHandler.startElement(self, name, attrs)
         if name == 'version':
-						self.data = {'name': '', 'major_version': '0', 'minor_version': '0', 'minor_minor_version': '0'}
+		self.data = {'name': '', 'major_version': '0', 'minor_version': '0', 'minor_minor_version': '0'}
+
     def endElement(self, name):
         if name == 'version':
             self.callback(Version(self.data['name'],

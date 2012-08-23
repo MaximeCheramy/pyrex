@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>adv_search</class>
- <widget class="QWidget" name="adv_search">
+ <class>TabAdvSearch</class>
+ <widget class="QWidget" name="TabAdvSearch">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>661</width>
+    <width>742</width>
     <height>350</height>
    </rect>
   </property>
@@ -357,5 +357,41 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>search_edit2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>search_btn2</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>452</x>
+     <y>30</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>371</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>search_btn2</sender>
+   <signal>clicked()</signal>
+   <receiver>TabAdvSearch</receiver>
+   <slot>adv_search()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>326</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>174</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>adv_search()</slot>
+ </slots>
 </ui>
