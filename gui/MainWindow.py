@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
         QObject.connect(self.tabs, SIGNAL('currentChanged(int)'), self.change_tab)
 
         self.search = TabSearch(self.tabs)
-        self.adv_search = TabAdvSearch(self.tabs, self.search)
+        self.adv_search = TabAdvSearch(self.search, self.tabs)
         self.peers = TabPeers(self.tabs)
         self.downloads = TabDownloads(self.tabs)
         self.options = TabOptions(self.tabs)
