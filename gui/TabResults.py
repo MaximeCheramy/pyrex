@@ -14,12 +14,19 @@ class MyQTableWidgetItem(QTableWidgetItem):
 
 
 class TabResults(QWidget):
+    resultsReceived = pyqtSignal(list)
+
     def __init__(self, search, parent=None):
         super(TabResults, self).__init__(parent)
 
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
 
-        search.do_search(self.add_results)
+        self.resultsReceived.connect(self.add_results)
+
+        search.do_search(self._send_signal_results)
+
+    def _send_signal_results(self, results):
+        self.resultsReceived.emit(results)
 
     def _add_share(self, share):
         rows = self.table_results.rowCount()

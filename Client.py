@@ -1,14 +1,14 @@
 from socket import *
 import xml.sax
 from xml.etree.ElementTree import tostring
-from PyQt4.QtCore import QThread
+from PyQt4.QtCore import QObject, QRunnable, QThreadPool
 
 HOSTNAME = 'localhost'
 PORT = 1111
 
-class Client(QThread):
+class Worker(QRunnable):
     def __init__(self, element, content_handler):
-        QThread.__init__(self)
+        QRunnable.__init__(self)
         self.element = element
         self.content_handler = content_handler
 
@@ -35,3 +35,11 @@ class Client(QThread):
             parser.feed(chunk)
 
         sock.close()
+
+class Client(QObject):
+    def __init__(self, element, content_handler):
+        QObject.__init__(self)
+        self.worker = Worker(element, content_handler)
+
+    def start(self):
+        QThreadPool.globalInstance().start(self.worker)
