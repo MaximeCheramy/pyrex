@@ -3,7 +3,7 @@
 
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QMainWindow, QTabWidget
+from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon
 
 import images
 from TabSearch import TabSearch
@@ -20,6 +20,12 @@ class MainWindow(QMainWindow):
 
         PyQt4.uic.loadUi('ui/pyrex.ui', self)
 
+        self.trayIcon = QSystemTrayIcon(QIcon("res/rex_18.png"), self)
+        self.trayIcon.show()
+        QObject.connect(self.trayIcon,
+                               SIGNAL("activated(QSystemTrayIcon::ActivationReason)"),
+                               self.icon_activated)
+ 
         self.tabs = QTabWidget(self.centralwidget)
         QObject.connect(self.tabs, SIGNAL('currentChanged(int)'), self.change_tab)
 
@@ -44,4 +50,15 @@ class MainWindow(QMainWindow):
             self.peers.update_peers()
         if tab == 6:
             self.informations.update_informations()
+
+    def closeEvent(self, event):
+        #TODO: Voir le comportement souhaité lorsqu'on ferme la fenetre.
+        event.accept()
+ 
+    def icon_activated(self, reason):
+        if reason == QSystemTrayIcon.Trigger:
+            if self.isVisible():
+                self.hide()
+            else:
+                self.show()
 
