@@ -6,14 +6,13 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget
 
 from search import Search
-from TabResults import TabResults, TabsResults
 
 class TabAdvSearch(QWidget):
     instance = None
 
-    def __init__(self, search, parent=None):
+    def __init__(self, search_tab, parent=None):
         QWidget.__init__(self, parent)
-
+        self.search_tab = search_tab
         PyQt4.uic.loadUi('ui/adv_search.ui', self)
     
     def adv_search(self):
@@ -59,6 +58,5 @@ class TabAdvSearch(QWidget):
         # On recherche
         if len(query) > 1:
             search = Search(query, protocol, Type, extensions, sizeinf, sizesup)
-            tab_result = TabResults(search, parent=self.tabs_results)
-            self.tabs_results.addTab(tab_result, query)
+            search_tab.add_search(search)
 
