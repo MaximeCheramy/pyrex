@@ -32,7 +32,7 @@ class AnalyseResults(DefaultHandler):
         DefaultHandler.endElement(self, name)
 
 class Search(object):
-    def __init__(self, query, protocol=None, Type=None, extensions=None, sizeinf=None, sizesup=None):
+    def __init__(self, query, protocol=None, Type=None, extensions="", sizeinf=None, sizesup=None):
         self.query       = query
         self.protocol    = protocol
         self.Type        = Type

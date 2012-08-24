@@ -38,7 +38,7 @@ class TabAdvSearch(QWidget):
         extensions = ""
         extensions += str(self.combo_type_fichier.currentText())
         if extensions == "Tous":
-            extensions = None
+            extensions = ""
         elif extensions == "Vidéos":
             extensions = "avi,mpg,mpeg,divx,mkv,mov,wmv,mp4,flv,ogm,m4v,rm,rmvb,mts,m2ts"
         elif extensions == "Musiques":
@@ -49,14 +49,20 @@ class TabAdvSearch(QWidget):
             extensions = "txt,pdf,rtf,doc,docx,odt,xls,xlsx,ods,ppt,pps,pptx,odp"
         elif extensions == "Archives":
             extensions = "tar,gz,bz2,rar,zip,iso,7z,mds,nrg,cue"
-        extensions += str(self.ext_edit.text()).replace(' ','').replace('/',',')
+        extensions += str(self.ext_edit.text())
         # Taille min
-        sizeinf = int(self.lineEdit_4.text())
+        try:
+            sizeinf = int(self.lineEdit_4.text())
+        except ValueError:
+            sizeinf = None
         # Taille max
-        sizesup = int(self.lineEdit_6.text())
+        try:
+            sizesup = int(self.lineEdit_6.text())
+        except ValueError:
+            sizesup = None
         # TODO: Adresses IP et Date
         # On recherche
         if len(query) > 1:
             search = Search(query, protocol, Type, extensions, sizeinf, sizesup)
-            search_tab.add_search(search)
+            self.search_tab.add_search(search)
 
