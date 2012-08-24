@@ -33,3 +33,6 @@ class TabPeers(QWidget):
             self.add_peer(peer)
         self.peers_get = None
 
+    def cell_selected(self, row, col, prev_row, prev_col):
+        print row, col
+
