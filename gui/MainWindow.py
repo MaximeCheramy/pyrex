@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
                                SIGNAL("activated(QSystemTrayIcon::ActivationReason)"),
                                self.icon_activated)
  
-        self.tabs = QTabWidget(self.centralwidget)
+        self.tabs = QTabWidget()
         QObject.connect(self.tabs, SIGNAL('currentChanged(int)'), self.change_tab)
 
         self.search = TabSearch(self.tabs)
@@ -44,6 +44,8 @@ class MainWindow(QMainWindow):
         self.tabs.insertTab(4, self.options, u'Options')
         self.tabs.insertTab(5, self.shares, u'Mes partages')
         self.tabs.insertTab(6, self.informations, u'Informations')
+        
+        self.setCentralWidget(self.tabs)
 
     def change_tab(self, tab):
         if tab == 3:

@@ -32,13 +32,15 @@ class AnalyseResults(DefaultHandler):
         DefaultHandler.endElement(self, name)
 
 class Search(object):
-    def __init__(self, query, protocol=None, Type=None, extensions="", sizeinf=None, sizesup=None):
+    def __init__(self, query, protocol=None, Type=None, extensions="", sizeinf=None, sizesup=None, dateinf=None, datesup=None):
         self.query       = query
         self.protocol    = protocol
         self.Type        = Type
         self.extensions  = extensions
         self.sizeinf     = sizeinf
         self.sizesup     = sizesup
+        self.dateinf     = dateinf
+        self.datesup     = datesup
         
     def do_search(self, callback):
         search_element = Element('search', 
@@ -59,6 +61,12 @@ class Search(object):
             sizeinf_element.text = str(self.sizeinf)
         elif self.sizesup:
             sizesup_element = SubElement(search_element, 'sizesup')
-            sizesup_element.text = str(self.sizesup)            
+            sizesup_element.text = str(self.sizesup)
+        elif self.dateinf:
+            dateinf_element = SubElement(search_element, 'dateinf')
+            dateinf_element.text = self.dateinf
+        elif self.datesup:
+            datesup_element = SubElement(search_element, 'datesup')
+            datesup_element.text = self.datesup            
         self.client = Client(search_element, AnalyseResults(callback))
         self.client.start()
