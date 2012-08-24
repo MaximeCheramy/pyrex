@@ -9,19 +9,28 @@ from stats import StatisticsGet
 from version import VersionGet
 
 class TabInformations(QWidget):
-    instance = None
-
+    statsReceived = pyqtSignal(object)
+    versionReceived = pyqtSignal(object)
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
 
         PyQt4.uic.loadUi('ui/informations.ui', self)
 
+        self.statsReceived.connect(self.set_statistics)
+        self.versionReceived.connect(self.set_version)
+
+    def _send_signal_stats(self, stats):
+        self.statsReceived.emit(stats)
+
+    def _send_signal_version(self, version):
+        self.versionReceived.emit(version)
+
     def update_informations(self):
         self.stats_get = StatisticsGet()
-        self.stats_get.do_get(self.set_statistics)
+        self.stats_get.do_get(self._send_signal_stats)
 
         self.version_get = VersionGet()
-        self.version_get.do_get(self.set_version)
+        self.version_get.do_get(self._send_signal_version)
 
     def set_statistics(self, stats):
         txt = u"Utilisateurs connectés : %d\n" % stats.users
