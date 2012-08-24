@@ -36,10 +36,10 @@ class TabAdvSearch(QWidget):
             Type = "DIRECTORY"
         # Extensions de la recherche
         extensions = ""
-        extensions += str(self.combo_type_fichier.currentText())
+        extensions += unicode(self.combo_type_fichier.currentText())
         if extensions == "Tous":
             extensions = ""
-        elif extensions == "Vidéos":
+        elif extensions == u"Vidéos":
             extensions = "avi,mpg,mpeg,divx,mkv,mov,wmv,mp4,flv,ogm,m4v,rm,rmvb,mts,m2ts"
         elif extensions == "Musiques":
             extensions = "mp3,wma,ogg,m4a,aac,flac,wv,wav,ra,kfn,kar,mid"
