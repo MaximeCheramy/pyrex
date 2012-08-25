@@ -11,13 +11,20 @@ class TabAdvSearch(QWidget):
     instance = None
 
     def __init__(self, search_tab, parent=None):
+        # Initialisations
         QWidget.__init__(self, parent)
         self.search_tab = search_tab
+        # On charge le "design"
         PyQt4.uic.loadUi('ui/adv_search.ui', self)
+        # Par défaut on cache les dates en bas
         self.label_11.hide()
         self.start_date.hide()
         self.label_12.hide()
         self.end_date.hide()
+        # On initialise tout de même les deux dates à celle du jour
+        self.start_date.setDate(QDate.currentDate())
+        self.end_date.setDate(QDate.currentDate())
+        # Signaux
         QObject.connect(self.combo_date, SIGNAL("currentIndexChanged(int)"), self.setDateForm)
     
     def adv_search(self):
