@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>810</width>
+    <height>456</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -45,8 +45,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>512</width>
-        <height>212</height>
+        <width>790</width>
+        <height>343</height>
        </rect>
       </property>
       <attribute name="label">
@@ -63,9 +63,6 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit_7"/>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
@@ -74,7 +71,11 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_8"/>
+        <widget class="QPushButton" name="dir_button">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_25">
@@ -84,7 +85,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBox"/>
+        <widget class="QSpinBox" name="spin_max_dwl"/>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_24">
@@ -94,7 +95,11 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QSpinBox" name="spinBox_2"/>
+        <widget class="QSpinBox" name="spin_nb_res_page">
+         <property name="maximum">
+          <number>999</number>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_26">
@@ -104,7 +109,18 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QComboBox" name="comboBox_5"/>
+        <widget class="QComboBox" name="combo_eff_dwl_init">
+         <item>
+          <property name="text">
+           <string>Oui</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Non</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="6" column="0">
         <widget class="QLabel" name="label_27">
@@ -114,7 +130,18 @@
         </widget>
        </item>
        <item row="6" column="1">
-        <widget class="QComboBox" name="comboBox_6"/>
+        <widget class="QComboBox" name="combo_ico_notif">
+         <item>
+          <property name="text">
+           <string>Oui</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Non</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item row="7" column="1">
         <spacer name="verticalSpacer_7">
@@ -145,13 +172,20 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_9">
+          <widget class="QPushButton" name="save_button_1">
            <property name="text">
             <string>Enregistrer</string>
            </property>
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="pseudo_edit">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -160,8 +194,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>437</width>
-        <height>189</height>
+        <width>790</width>
+        <height>343</height>
        </rect>
       </property>
       <attribute name="label">
@@ -172,7 +206,7 @@
         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
        </property>
        <item row="0" column="0">
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="checkBox_FTP">
          <property name="text">
           <string>Activer le serveur FTP (active la fonction de partage)</string>
          </property>
@@ -186,7 +220,11 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="spinBox_3"/>
+        <widget class="QSpinBox" name="spin_port">
+         <property name="maximum">
+          <number>99999</number>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_29">
@@ -196,17 +234,17 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QSpinBox" name="spinBox_4"/>
+        <widget class="QSpinBox" name="spin_connex_sim"/>
        </item>
        <item row="5" column="0">
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="check_share_myFiles">
          <property name="text">
           <string>Partager les fichiers que je télécharge</string>
          </property>
         </widget>
        </item>
        <item row="6" column="0">
-        <widget class="QCheckBox" name="checkBox_3">
+        <widget class="QCheckBox" name="check_aff_maListe">
          <property name="text">
           <string>Permettre l'affichage de ma liste de téléchargements</string>
          </property>
@@ -228,7 +266,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_10">
+          <widget class="QPushButton" name="save_button_2">
            <property name="text">
             <string>Enregistrer</string>
            </property>
@@ -256,20 +294,26 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>362</width>
-        <height>283</height>
+        <width>790</width>
+        <height>343</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Configuration Avancée</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_8">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="label_30">
          <property name="text">
           <string>Adresse IP du daemon :</string>
          </property>
         </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="edit_IP_daemon"/>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_31">
@@ -292,12 +336,8 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_33">
-         <property name="text">
-          <string>IPs pouvant configurer le daemon :</string>
-         </property>
-        </widget>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="edit_tps_scan"/>
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_35">
@@ -306,6 +346,19 @@
          </property>
         </widget>
        </item>
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="edit_plage_ip"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_33">
+         <property name="text">
+          <string>IPs pouvant configurer le daemon :</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="edit_ip_conf_daemon"/>
+       </item>
        <item row="9" column="0">
         <widget class="QLabel" name="label_36">
          <property name="text">
@@ -313,28 +366,21 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit_9"/>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="comboBox_7"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEdit_11"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="lineEdit_10"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="lineEdit_13"/>
-       </item>
-       <item row="6" column="1">
-        <widget class="QLineEdit" name="lineEdit_12"/>
-       </item>
        <item row="9" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_12">
          <item>
-          <widget class="QComboBox" name="comboBox_8"/>
+          <widget class="QComboBox" name="combo_aff_myShares">
+           <item>
+            <property name="text">
+             <string>Oui</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Non</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item>
           <spacer name="horizontalSpacer_11">
@@ -359,11 +405,24 @@
         </widget>
        </item>
        <item row="11" column="1">
-        <widget class="QCheckBox" name="checkBox_4">
+        <widget class="QCheckBox" name="check_expert_mode">
          <property name="text">
           <string>Mode expert</string>
          </property>
         </widget>
+       </item>
+       <item row="12" column="1">
+        <spacer name="verticalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="13" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_13">
@@ -381,7 +440,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_11">
+          <widget class="QPushButton" name="save_button_3">
            <property name="text">
             <string>Enregistrer</string>
            </property>
@@ -389,18 +448,22 @@
          </item>
         </layout>
        </item>
-       <item row="12" column="1">
-        <spacer name="verticalSpacer_6">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="combo_logs">
+         <item>
+          <property name="text">
+           <string>Afficher dans la console</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Enregistrer dans un fichier</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="spin_nb_ip_scan"/>
        </item>
       </layout>
      </widget>
@@ -409,5 +472,74 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>save_button_1</sender>
+   <signal>clicked()</signal>
+   <receiver>TabOptions</receiver>
+   <slot>saveConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>save_button_2</sender>
+   <signal>clicked()</signal>
+   <receiver>TabOptions</receiver>
+   <slot>saveConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>save_button_3</sender>
+   <signal>clicked()</signal>
+   <receiver>TabOptions</receiver>
+   <slot>saveConfig()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>422</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dir_button</sender>
+   <signal>clicked()</signal>
+   <receiver>TabOptions</receiver>
+   <slot>chooseDirectory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>619</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>404</x>
+     <y>227</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>saveConfig()</slot>
+  <slot>chooseDirectory()</slot>
+ </slots>
 </ui>
