@@ -19,18 +19,12 @@ class TabInformations(QWidget):
         self.statsReceived.connect(self.set_statistics)
         self.versionReceived.connect(self.set_version)
 
-    def _send_signal_stats(self, stats):
-        self.statsReceived.emit(stats)
-
-    def _send_signal_version(self, version):
-        self.versionReceived.emit(version)
-
     def update_informations(self):
         self.stats_get = StatisticsGet()
-        self.stats_get.do_get(self._send_signal_stats)
+        self.stats_get.do_get(self.statsReceived.emit)
 
         self.version_get = VersionGet()
-        self.version_get.do_get(self._send_signal_version)
+        self.version_get.do_get(self.versionReceived.emit)
 
     def set_statistics(self, stats):
         txt = u"Utilisateurs connectés : %d\n" % stats.users

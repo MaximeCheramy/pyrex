@@ -23,10 +23,7 @@ class TabResults(QWidget):
 
         self.resultsReceived.connect(self.add_results)
 
-        search.do_search(self._send_signal_results)
-
-    def _send_signal_results(self, results):
-        self.resultsReceived.emit(results)
+        search.do_search(self.resultsReceived.emit)
 
     def _add_share(self, share):
         rows = self.table_results.rowCount()

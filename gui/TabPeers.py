@@ -12,13 +12,10 @@ class TabPeers(QWidget):
         self.peers_get = None
         self.peersReceived.connect(self.set_peers)
 
-    def _send_signal_peers(self, peers):
-        self.peersReceived.emit(peers)
-
     def update_peers(self):
         if self.peers_get is None:
             self.peers_get = PeersGet()
-            self.peers_get.do_get(self._send_signal_peers)
+            self.peers_get.do_get(self.peersReceived.emit)
 
     def add_peer(self, peer):
         rows = self.table_peers.rowCount()
