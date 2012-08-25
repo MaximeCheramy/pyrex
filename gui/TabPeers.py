@@ -20,7 +20,9 @@ class TabPeers(QWidget):
     def add_peer(self, peer):
         rows = self.table_peers.rowCount()
         self.table_peers.insertRow(rows)
-        self.table_peers.setItem(rows, 0, QTableWidgetItem(peer.nickname))
+        item = QTableWidgetItem(peer.nickname)
+        item.peer = peer
+        self.table_peers.setItem(rows, 0, item)
         self.table_peers.setItem(rows, 1, QTableWidgetItem(peer.ip))
 
     def set_peers(self, peers):
@@ -31,5 +33,10 @@ class TabPeers(QWidget):
         self.peers_get = None
 
     def cell_selected(self, row, col, prev_row, prev_col):
-        print row, col
+        if row >= 0:
+            item = self.table_peers.item(row, 0)
+            self.label_nickname.setText(item.peer.nickname)
+            self.label_ip.setText(item.peer.ip)
+            self.label_version.setText("%s %s" %
+                            (item.peer.name, item.peer.version))
 
