@@ -59,7 +59,9 @@ class MainWindow(QMainWindow):
     def change_tab(self, tab):
         if tab == 3:
             self.peers.update_peers()
-        if tab == 6:
+        elif tab == 5:
+            self.shares.update_sharedirs()
+        elif tab == 6:
             self.informations.update_informations()
 
     def closeEvent(self, event):
