@@ -3,7 +3,7 @@
 
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon
+from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon, QMenu, QAction
 
 import images
 from TabSearch import TabSearch
@@ -20,12 +20,21 @@ class MainWindow(QMainWindow):
 
         PyQt4.uic.loadUi('ui/pyrex.ui', self)
 
+        # Tray Icon:
         self.trayIcon = QSystemTrayIcon(QIcon("res/rex_18.png"), self)
+        trayMenu = QMenu()
+        actionQuit = QAction("Quitter", trayMenu)
+        actionQuit.triggered.connect(self.close)
+        trayMenu.addAction(actionQuit)
+        self.trayIcon.setContextMenu(trayMenu)
         self.trayIcon.show()
+
         QObject.connect(self.trayIcon,
                                SIGNAL("activated(QSystemTrayIcon::ActivationReason)"),
                                self.icon_activated)
  
+
+        # Tabs:
         self.tabs = QTabWidget()
         QObject.connect(self.tabs, SIGNAL('currentChanged(int)'), self.change_tab)
 
