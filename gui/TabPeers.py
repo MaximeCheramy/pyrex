@@ -16,6 +16,7 @@ class TabPeers(QWidget):
         self.statsReceived.connect(self.set_stats)
         self.stats_get = None
         self.timer = None
+        self.cache = {}
 
     def update_peers(self):
         if self.peers_get is None:
@@ -39,9 +40,12 @@ class TabPeers(QWidget):
 
     def set_stats(self, stats):
         if stats:
-            self.label_size_shares.setText(stats.shares_size_mine_str)
-            self.label_size_total_shares.setText(stats.shares_size_total_str)
-            self.label_peers.setText(str(stats.users))
+            self.cache[stats.ip] = stats
+            row = self.table_peers.currentRow()
+            if self.table_peers.item(row, 0).peer.ip == stats.ip:
+                self.label_size_shares.setText(stats.shares_size_mine_str)
+                self.label_size_total_shares.setText(stats.shares_size_total_str)
+                self.label_peers.setText(str(stats.users))
         else:
             if self.timer:
                 self.timer.stop()
@@ -58,12 +62,13 @@ class TabPeers(QWidget):
             self.label_version.setText("%s %s" %
                             (item.peer.name, item.peer.version))
 
-            self.label_size_shares.setText('-')
-            self.label_size_total_shares.setText('-')
-            self.label_peers.setText('-')
+            if item.peer.ip in self.cache:
+                self.set_stats(self.cache[item.peer.ip])
+            else:
+                self.label_size_shares.setText('-')
+                self.label_size_total_shares.setText('-')
+                self.label_peers.setText('-')
 
-            if self.stats_get:
-                self.stats_get.cancel()
             self.stats_get = StatisticsGet(self.statsReceived.emit, item.peer.ip)
             self.stats_get.do_get()
 

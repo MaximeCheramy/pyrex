@@ -29,6 +29,10 @@ class Statistics(object):
         self._shares_size_mine = shares_size_mine
 
     @property
+    def ip(self):
+        return self._ip
+
+    @property
     def nickname(self):
         return self._nickname
 
