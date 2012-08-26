@@ -5,6 +5,7 @@ import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QFileDialog
 import os
+import codecs
 
 class TabOptions(QWidget):
     instance = None
@@ -24,7 +25,10 @@ class TabOptions(QWidget):
         d_conf = dict()
         # Configuration Générale
         d_conf["pseudo"]            = str(self.pseudo_edit.text())
-        d_conf["save_dir"]          = str(self.dir_button.text())
+        try:
+            d_conf["save_dir"]      = str(self.dir_button.text())
+        except UnicodeEncodeError:
+            d_conf["save_dir"]      = unicode(self.dir_button.text())
         d_conf["max_dwl"]           = int(self.spin_max_dwl.value())
         d_conf["nb_res_page"]       = int(self.spin_nb_res_page.value())
         d_conf["eff_dwl_init"]      = str(self.combo_eff_dwl_init.currentIndex())
@@ -48,9 +52,12 @@ class TabOptions(QWidget):
         self.writeConfig(d_conf)
         
     def writeConfig(self, d_conf):
-        config = open("config.ini", "w")
+        config = codecs.open("config.ini", "w", encoding='utf-8')
         for key, value in d_conf.items():
-            var = "{}={}\n".format(key,value)
+            try:
+                var = "{}={}\n".format(key,value)
+            except UnicodeEncodeError:
+                var = u"{}={}\n".format(key, value)
             config.write(var)
         config.close()
             
@@ -100,7 +107,7 @@ class TabOptions(QWidget):
         
     def loadConfig(self):
         # On charge la config
-        config = open("config.ini", "r")
+        config = codecs.open("config.ini", "r", encoding='utf-8')
         dico = dict()
         # On la parse et on met les clés et valeurs dans un dico
         for line in config:
