@@ -10,10 +10,11 @@ from search import Search
 class TabAdvSearch(QWidget):
     instance = None
 
-    def __init__(self, search_tab, parent=None):
+    def __init__(self, search_tab, tabs):
         # Initialisations
-        QWidget.__init__(self, parent)
+        QWidget.__init__(self, tabs)
         self.search_tab = search_tab
+        self.tabs = tabs
         # On charge le "design"
         PyQt4.uic.loadUi('ui/adv_search.ui', self)
         # Par défaut on cache les dates en bas
@@ -75,11 +76,12 @@ class TabAdvSearch(QWidget):
         # Date inf
         dateinf = "{}/{}/{}".format(self.start_date.date().year(), self.start_date.date().month(), self.start_date.date().day())
         # Date sup
-        dateinf = "{}/{}/{}".format(self.end_date.date().year(), self.end_date.date().month(), self.end_date.date().day())        
+        datesup = "{}/{}/{}".format(self.end_date.date().year(), self.end_date.date().month(), self.end_date.date().day())
         # On recherche
         if len(query) > 1:
             search = Search(query, protocol, Type, extensions, sizeinf, sizesup)
             self.search_tab.add_search(search)
+            self.tabs.setCurrentWidget(self.search_tab)
             
     def setDateForm(self, nb):
         if nb == 0:
