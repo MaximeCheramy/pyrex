@@ -6,6 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QFileDialog
 import os
 import codecs
+from options import Options
 
 class TabOptions(QWidget):
     instance = None
@@ -15,11 +16,12 @@ class TabOptions(QWidget):
         PyQt4.uic.loadUi('ui/options.ui', self)
         # Si le fichier de config existe pas, on effectue la config par défaut et on le créé
         if not os.path.exists("config.ini"):
-            self.defaultConfig()
+            self.setConfig()
             self.saveConfig()
-        # Sinon on loade le fichier de config
+        # Sinon on loade le fichier de config : TODO : décommenter quand ça fonctionnera
         else:
-            self.loadConfig()
+            #self.loadConfig()
+            pass
 
     def saveConfig(self):
         d_conf = dict()
@@ -52,39 +54,48 @@ class TabOptions(QWidget):
         self.writeConfig(d_conf)
         
     def writeConfig(self, d_conf):
+        # On écrit dans config.ini tout ce qui se rapporte au gui
         config = codecs.open("config.ini", "w", encoding='utf-8')
         for key, value in d_conf.items():
-            try:
-                var = "{}={}\n".format(key,value)
-            except UnicodeEncodeError:
-                var = u"{}={}\n".format(key, value)
-            config.write(var)
+            # On cherche les champs liés au gui
+            if key in ["save_dir", "max_dwl", "nb_res_page", "eff_dwl_init", \
+                       "ico_notif", "share_myFiles", "aff_maListe", "ip_daemon", "logs", "expert_mode"]:
+                try:
+                    var = "{}={}\n".format(key,value)
+                except UnicodeEncodeError:
+                    var = u"{}={}\n".format(key, value)
+                config.write(var)
         config.close()
-            
-    def chooseDirectory(self):
-        self.dir_button.setText(QFileDialog.getExistingDirectory(self))
-        
-    def defaultConfig(self, dico=None):
+        # Maintenant on envoie la fin de la config au daemon
+        options = Options(d_conf)
+        options.set_options()
+     
+    def setConfig(self, dico=None):
         if dico is None:
-            dico = {"pseudo"        : "pseudo", 
+            # Config par défaut du gui
+            dico = {"pseudo"        : "",
                     "save_dir"      : os.path.expanduser('~'), 
                     "max_dwl"       : 10, 
                     "nb_res_page"   : 100, 
                     "eff_dwl_init"  : 1, 
-                    "ico_notif"     : 0, 
-                    "use_FTP"       : True, 
-                    "FTP_port"      : 2221, 
-                    "nb_connex_sim" : 10, 
+                    "ico_notif"     : 0,
+                    "use_FTP"       : True,
+                    "FTP_port"      : 2221,
+                    "nb_connex_sim" : 10,
                     "share_myFiles" : True, 
                     "aff_maListe"   : False, 
                     "ip_daemon"     : "127.0.0.1", 
                     "logs"          : 1, 
-                    "nb_ip_scan"    : 10, 
+                    "nb_ip_scan"    : 10,
                     "tps_scan"      : 120, 
-                    "plage_ip"      : "10.31.40.0-10.31.47.254", 
-                    "ip_conf_daemon": "", 
-                    "aff_myShares"  : 0, 
+ 	                "plage_ip"      : "10.31.40.0-10.31.47.254", 
+ 	                "ip_conf_daemon": "", 
+ 	                "aff_myShares"  : 0,
                     "expert_mode"   : False}
+            # On va chercher la config du daemon
+            options = Options(dico)
+            options.get_options()
+        # On affiche la config
         self.pseudo_edit.setText(dico["pseudo"])
         self.dir_button.setText(dico["save_dir"])
         self.spin_max_dwl.setValue(dico["max_dwl"])
@@ -128,5 +139,11 @@ class TabOptions(QWidget):
             else:
                 pass
         config.close()
+        # On va chercher ce qui concerne le daemon
+        options = Options(dico)
+        options.get_options()
         # On envoie la config dans Rex
-        self.defaultConfig(dico)
+        self.setConfig(dico)
+        
+    def chooseDirectory(self):
+        self.dir_button.setText(QFileDialog.getExistingDirectory(self))
