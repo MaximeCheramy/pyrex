@@ -18,28 +18,33 @@ class Worker(QRunnable):
         self.canceled = True
 
     def run(self):
-        sock = socket(AF_INET, SOCK_STREAM)
-        sock.connect((self.hostname, PORT))
+        try:
+            sock = socket(AF_INET, SOCK_STREAM)
+            sock.connect((self.hostname, PORT))
+    
+            msg = tostring(self.element, 'utf-8')
+    
+            totalsent = 0
+            while len(msg) > totalsent:
+                sent = sock.send(msg[totalsent:])
+                totalsent += sent
+                if sent == 0:
+                    break
+    
+            parser = xml.sax.make_parser()
+            parser.setContentHandler(self.content_handler)
+    
+            while not self.canceled:
+                chunk = sock.recv(4096)
+                if chunk == '':
+                    break
+                parser.feed(chunk)
+    
+        except socket.error:
+            pass
+        finally:
+            sock.close()
 
-        msg = tostring(self.element, 'utf-8')
-
-        totalsent = 0
-        while len(msg) > totalsent:
-            sent = sock.send(msg[totalsent:])
-            totalsent += sent
-            if sent == 0:
-                break
-
-        parser = xml.sax.make_parser()
-        parser.setContentHandler(self.content_handler)
-
-        while not self.canceled:
-            chunk = sock.recv(4096)
-            if chunk == '':
-                break
-            parser.feed(chunk)
-
-        sock.close()
 
 class Client(QObject):
     def __init__(self, element, content_handler, hostname=None):
