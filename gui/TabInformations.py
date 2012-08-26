@@ -20,8 +20,8 @@ class TabInformations(QWidget):
         self.versionReceived.connect(self.set_version)
 
     def update_informations(self):
-        self.stats_get = StatisticsGet()
-        self.stats_get.do_get(self.statsReceived.emit)
+        self.stats_get = StatisticsGet(self.statsReceived.emit)
+        self.stats_get.do_get()
 
         self.version_get = VersionGet()
         self.version_get.do_get(self.versionReceived.emit)

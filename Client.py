@@ -12,6 +12,10 @@ class Worker(QRunnable):
         self.element = element
         self.content_handler = content_handler
         self.hostname = hostname
+        self.canceled = False
+
+    def cancel(self):
+        self.canceled = True
 
     def run(self):
         sock = socket(AF_INET, SOCK_STREAM)
@@ -29,7 +33,7 @@ class Worker(QRunnable):
         parser = xml.sax.make_parser()
         parser.setContentHandler(self.content_handler)
 
-        while True:
+        while not self.canceled:
             chunk = sock.recv(4096)
             if chunk == '':
                 break
@@ -46,3 +50,6 @@ class Client(QObject):
 
     def start(self):
         QThreadPool.globalInstance().start(self.worker)
+
+    def cancel(self):
+        self.worker.cancel()

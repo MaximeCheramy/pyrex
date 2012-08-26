@@ -5,11 +5,19 @@ from DefaultHandler import DefaultHandler
 from Client import Client
 
 class StatisticsGet(object):
-    def do_get(self, callback, hostname=None):
+    def __init__(self, callback, hostname=None):
+        self.hostname = hostname
+        self.callback = callback
+
+    def do_get(self):
         search_element = Element('statistics', {'type': 'get'})
 
-        self.client = Client(search_element, AnalyseStatistics(callback), hostname)
+        self.client = Client(search_element, AnalyseStatistics(self.callback),
+                        self.hostname)
         self.client.start()
+
+    def cancel(self):
+        self.client.cancel()
 
 
 class Statistics(object):
@@ -54,7 +62,9 @@ class AnalyseStatistics(DefaultHandler):
         if name == 'statistics':
             self.data = {'nickname': '', 'ip': '', 'users': '0', 'shares_size_total': '0', 'shares_size_mine': '0'}
     def endElement(self, name):
-        if name == 'statistics':
+        if name == 'error':
+            self.callback(None)
+        elif name == 'statistics':
             self.callback(Statistics(self.data['nickname'], self.data['ip'],
                           int(self.data['users']), 
                           float(self.data['shares_size_total']),
