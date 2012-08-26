@@ -7,14 +7,15 @@ HOSTNAME = 'localhost'
 PORT = 1111
 
 class Worker(QRunnable):
-    def __init__(self, element, content_handler):
+    def __init__(self, element, content_handler, hostname):
         QRunnable.__init__(self)
         self.element = element
         self.content_handler = content_handler
+        self.hostname = hostname
 
     def run(self):
         sock = socket(AF_INET, SOCK_STREAM)
-        sock.connect((HOSTNAME, PORT))
+        sock.connect((self.hostname, PORT))
 
         msg = tostring(self.element, 'utf-8')
 
@@ -37,9 +38,11 @@ class Worker(QRunnable):
         sock.close()
 
 class Client(QObject):
-    def __init__(self, element, content_handler):
+    def __init__(self, element, content_handler, hostname=None):
         QObject.__init__(self)
-        self.worker = Worker(element, content_handler)
+        if hostname is None:
+            hostname = HOSTNAME
+        self.worker = Worker(element, content_handler, hostname)
 
     def start(self):
         QThreadPool.globalInstance().start(self.worker)

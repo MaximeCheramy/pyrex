@@ -5,10 +5,10 @@ from DefaultHandler import DefaultHandler
 from Client import Client
 
 class StatisticsGet(object):
-    def do_get(self, callback):
+    def do_get(self, callback, hostname=None):
         search_element = Element('statistics', {'type': 'get'})
 
-        self.client = Client(search_element, AnalyseStatistics(callback))
+        self.client = Client(search_element, AnalyseStatistics(callback), hostname)
         self.client.start()
 
 

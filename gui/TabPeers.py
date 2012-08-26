@@ -3,14 +3,17 @@ from PyQt4.QtGui import QWidget, QTableWidgetItem
 from PyQt4.QtCore import pyqtSignal
 
 from peers import PeersGet
+from stats import StatisticsGet
 
 class TabPeers(QWidget):
     peersReceived = pyqtSignal(list)
+    statsReceived = pyqtSignal(object)
     def __init__(self, parent):
         QWidget.__init__(self, parent)
         PyQt4.uic.loadUi('ui/peers.ui', self)
         self.peers_get = None
         self.peersReceived.connect(self.set_peers)
+        self.statsReceived.connect(self.set_stats)
 
     def update_peers(self):
         if self.peers_get is None:
@@ -32,6 +35,11 @@ class TabPeers(QWidget):
             self.add_peer(peer)
         self.peers_get = None
 
+    def set_stats(self, stats):
+        self.label_size_shares.setText(stats.shares_size_mine_str)
+        self.label_size_total_shares.setText(stats.shares_size_total_str)
+        self.label_peers.setText(str(stats.users))
+
     def cell_selected(self, row, col, prev_row, prev_col):
         if row >= 0:
             item = self.table_peers.item(row, 0)
@@ -39,4 +47,11 @@ class TabPeers(QWidget):
             self.label_ip.setText(item.peer.ip)
             self.label_version.setText("%s %s" %
                             (item.peer.name, item.peer.version))
+
+            self.label_size_shares.setText('-')
+            self.label_size_total_shares.setText('-')
+            self.label_peers.setText('-')
+
+            self.stats_get = StatisticsGet()
+            self.stats_get.do_get(self.statsReceived.emit, item.peer.ip)
 
