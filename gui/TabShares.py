@@ -14,6 +14,7 @@ class TabShares(QWidget):
         QWidget.__init__(self, parent)
 
         PyQt4.uic.loadUi('ui/shares.ui', self)
+        self.table_sharedirs.resizeColumnsToContents()
         
         self.sharedirsReceived.connect(self.set_shares)
         self.sharedirs_get = None

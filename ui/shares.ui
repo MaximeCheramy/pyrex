@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>418</width>
     <height>300</height>
    </rect>
   </property>
@@ -16,6 +16,18 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTableWidget" name="table_sharedirs">
+     <property name="minimumSize">
+      <size>
+       <width>400</width>
+       <height>0</height>
+      </size>
+     </property>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>56</number>
+     </attribute>
      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
       <bool>false</bool>
      </attribute>
@@ -29,10 +41,21 @@
       <property name="text">
        <string>Nom du partage</string>
       </property>
+      <property name="font">
+       <font>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="textAlignment">
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+      </property>
      </column>
      <column>
       <property name="text">
        <string>Chemin local</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
      </column>
     </widget>
