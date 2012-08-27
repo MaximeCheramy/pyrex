@@ -1,149 +1,171 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import os
 import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QFileDialog
-import os
-import codecs
-from options import Options
+from confDaemon import ConfDaemon
+from configuration import Configuration
+
+# A supprimer (debug)
+import inspect
 
 class TabOptions(QWidget):
-    instance = None
+    instance            = None
+    varsGuiUpdated      = pyqtSignal()
+    varsDaemonUpdated   = pyqtSignal()
+    varsDaemonToCheck   = pyqtSignal()
 
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
         PyQt4.uic.loadUi('ui/options.ui', self)
+        # Variables de classe
+        self.setDefault()
+        # Signaux
+        self.varsGuiUpdated.connect(self.setGuiVars)
+        self.varsDaemonUpdated.connect(self.setDaemonVars)
+        self.varsDaemonToCheck.connect(self.checkDaemonVars)
         # Si le fichier de config existe pas, on effectue la config par défaut et on le créé
         if not os.path.exists("config.ini"):
-            self.setConfig()
+            self.setConfig(True)
             self.saveConfig()
-        # Sinon on loade le fichier de config : TODO : décommenter quand ça fonctionnera
+        # Sinon on loade le fichier de config puis on demande la conf au daemon
         else:
-            #self.loadConfig()
-            pass
-
+            # Debug
+            print "On loade la config du GUI"
+            conf = Configuration(self.varsGuiUpdated.emit)
+            conf.load_config()
+            print "On loade la config du Daemon"
+            daemon = ConfDaemon(self.varsDaemonUpdated.emit)
+            daemon.get_conf()
+            
     def saveConfig(self):
-        d_conf = dict()
         # Configuration Générale
-        d_conf["pseudo"]            = str(self.pseudo_edit.text())
+        self.nickname                   = str(self.pseudo_edit.text())
         try:
-            d_conf["save_dir"]      = str(self.dir_button.text())
+            self.save_dir               = str(self.dir_button.text())
         except UnicodeEncodeError:
-            d_conf["save_dir"]      = unicode(self.dir_button.text())
-        d_conf["max_dwl"]           = int(self.spin_max_dwl.value())
-        d_conf["nb_res_page"]       = int(self.spin_nb_res_page.value())
-        d_conf["eff_dwl_init"]      = str(self.combo_eff_dwl_init.currentIndex())
-        d_conf["ico_notif"]         = str(self.combo_ico_notif.currentIndex())
+            self.save_dir               = unicode(self.dir_button.text())
+        self.max_simultaneous_downloads = int(self.spin_max_dwl.value())
+        self.max_results                = int(self.spin_nb_res_page.value())
+        self.clean_dl_list              = str(self.combo_eff_dwl_init.currentIndex())
+        self.icon                       = str(self.combo_ico_notif.currentIndex())
         # Configuration Partages
-        d_conf["use_FTP"]           = self.checkBox_FTP.isChecked()
-        d_conf["FTP_port"]          = int(self.spin_port.value())
-        d_conf["nb_connex_sim"]     = int(self.spin_connex_sim.value())
-        d_conf["share_myFiles"]     = self.check_share_myFiles.isChecked()
-        d_conf["aff_maListe"]       = self.check_aff_maListe.isChecked()
+        self.ftp_enabled                = self.checkBox_FTP.isChecked()
+        self.ftp_port                   = int(self.spin_port.value())
+        self.ftp_maxlogins              = int(self.spin_connex_sim.value())
+        self.share_downloads            = self.check_share_myFiles.isChecked()
+        self.display_mine               = self.check_aff_maListe.isChecked()
         # Configuration Avancée
-        d_conf["ip_daemon"]         = str(self.edit_IP_daemon.text())
-        d_conf["logs"]              = str(self.combo_logs.currentIndex())
-        d_conf["nb_ip_scan"]        = int(self.spin_nb_ip_scan.value())
-        d_conf["tps_scan"]          = int(self.spin_tps_scan.value())
-        d_conf["plage_ip"]          = str(self.edit_plage_ip.text())
-        d_conf["ip_conf_daemon"]    = str(self.edit_ip_conf_daemon.text())
-        d_conf["aff_myShares"]      = str(self.combo_aff_myShares.currentIndex())
-        d_conf["expert_mode"]       = self.check_expert_mode.isChecked()
-        # On ecrit la config dans un fichier (config.ini)
-        self.writeConfig(d_conf)
+        self.ip_daemon                  = str(self.edit_IP_daemon.text())
+        self.log_in_file                = str(self.combo_logs.currentIndex())
+        self.nb_ips_scan_lan            = int(self.spin_nb_ip_scan.value())
+        self.time_between_scan          = int(self.spin_tps_scan.value())
+        self.ip_range                   = str(self.edit_plage_ip.text())
+        self.ips_remote_control         = str(self.edit_ip_conf_daemon.text())
+        self.ftp_show_downloads         = str(self.combo_aff_myShares.currentIndex())
+        self.adv_mode                   = self.check_expert_mode.isChecked()
+        # On ecrit la config du gui dans un fichier (config.ini)
+        # Debug
+        print "On écrit la nouvelle config du gui"
+        configuration = Configuration(None, self.save_dir, self.max_simultaneous_downloads, self.max_results, self.clean_dl_list, self.icon, self.share_downloads, self.display_mine, self.ip_daemon, self.log_in_file, self.adv_mode)
+        configuration.write_config()                              
+        # On envoie la config du daemon au daemon
+        # Debug
+        print "On envoie la nouvelle config au daemon"
+        daemon = ConfDaemon(self.varsDaemonToCheck.emit, self.nickname, self.time_between_scan, self.nb_ips_scan_lan, self.ip_range, self.ips_remote_control, self.ftp_enabled, self.ftp_port, self.ftp_maxlogins, self.ftp_show_downloads)
+        daemon.set_conf()
         
-    def writeConfig(self, d_conf):
-        # On écrit dans config.ini tout ce qui se rapporte au gui
-        config = codecs.open("config.ini", "w", encoding='utf-8')
-        for key, value in d_conf.items():
-            # On cherche les champs liés au gui
-            if key in ["save_dir", "max_dwl", "nb_res_page", "eff_dwl_init", \
-                       "ico_notif", "share_myFiles", "aff_maListe", "ip_daemon", "logs", "expert_mode"]:
-                try:
-                    var = "{}={}\n".format(key,value)
-                except UnicodeEncodeError:
-                    var = u"{}={}\n".format(key, value)
-                config.write(var)
-        config.close()
-        # Maintenant on envoie la fin de la config au daemon
-        options = Options(d_conf)
-        options.set_options()
-     
-    def setConfig(self, dico=None):
-        if dico is None:
+    def setConfig(self, default=None):
+        if default:
             # Config par défaut du gui
-            dico = {"pseudo"        : "",
-                    "save_dir"      : os.path.expanduser('~'), 
-                    "max_dwl"       : 10, 
-                    "nb_res_page"   : 100, 
-                    "eff_dwl_init"  : 1, 
-                    "ico_notif"     : 0,
-                    "use_FTP"       : True,
-                    "FTP_port"      : 2221,
-                    "nb_connex_sim" : 10,
-                    "share_myFiles" : True, 
-                    "aff_maListe"   : False, 
-                    "ip_daemon"     : "127.0.0.1", 
-                    "logs"          : 1, 
-                    "nb_ip_scan"    : 10,
-                    "tps_scan"      : 120, 
- 	                "plage_ip"      : "10.31.40.0-10.31.47.254", 
- 	                "ip_conf_daemon": "", 
- 	                "aff_myShares"  : 0,
-                    "expert_mode"   : False}
+            self.setDefault()
             # On va chercher la config du daemon
-            options = Options(dico)
-            options.get_options()
+            daemon = ConfDaemon(self.varsDaemonUpdated.emit)
+            daemon.get_conf()
         # On affiche la config
-        self.pseudo_edit.setText(dico["pseudo"])
-        self.dir_button.setText(dico["save_dir"])
-        self.spin_max_dwl.setValue(dico["max_dwl"])
-        self.spin_nb_res_page.setValue(dico["nb_res_page"])
-        self.combo_eff_dwl_init.setCurrentIndex(dico["eff_dwl_init"])
-        self.combo_ico_notif.setCurrentIndex(dico["ico_notif"])
-        self.checkBox_FTP.setChecked(dico["use_FTP"])
-        self.spin_port.setValue(dico["FTP_port"])
-        self.spin_connex_sim.setValue(dico["nb_connex_sim"])
-        self.check_share_myFiles.setChecked(dico["share_myFiles"])
-        self.check_aff_maListe.setChecked(dico["aff_maListe"])
-        self.edit_IP_daemon.setText(dico["ip_daemon"])
-        self.combo_logs.setCurrentIndex(dico["logs"])
-        self.spin_nb_ip_scan.setValue(dico["nb_ip_scan"])
-        self.spin_tps_scan.setValue(dico["tps_scan"])
-        self.edit_plage_ip.setText(dico["plage_ip"])
-        self.edit_ip_conf_daemon.setText(dico["ip_conf_daemon"])
-        self.combo_aff_myShares.setCurrentIndex(dico["aff_myShares"])
-        self.check_expert_mode.setChecked(dico["expert_mode"])
+        self.pseudo_edit.setText(self.nickname)
+        self.dir_button.setText(self.save_dir)
+        self.spin_max_dwl.setValue(self.max_simultaneous_downloads)
+        self.spin_nb_res_page.setValue(self.max_results)
+        self.combo_eff_dwl_init.setCurrentIndex(self.clean_dl_list)
+        self.combo_ico_notif.setCurrentIndex(self.icon)
+        self.checkBox_FTP.setChecked(self.ftp_enabled)
+        self.spin_port.setValue(self.ftp_port)
+        self.spin_connex_sim.setValue(self.ftp_maxlogins)
+        self.check_share_myFiles.setChecked(self.share_downloads)
+        self.check_aff_maListe.setChecked(self.display_mine)
+        self.edit_IP_daemon.setText(self.ip_daemon)
+        self.combo_logs.setCurrentIndex(self.log_in_file)
+        self.spin_nb_ip_scan.setValue(self.nb_ips_scan_lan)
+        self.spin_tps_scan.setValue(self.time_between_scan)
+        self.edit_plage_ip.setText(self.ip_range)
+        self.edit_ip_conf_daemon.setText(self.ips_remote_control)
+        self.combo_aff_myShares.setCurrentIndex(self.ftp_show_downloads)
+        self.check_expert_mode.setChecked(self.adv_mode)
+    
+    def setDefault(self):
+        self.nickname                   = "pseudo"
+        self.save_dir                   = os.path.expanduser('~')
+        self.max_simultaneous_downloads = 10
+        self.max_results                = 100
+        self.clean_dl_list              = 1
+        self.icon                       = 0
+        self.ftp_enabled                = True
+        self.ftp_port                   = 2221
+        self.ftp_maxlogins              = 10
+        self.share_downloads            = True
+        self.display_mine               = False
+        self.ip_daemon                  = "120.0.0.1"
+        self.log_in_file                = 1
+        self.nb_ips_scan_lan            = 10
+        self.time_between_scan          = 120
+        self.ip_range                   = "10.31.40.0-10.31.47.254"
+        self.ips_remote_control         = ""
+        self.ftp_show_downloads         = 0
+        self.adv_mode                   = False
         
-    def loadConfig(self):
-        # On charge la config
-        config = codecs.open("config.ini", "r", encoding='utf-8')
-        dico = dict()
-        # On la parse et on met les clés et valeurs dans un dico
-        for line in config:
-            if "=" in line:
-                key, value = line.split("=", 1)
-                value = value[:-1]
-                # Exception : integer
-                try:
-                    value = int(value)
-                except ValueError:
-                    pass
-                # Exception : boolean
-                if value == 'True':
-                    value = True
-                elif value == 'False':
-                    value = False
-                dico[key] = value
-            else:
-                pass
-        config.close()
-        # On va chercher ce qui concerne le daemon
-        options = Options(dico)
-        options.get_options()
-        # On envoie la config dans Rex
-        self.setConfig(dico)
+    def setGuiVars(self, save_dir, max_simultaneous_downloads, max_results, clean_dl_list, icon, share_downloads, display_mine, ip_daemon, log_in_file, adv_mode):
+        # Debug
+        print "Config reçue du GUI : "
+        frame = inspect.currentframe()
+        args, _, _, values = inspect.getargvalues(frame)
+        print 'function name "%s"' % inspect.getframeinfo(frame)[2]
+        for i in args:
+            print "    %s = %s" % (i, values[i])
+        self.save_dir                   = save_dir
+        self.max_simultaneous_downloads = max_simultaneous_downloads
+        self.max_results                = max_results
+        self.clean_dl_list              = clean_dl_list
+        self.icon                       = icon
+        self.share_downloads            = share_downloads
+        self.display_mine               = display_mine
+        self.ip_daemon                  = ip_daemon
+        self.log_in_file                = log_in_file
+        self.adv_mode                   = adv_mode
         
+    def setDaemonVars(self, nickname, time_between_scan, nb_ips_scan_lan, ip_range, ips_remote_control, ftp_enabled, ftp_port, ftp_maxlogins, ftp_showdownloads):
+        # Debug
+        print "Config reçue du daemon : "
+        frame = inspect.currentframe()
+        args, _, _, values = inspect.getargvalues(frame)
+        print 'function name "%s"' % inspect.getframeinfo(frame)[2]
+        for i in args:
+            print "    %s = %s" % (i, values[i])
+        self.nickname           = nickname
+        self.time_between_scan  = time_between_scan
+        self.nb_ips_scan_lan    = nb_ips_scan_lan
+        self.ip_range           = ip_range
+        self.ips_remote_control = ips_remote_control
+        self.ftp_enabled        = ftp_enabled
+        self.ftp_port           = ftp_port
+        self.ftp_maxlogins      = ftp_maxlogins
+        self.ftp_showdownloads  = ftp_showdownloads
+        
+    # TODO : vérifier que le daemon a bien pris les modifs et envoyer des erreurs avec cette fonction
+    def checkDaemonVars(self, nickname, time_between_scan, nb_ips_scan_lan, ip_range, ips_remote_control, ftp_enabled, ftp_port, ftp_maxlogins, ftp_showdownloads):
+        pass
+    
     def chooseDirectory(self):
         self.dir_button.setText(QFileDialog.getExistingDirectory(self))
