@@ -57,4 +57,4 @@ class Configuration(object):
                 pass
         config.close()
         # On envoie la config à TabOptions
-        self.callback(self.save_dir, self.max_simultaneous_downloads, self.max_results, self.clean_dl_list, self.icon, self.share_downloads, self.display_mine, self.ip_daemon, self.log_in_file, self.adv_mode)
+        self.callback(Configuration(None, self.save_dir, self.max_simultaneous_downloads, self.max_results, self.clean_dl_list, self.icon, self.share_downloads, self.display_mine, self.ip_daemon, self.log_in_file, self.adv_mode))

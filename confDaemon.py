@@ -76,7 +76,7 @@ class AnalyseConfDaemon(DefaultHandler):
 
     def endElement(self, name):
         if name == "conf":
-            self.callback(self.data["nickname"], self.data["time_between_scan"], self.data["nb_ips_scan_lan"], self.data["ip_range"], self.data["ips_remote_control"], self.data["ftp_enabled"], self.data["ftp_port"], self.data["ftp_maxlogins"], self.data["ftp_showdownloads"])
+            self.callback(ConfDaemon(None, self.data["nickname"], self.data["time_between_scan"], self.data["nb_ips_scan_lan"], self.data["ip_range"], self.data["ips_remote_control"], self.data["ftp_enabled"], self.data["ftp_port"], self.data["ftp_maxlogins"], self.data["ftp_showdownloads"]))
         else:
             self.data[name] = self.buf
         DefaultHandler.endElement(self, name)

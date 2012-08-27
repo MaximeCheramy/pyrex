@@ -13,9 +13,9 @@ import inspect
 
 class TabOptions(QWidget):
     instance            = None
-    varsGuiUpdated      = pyqtSignal()
-    varsDaemonUpdated   = pyqtSignal()
-    varsDaemonToCheck   = pyqtSignal()
+    varsGuiUpdated      = pyqtSignal(object)
+    varsDaemonUpdated   = pyqtSignal(object)
+    varsDaemonToCheck   = pyqtSignal(object)
 
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
@@ -126,7 +126,7 @@ class TabOptions(QWidget):
         self.ftp_show_downloads         = 0
         self.adv_mode                   = False
         
-    def setGuiVars(self, save_dir, max_simultaneous_downloads, max_results, clean_dl_list, icon, share_downloads, display_mine, ip_daemon, log_in_file, adv_mode):
+    def setGuiVars(self, guiVars):
         # Debug
         print "Config reçue du GUI : "
         frame = inspect.currentframe()
@@ -134,18 +134,18 @@ class TabOptions(QWidget):
         print 'function name "%s"' % inspect.getframeinfo(frame)[2]
         for i in args:
             print "    %s = %s" % (i, values[i])
-        self.save_dir                   = save_dir
-        self.max_simultaneous_downloads = max_simultaneous_downloads
-        self.max_results                = max_results
-        self.clean_dl_list              = clean_dl_list
-        self.icon                       = icon
-        self.share_downloads            = share_downloads
-        self.display_mine               = display_mine
-        self.ip_daemon                  = ip_daemon
-        self.log_in_file                = log_in_file
-        self.adv_mode                   = adv_mode
+        self.save_dir                   = guiVars.save_dir
+        self.max_simultaneous_downloads = guiVars.max_simultaneous_downloads
+        self.max_results                = guiVars.max_results
+        self.clean_dl_list              = guiVars.clean_dl_list
+        self.icon                       = guiVars.icon
+        self.share_downloads            = guiVars.share_downloads
+        self.display_mine               = guiVars.display_mine
+        self.ip_daemon                  = guiVars.ip_daemon
+        self.log_in_file                = guiVars.log_in_file
+        self.adv_mode                   = guiVars.adv_mode
         
-    def setDaemonVars(self, nickname, time_between_scan, nb_ips_scan_lan, ip_range, ips_remote_control, ftp_enabled, ftp_port, ftp_maxlogins, ftp_showdownloads):
+    def setDaemonVars(self, daemonVars):
         # Debug
         print "Config reçue du daemon : "
         frame = inspect.currentframe()
@@ -153,18 +153,18 @@ class TabOptions(QWidget):
         print 'function name "%s"' % inspect.getframeinfo(frame)[2]
         for i in args:
             print "    %s = %s" % (i, values[i])
-        self.nickname           = nickname
-        self.time_between_scan  = time_between_scan
-        self.nb_ips_scan_lan    = nb_ips_scan_lan
-        self.ip_range           = ip_range
-        self.ips_remote_control = ips_remote_control
-        self.ftp_enabled        = ftp_enabled
-        self.ftp_port           = ftp_port
-        self.ftp_maxlogins      = ftp_maxlogins
-        self.ftp_showdownloads  = ftp_showdownloads
+        self.nickname           = daemonVars.nickname
+        self.time_between_scan  = daemonVars.time_between_scan
+        self.nb_ips_scan_lan    = daemonVars.nb_ips_scan_lan
+        self.ip_range           = daemonVars.ip_range
+        self.ips_remote_control = daemonVars.ips_remote_control
+        self.ftp_enabled        = daemonVars.ftp_enabled
+        self.ftp_port           = daemonVars.ftp_port
+        self.ftp_maxlogins      = daemonVars.ftp_maxlogins
+        self.ftp_showdownloads  = daemonVars.ftp_showdownloads
         
     # TODO : vérifier que le daemon a bien pris les modifs et envoyer des erreurs avec cette fonction
-    def checkDaemonVars(self, nickname, time_between_scan, nb_ips_scan_lan, ip_range, ips_remote_control, ftp_enabled, ftp_port, ftp_maxlogins, ftp_showdownloads):
+    def checkDaemonVars(self, daemonVars):
         pass
     
     def chooseDirectory(self):
