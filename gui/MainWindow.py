@@ -59,6 +59,8 @@ class MainWindow(QMainWindow):
     def change_tab(self, tab):
         if tab == 3:
             self.peers.update_peers()
+        elif tab == 4:
+            self.options.update_conf()
         elif tab == 5:
             self.shares.update_sharedirs()
         elif tab == 6:

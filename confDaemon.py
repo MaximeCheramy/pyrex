@@ -54,7 +54,7 @@ class ConfDaemon(object):
     def get_conf(self):
         get_conf_element = Element('conf', {'type':'get'})
         self.client = Client(get_conf_element, AnalyseConfDaemon(self.callback))
-        self.client.start
+        self.client.start()
         
 class AnalyseConfDaemon(DefaultHandler):
     def __init__(self, callback):
@@ -62,6 +62,7 @@ class AnalyseConfDaemon(DefaultHandler):
         self.callback = callback
         
     def startElement(self, name, attrs):
+        print name
         DefaultHandler.startElement(self, name, attrs)
         if name == "conf":
             self.data = {'nickname'             : "",

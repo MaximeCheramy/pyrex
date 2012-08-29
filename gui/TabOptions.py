@@ -24,20 +24,13 @@ class TabOptions(QWidget):
         # Signaux
         self.varsDaemonUpdated.connect(self.setDaemonVars)
         self.varsDaemonToCheck.connect(self.checkDaemonVars)
-        # Si le fichier de config existe pas, on effectue la config par défaut et on le créé
-        if not os.path.exists("config.ini"):
-            self.setConfig(True)
-            self.saveConfig()
-        # Sinon on loade le fichier de config puis on demande la conf au daemon
-        else:
-            # Debug
-            print "On loade la config du GUI"
-            Configuration.load_config()
-            self.setGuiVars()
-            print "On loade la config du Daemon"
-            daemon = ConfDaemon(self.varsDaemonUpdated.emit)
-            daemon.get_conf()
-            self.setConfig()
+
+    def update_conf(self):
+        self.setGuiVars()
+        print "On loade la config du Daemon"
+        self.daemon = ConfDaemon(self.varsDaemonUpdated.emit)
+        self.daemon.get_conf()
+        self.setConfig()
             
     def saveConfig(self):
         # Configuration Générale
