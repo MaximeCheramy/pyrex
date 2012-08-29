@@ -13,7 +13,6 @@ import inspect
 
 class TabOptions(QWidget):
     instance            = None
-    varsGuiUpdated      = pyqtSignal(object)
     varsDaemonUpdated   = pyqtSignal(object)
     varsDaemonToCheck   = pyqtSignal(object)
 
@@ -23,7 +22,6 @@ class TabOptions(QWidget):
         # Variables de classe
         self.setDefault()
         # Signaux
-        self.varsGuiUpdated.connect(self.setGuiVars)
         self.varsDaemonUpdated.connect(self.setDaemonVars)
         self.varsDaemonToCheck.connect(self.checkDaemonVars)
         # Si le fichier de config existe pas, on effectue la config par défaut et on le créé
@@ -34,11 +32,12 @@ class TabOptions(QWidget):
         else:
             # Debug
             print "On loade la config du GUI"
-            conf = Configuration(self.varsGuiUpdated.emit)
-            conf.load_config()
+            Configuration.load_config()
+            self.setGuiVars()
             print "On loade la config du Daemon"
             daemon = ConfDaemon(self.varsDaemonUpdated.emit)
             daemon.get_conf()
+            self.setConfig()
             
     def saveConfig(self):
         # Configuration Générale
@@ -69,8 +68,17 @@ class TabOptions(QWidget):
         # On ecrit la config du gui dans un fichier (config.ini)
         # Debug
         print "On écrit la nouvelle config du gui"
-        configuration = Configuration(None, self.save_dir, self.max_simultaneous_downloads, self.max_results, self.clean_dl_list, self.icon, self.share_downloads, self.display_mine, self.ip_daemon, self.log_in_file, self.adv_mode)
-        configuration.write_config()                              
+        Configuration.save_dir                      = self.save_dir
+        Configuration.max_simultaneous_downloads    = self.max_simultaneous_downloads
+        Configuration.max_results                   = self.max_results
+        Configuration.clean_dl_list                 = self.clean_dl_list
+        Configuration.icon                          = self.icon
+        Configuration.share_downloads               = self.share_downloads
+        Configuration.display_mine                  = self.display_mine
+        Configuration.ip_daemon                     = self.ip_daemon
+        Configuration.log_in_file                   = self.log_in_file
+        Configuration.adv_mode                      = self.adv_mode
+        Configuration.write_config()                              
         # On envoie la config du daemon au daemon
         # Debug
         print "On envoie la nouvelle config au daemon"
@@ -126,24 +134,17 @@ class TabOptions(QWidget):
         self.ftp_show_downloads         = 0
         self.adv_mode                   = False
         
-    def setGuiVars(self, guiVars):
-        # Debug
-        print "Config reçue du GUI : "
-        frame = inspect.currentframe()
-        args, _, _, values = inspect.getargvalues(frame)
-        print 'function name "%s"' % inspect.getframeinfo(frame)[2]
-        for i in args:
-            print "    %s = %s" % (i, values[i])
-        self.save_dir                   = guiVars.save_dir
-        self.max_simultaneous_downloads = guiVars.max_simultaneous_downloads
-        self.max_results                = guiVars.max_results
-        self.clean_dl_list              = guiVars.clean_dl_list
-        self.icon                       = guiVars.icon
-        self.share_downloads            = guiVars.share_downloads
-        self.display_mine               = guiVars.display_mine
-        self.ip_daemon                  = guiVars.ip_daemon
-        self.log_in_file                = guiVars.log_in_file
-        self.adv_mode                   = guiVars.adv_mode
+    def setGuiVars(self):
+        self.save_dir                   = Configuration.save_dir
+        self.max_simultaneous_downloads = Configuration.max_simultaneous_downloads
+        self.max_results                = Configuration.max_results
+        self.clean_dl_list              = Configuration.clean_dl_list
+        self.icon                       = Configuration.icon
+        self.share_downloads            = Configuration.share_downloads
+        self.display_mine               = Configuration.display_mine
+        self.ip_daemon                  = Configuration.ip_daemon
+        self.log_in_file                = Configuration.log_in_file
+        self.adv_mode                   = Configuration.adv_mode
         
     def setDaemonVars(self, daemonVars):
         # Debug
