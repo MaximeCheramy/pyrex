@@ -16,7 +16,7 @@ class ConfDaemon(object):
         self.ftp_enabled        = ftp_enabled
         self.ftp_port           = ftp_port
         self.ftp_maxlogins      = ftp_maxlogins
-        self.ftp_show_downloads  = ftp_show_downloads
+        self.ftp_show_downloads = ftp_show_downloads
         
     def set_conf(self):
         set_conf_element = Element('conf', {'type':'set'})
@@ -62,7 +62,7 @@ class AnalyseConfDaemon(DefaultHandler):
         self.callback = callback
         
     def startElement(self, name, attrs):
-        print name
+        print "AnalyseConfDaemon :",name
         DefaultHandler.startElement(self, name, attrs)
         if name == "conf":
             self.data = {'nickname'             : "",
@@ -77,6 +77,7 @@ class AnalyseConfDaemon(DefaultHandler):
 
     def endElement(self, name):
         if name == "conf":
+            print "AnalyseConfDaemon : on envoie les valeurs au gui"
             self.callback(ConfDaemon(None, self.data["nickname"], self.data["time_between_scan"], self.data["nb_ips_scan_lan"], self.data["ip_range"], self.data["ips_remote_control"], self.data["ftp_enabled"], self.data["ftp_port"], self.data["ftp_maxlogins"], self.data["ftp_showdownloads"]))
         else:
             self.data[name] = self.buf

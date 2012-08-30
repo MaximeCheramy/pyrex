@@ -63,6 +63,13 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="pseudo_edit">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_23">
          <property name="text">
@@ -102,48 +109,20 @@
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="label_26">
+        <widget class="QCheckBox" name="check_clean_dl_list">
          <property name="text">
           <string>Effacer les téléchargements finis au lancement :</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="combo_eff_dwl_init">
-         <item>
-          <property name="text">
-           <string>Oui</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Non</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_27">
+       <item row="5" column="0">
+        <widget class="QCheckBox" name="check_icon">
          <property name="text">
           <string>Laisser l'icône dans la zone de notification lorsqu'on ferme Rex :</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
-        <widget class="QComboBox" name="combo_ico_notif">
-         <item>
-          <property name="text">
-           <string>Oui</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Non</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="7" column="1">
+       <item row="5" column="1">
         <spacer name="verticalSpacer_7">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -156,7 +135,7 @@
          </property>
         </spacer>
        </item>
-       <item row="8" column="1">
+       <item row="6" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_14">
          <item>
           <spacer name="horizontalSpacer_9">
@@ -179,13 +158,6 @@
           </widget>
          </item>
         </layout>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="pseudo_edit">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
