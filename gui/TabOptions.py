@@ -105,27 +105,6 @@ class TabOptions(QWidget):
         self.edit_ip_conf_daemon.setText(self.ips_remote_control)
         self.combo_aff_myShares.setCurrentIndex(self.ftp_show_downloads)
         self.check_expert_mode.setChecked(self.adv_mode)
-    
-    def setDefault(self):
-        self.nickname                   = "pseudo"
-        self.save_dir                   = os.path.expanduser('~')
-        self.max_simultaneous_downloads = 10
-        self.max_results                = 100
-        self.clean_dl_list              = 1
-        self.icon                       = 0
-        self.ftp_enabled                = True
-        self.ftp_port                   = 2221
-        self.ftp_maxlogins              = 10
-        self.share_downloads            = True
-        self.display_mine               = False
-        self.ip_daemon                  = "120.0.0.1"
-        self.log_in_file                = 1
-        self.nb_ips_scan_lan            = 10
-        self.time_between_scan          = 120
-        self.ip_range                   = "10.31.40.0-10.31.47.254"
-        self.ips_remote_control         = ""
-        self.ftp_show_downloads         = 0
-        self.adv_mode                   = False
         
     def setGuiVars(self):
         self.save_dir                   = Configuration.save_dir

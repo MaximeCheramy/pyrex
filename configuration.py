@@ -5,15 +5,15 @@ import codecs
 from confDaemon import ConfDaemon
 
 class Configuration:
-    save_dir                    = ""
-    max_simultaneous_downloads  = 0
-    max_results                 = 0
-    clean_dl_list               = 0
+    save_dir                    = os.path.expanduser('~')
+    max_simultaneous_downloads  = 10
+    max_results                 = 100
+    clean_dl_list               = 1
     icon                        = 0
-    share_downloads             = False
+    share_downloads             = True
     display_mine                = False
-    ip_daemon                   = ""
-    log_in_file                 = 0
+    ip_daemon                   = "120.0.0.1"
+    log_in_file                 = 1
     adv_mode                    = False
     
     @staticmethod
