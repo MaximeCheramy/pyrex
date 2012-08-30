@@ -25,10 +25,10 @@ class ConfDaemon(object):
         nickname_element.text = self.nickname
         # Time between scan
         time_between_scan_element = SubElement(set_conf_element, 'time_between_scan')
-        time_between_scan_element.text = self.time_between_scan
+        time_between_scan_element.text = str(self.time_between_scan)
         # Nb IP à scanner
         nb_ips_scan_lan_element = SubElement(set_conf_element, 'nb_ips_scan_lan')
-        nb_ips_scan_lan_element.text = self.nb_ips_scan_lan
+        nb_ips_scan_lan_element.text = str(self.nb_ips_scan_lan)
         # Plage IP
         ip_range_element = SubElement(set_conf_element, 'ip_range')
         ip_range_element.text = self.ip_range
@@ -37,16 +37,16 @@ class ConfDaemon(object):
         ips_remote_control_element.text = self.ips_remote_control
         # FTP activé
         ftp_enabled_element = SubElement(set_conf_element, 'ftp_enabled')
-        ftp_enabled_element.text = self.ftp_enabled
+        ftp_enabled_element.text = self.ftp_enabled and "true" or "false"
         # Port FTP
         ftp_port_element = SubElement(set_conf_element, 'ftp_port')
-        ftp_port_element.text = self.ftp_port
+        ftp_port_element.text = str(self.ftp_port)
         # Max Connex simultanées FTP
         ftp_maxlogins_element = SubElement(set_conf_element, 'ftp_maxlogins')
-        ftp_maxlogins_element.text = self.ftp_maxlogins
+        ftp_maxlogins_element.text = str(self.ftp_maxlogins)
         # Afficher dwl FTP
         ftp_show_downloads_element = SubElement(set_conf_element, 'ftp_show_downloads')
-        ftp_show_downloads_element.text = self.ftp_show_downloads
+        ftp_show_downloads_element.text = self.ftp_show_downloads and "true" or "false"
         # On envoie au client
         self.client = Client(set_conf_element, AnalyseConfDaemon(self.callback))
         self.client.start()

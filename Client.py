@@ -40,8 +40,8 @@ class Worker(QRunnable):
                     break
                 parser.feed(chunk)
     
-        except socket.error:
-            pass
+        #except socket.error:
+        #    pass
         finally:
             sock.close()
 

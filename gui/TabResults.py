@@ -4,6 +4,7 @@ from PyQt4.QtCore import *
 
 from downloads import Download
 from TabDownloads import TabDownloads
+from configuration import Configuration
 
 from datetime import date
 
@@ -43,7 +44,7 @@ class TabResults(QWidget):
         self.download(self.table_results.item(row, 0).share)
 
     def download(self, share):
-        dl = Download.get_download(share, share.name, date.today())
+        dl = Download.get_download(share, Configuration.save_dir + share.name, date.today())
         TabDownloads.instance.add_download(dl)
         dl.start_download()
 
