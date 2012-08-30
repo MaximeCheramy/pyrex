@@ -30,8 +30,7 @@ class TabOptions(QWidget):
         print "On loade la config du Daemon"
         self.daemon = ConfDaemon(self.varsDaemonUpdated.emit)
         self.daemon.get_conf()
-        self.setConfig()
-            
+                    
     def saveConfig(self):
         # Configuration Générale
         self.nickname                   = str(self.pseudo_edit.text())
@@ -41,9 +40,7 @@ class TabOptions(QWidget):
             self.save_dir               = unicode(self.dir_button.text())
         self.max_simultaneous_downloads = int(self.spin_max_dwl.value())
         self.max_results                = int(self.spin_nb_res_page.value())
-        #self.clean_dl_list              = int(self.combo_eff_dwl_init.currentIndex())
         self.clean_dl_list              = self.check_clean_dl_list.isChecked()
-        #self.icon                       = int(self.combo_ico_notif.currentIndex())
         self.icon                       = self.check_icon.isChecked()
         # Configuration Partages
         self.ftp_enabled                = self.checkBox_FTP.isChecked()
@@ -86,9 +83,7 @@ class TabOptions(QWidget):
         self.dir_button.setText(self.save_dir)
         self.spin_max_dwl.setValue(self.max_simultaneous_downloads)
         self.spin_nb_res_page.setValue(self.max_results)
-        #self.combo_eff_dwl_init.setCurrentIndex(self.clean_dl_list)
         self.check_clean_dl_list.setChecked(self.clean_dl_list)
-        #self.combo_ico_notif.setCurrentIndex(self.icon)
         self.check_icon.setChecked(self.icon)
         self.checkBox_FTP.setChecked(self.ftp_enabled)
         self.spin_port.setValue(self.ftp_port)
@@ -119,20 +114,33 @@ class TabOptions(QWidget):
     def setDaemonVars(self, daemonVars):
         # Debug
         print "Config reçue du daemon : "
-        frame = inspect.currentframe()
-        args, _, _, values = inspect.getargvalues(frame)
-        print 'function name "%s"' % inspect.getframeinfo(frame)[2]
-        for i in args:
-            print "    %s = %s" % (i, values[i])
+        print "Nickname :", daemonVars.nickname
+        print "Time_between_scan :", daemonVars.time_between_scan
+        print "Nb_ips_scan_lan :", daemonVars.nb_ips_scan_lan
+        print "Ip_range :", daemonVars.ip_range
+        print "Ips_remote_control :", daemonVars.ips_remote_control
+        print "Ftp_enabled :", daemonVars.ftp_enabled
+        print "Ftp_port :", daemonVars.ftp_port
+        print "Ftp_maxlogins :", daemonVars.ftp_maxlogins
+        print "Ftp_show_downloads :", daemonVars.ftp_show_downloads
+        
         self.nickname           = daemonVars.nickname
-        self.time_between_scan  = daemonVars.time_between_scan
-        self.nb_ips_scan_lan    = daemonVars.nb_ips_scan_lan
+        self.time_between_scan  = int(daemonVars.time_between_scan)
+        self.nb_ips_scan_lan    = int(daemonVars.nb_ips_scan_lan)
         self.ip_range           = daemonVars.ip_range
         self.ips_remote_control = daemonVars.ips_remote_control
-        self.ftp_enabled        = daemonVars.ftp_enabled
-        self.ftp_port           = daemonVars.ftp_port
-        self.ftp_maxlogins      = daemonVars.ftp_maxlogins
-        self.ftp_show_downloads = daemonVars.ftp_show_downloads
+        if daemonVars.ftp_enabled == "true":
+            self.ftp_enabled    = True
+        else:
+            self.ftp_enabled    = False
+        self.ftp_port           = int(daemonVars.ftp_port)
+        self.ftp_maxlogins      = int(daemonVars.ftp_maxlogins)
+        if daemonVars.ftp_show_downloads == "true":
+            self.ftp_show_downloads = True
+        else:
+            self.ftp_show_downloads = False
+        # On écrit la config
+        self.setConfig()
         
     def setDaemonVarsDefault(self):
         self.nickname           = ""

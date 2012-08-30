@@ -22,15 +22,7 @@ class Configuration(object):
         # On écrit dans config.ini tout ce qui se rapporte au gui
         config = codecs.open("config.ini", "w", encoding='utf-8')
         for key in ['save_dir', 'max_simultaneous_downloads', 'max_results', 'clean_dl_list', 'icon', 'share_downloads', 'display_mine', 'ip_daemon', 'log_in_file', 'adv_mode']:
-            # On cherche les champs liés au gui
-            try:
-                var = "{}={}\n".format(key,Configuration.__dict__[key])
-                # Debug
-                #print "{}={}\n".format(key,value)
-            except UnicodeEncodeError:
-                var = u"{}={}\n".format(key, Configuration.__dict__[key])
-                # Debug
-                #print u"{}={}\n".format(key,value)
+            var = u"{}={}\n".format(key, Configuration.__dict__[key])
             config.write(var)
         config.close()           
         

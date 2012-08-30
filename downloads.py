@@ -6,13 +6,14 @@ from PyQt4.QtNetwork import QFtp
 
 from Share import AnalyseShare
 from DefaultHandler import DefaultHandler
+from configuration import Configuration
 import Tools
 
 class Download(QObject):
     def __init__(self, file_share, local_path, date):
         QObject.__init__(self)
         self._file_share = file_share
-        self._local_path = local_path
+        self._local_path = Configuration.save_dir + local_path
         self._date = date
         self._state = 5
 
