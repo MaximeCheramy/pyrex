@@ -3,6 +3,8 @@ import xml.sax
 from xml.etree.ElementTree import tostring
 from PyQt4.QtCore import QObject, QRunnable, QThreadPool
 
+from configuration import Configuration
+
 HOSTNAME = 'localhost'
 PORT = 1111
 

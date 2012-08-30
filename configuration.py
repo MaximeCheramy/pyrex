@@ -3,7 +3,6 @@
 
 import codecs
 import os
-from confDaemon import ConfDaemon
 
 class Configuration(object):
     save_dir                    = os.path.expanduser('~')
