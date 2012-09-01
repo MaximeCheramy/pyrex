@@ -32,10 +32,10 @@ class AnalyseResults(DefaultHandler):
         DefaultHandler.endElement(self, name)
 
 class Search(object):
-    def __init__(self, query, protocol=None, Type=None, extensions="", sizeinf=None, sizesup=None, dateinf=None, datesup=None):
+    def __init__(self, query, protocol=None, type_share=None, extensions="", sizeinf=None, sizesup=None, dateinf=None, datesup=None):
         self.query       = query
         self.protocol    = protocol
-        self.Type        = Type
+        self.type_share        = type_share
         self.extensions  = extensions
         self.sizeinf     = sizeinf
         self.sizesup     = sizesup
@@ -50,9 +50,9 @@ class Search(object):
         if self.protocol: 
             protocol_element = SubElement(search_element, 'protocol')
             protocol_element.text = self.protocol
-        elif self.Type:
-            Type_element = SubElement(search_element, 'type')
-            Type_element.text = self.Type
+        elif self.type_share:
+            type_share_element = SubElement(search_element, 'type')
+            type_share_element.text = self.type_share
         elif self.extensions:
             extensions_element = SubElement(search_element, 'extensions')
             extensions_element.text = self.extensions

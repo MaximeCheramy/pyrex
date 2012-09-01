@@ -11,11 +11,12 @@ class AnalyseShare(object):
                     'type': 'file', 'size': '0', 'port': '-1',
                     'nickname': '', 'last_modified': '0', 
                     'protocol': 'FTP'}
+            self.share_type = ('type' in attrs) and attrs['type'] or 'file'
 
 
     def close(self, name, buf):
          if name == "share":
-             if self.data["type"] == 'file':
+             if self.share_type == 'file':
                  self.share = FileShare(
                          self.data['name'], self.data['client_address'], 
                          int(self.data['port']), self.data['path'], 
