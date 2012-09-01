@@ -14,6 +14,7 @@ class TabPeers(QWidget):
         self.peers_get = None
         self.peersReceived.connect(self.set_peers)
         self.statsReceived.connect(self.set_stats)
+        #self.table_peers.sortItems(0, PyQt4.SortOrder.AscendingOrder)
         self.stats_get = None
         self.timer = None
         self.cache = {}

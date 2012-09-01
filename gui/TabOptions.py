@@ -114,15 +114,15 @@ class TabOptions(QWidget):
     def setDaemonVars(self, daemonVars):
         # Debug
         print "Config reçue du daemon : "
-        print "Nickname :", daemonVars.nickname
-        print "Time_between_scan :", daemonVars.time_between_scan
-        print "Nb_ips_scan_lan :", daemonVars.nb_ips_scan_lan
-        print "Ip_range :", daemonVars.ip_range
-        print "Ips_remote_control :", daemonVars.ips_remote_control
-        print "Ftp_enabled :", daemonVars.ftp_enabled
-        print "Ftp_port :", daemonVars.ftp_port
-        print "Ftp_maxlogins :", daemonVars.ftp_maxlogins
-        print "Ftp_show_downloads :", daemonVars.ftp_show_downloads
+        #print "Nickname :", daemonVars.nickname
+        #print "Time_between_scan :", daemonVars.time_between_scan
+        #print "Nb_ips_scan_lan :", daemonVars.nb_ips_scan_lan
+        #print "Ip_range :", daemonVars.ip_range
+        #print "Ips_remote_control :", daemonVars.ips_remote_control
+        #print "Ftp_enabled :", daemonVars.ftp_enabled
+        #print "Ftp_port :", daemonVars.ftp_port
+        #print "Ftp_maxlogins :", daemonVars.ftp_maxlogins
+        #print "Ftp_show_downloads :", daemonVars.ftp_show_downloads
         
         self.nickname           = daemonVars.nickname
         self.time_between_scan  = int(daemonVars.time_between_scan)

@@ -62,7 +62,7 @@ class AnalyseConfDaemon(DefaultHandler):
         self.callback = callback
         
     def startElement(self, name, attrs):
-        print "AnalyseConfDaemon :",name
+        #print "AnalyseConfDaemon :",name
         DefaultHandler.startElement(self, name, attrs)
         if name == "conf":
             self.data = {'nickname'             : "",
