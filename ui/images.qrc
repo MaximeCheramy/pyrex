@@ -20,6 +20,26 @@
   </qresource>
   <qresource prefix="rex_logo">
     <file>res/Rex.png</file>
+    <file>../res/button_copy_24.png</file>
+    <file>../res/button_copy.png</file>
+    <file>../res/button_download_24.png</file>
+    <file>../res/button_download.png</file>
+    <file>../res/button_open_24.png</file>
+    <file>../res/button_open.png</file>
+    <file>../res/button_pause_24.png</file>
+    <file>../res/button_pause.png</file>
+    <file>../res/button_remove_24.png</file>
+    <file>../res/button_remove.png</file>
+    <file>../res/button_start_24.png</file>
+    <file>../res/button_start.png</file>
+    <file>../res/go.png</file>
+    <file>../res/next.png</file>
+    <file>../res/previous.png</file>
+    <file>../res/rex_18.png</file>
+    <file>../res/rex_48.png</file>
+    <file>../res/Rex.png</file>
+    <file>../res/up.png</file>
+    <file>../res/update.png</file>
     <file>res/rex_48.png</file>
   </qresource>
 </RCC>
