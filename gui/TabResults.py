@@ -19,11 +19,11 @@ class TabResults(QWidget):
 
     def __init__(self, search, parent=None):
         super(TabResults, self).__init__(parent)
-
+        # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
-
+        # Signaux
         self.resultsReceived.connect(self.add_results)
-
+        # On envoie la recherche
         search.do_search(self.resultsReceived.emit)
 
     def _add_share(self, share):
