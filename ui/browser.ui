@@ -124,8 +124,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>up_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>_cd_parent_dir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activated(int,int)</slot>
+  <slot>_cd_parent_dir()</slot>
  </slots>
 </ui>

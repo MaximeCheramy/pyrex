@@ -37,9 +37,13 @@ class BrowserFtp(QWidget):
 
         self._change_dir()
 
+    def _cd_parent_dir(self):
+        self._url = self._url.resolved(QUrl(".."))
+        self._change_dir()
+
     def _change_dir(self):
         self.ftp.cd(self._url.path())
-        self.address_bar.setText(self._url.path())
+        self.address_bar.setText(self._url.toString())
 
     def activated(self, row, col):
         name = self.list_table.item(row, 0).text()
@@ -57,10 +61,11 @@ class BrowserFtp(QWidget):
     def list_info(self, url_info):
         rows = self.list_table.rowCount()
         self.list_table.insertRow(rows)
-        self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name()))
         if url_info.isDir():
+            self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name() + '/'))
             self.list_table.setItem(rows, 1, SizeItem(True, 0))
         else:
+            self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name()))
             self.list_table.setItem(rows, 1, SizeItem(False, url_info.size()))
         self.list_table.setItem(rows, 2, QTableWidgetItem(url_info.lastModified().toString('dd/MM/yyyy')))
 
