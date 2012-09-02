@@ -10,8 +10,12 @@ from PyQt4.QtCore import QUrl
 from PyQt4.QtNetwork import QFtp
 
 class SizeItem(QTableWidgetItem):
-    def __init__(self, size):
-        super(SizeItem, self).__init__(convert_size_str(size))
+    def __init__(self, is_dir, size):
+        if is_dir:
+            super(SizeItem, self).__init__('Dossier')
+        else:
+            super(SizeItem, self).__init__(convert_size_str(size))
+
         self.size = size
 
 
@@ -53,9 +57,9 @@ class BrowserFtp(QWidget):
         self.list_table.insertRow(rows)
         self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name()))
         if url_info.isDir():
-            self.list_table.setItem(rows, 1, QTableWidgetItem(''))
+            self.list_table.setItem(rows, 1, SizeItem(True, 0))
         else:
-            self.list_table.setItem(rows, 1, SizeItem(url_info.size()))
+            self.list_table.setItem(rows, 1, SizeItem(False, url_info.size()))
         self.list_table.setItem(rows, 2, QTableWidgetItem(url_info.lastModified().toString('dd/MM/yyyy')))
 
     def command_finished(self, _, err):
