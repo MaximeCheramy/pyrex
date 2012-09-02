@@ -49,7 +49,7 @@ class TabResults(QWidget):
             self.download(share)
         else:
             browser = BrowserFtp(share.url, self.tabs_results)
-            self.tabs_results.addTab(browser, share.url)
+            self.tabs_results.addTab(browser, share.client_address)
             self.tabs_results.setCurrentWidget(browser)
 
 

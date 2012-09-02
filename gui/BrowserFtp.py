@@ -1,8 +1,19 @@
 import PyQt4.uic
+from datetime import date
+from configuration import Configuration
+from TabDownloads import TabDownloads
+from downloads import Download
+from Share import FileShare, DirectoryShare
 from Tools import convert_size_str
 from PyQt4.QtGui import QWidget, QTableWidgetItem
 from PyQt4.QtCore import QUrl
 from PyQt4.QtNetwork import QFtp
+
+class SizeItem(QTableWidgetItem):
+    def __init__(self, size):
+        super(SizeItem, self).__init__(convert_size_str(size))
+        self.size = size
+
 
 class BrowserFtp(QWidget):
 
@@ -24,16 +35,32 @@ class BrowserFtp(QWidget):
             self.ftp.cd(self._url.path())
 
     def activated(self, row, col):
-        print row, col
+        name = self.list_table.item(row, 0).text()
+        if self.list_table.item(row, 1).text():
+            size = self.list_table.item(row, 1).size
+
+            share = FileShare(name, self._url.host(), self._url.port(21), self._url.path(), 'FTP', size, 0, '')
+            dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
+            TabDownloads.instance.add_download(dl)
+            dl.start_download()
+        else:
+            share = DirectoryShare(name, self._url.host(), self._url.port(21), self._url.path(), 'FTP', 0, '')
+            self._url = QUrl(share.url)
+            self.ftp.cd(self._url.path())
 
     def list_info(self, url_info):
         rows = self.list_table.rowCount()
         self.list_table.insertRow(rows)
         self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name()))
-        self.list_table.setItem(rows, 1, QTableWidgetItem(convert_size_str(url_info.size())))
+        if url_info.isDir():
+            self.list_table.setItem(rows, 1, QTableWidgetItem(''))
+        else:
+            self.list_table.setItem(rows, 1, SizeItem(url_info.size()))
         self.list_table.setItem(rows, 2, QTableWidgetItem(url_info.lastModified().toString('dd/MM/yyyy')))
 
     def command_finished(self, _, err):
-        if self.ftp.currentCommand() == QFtp.Login:
+        if self.ftp.currentCommand() == QFtp.Cd:
+            while self.list_table.rowCount() > 0:
+                self.list_table.removeRow(0)
             self.ftp.list()
 

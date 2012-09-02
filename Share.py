@@ -27,7 +27,7 @@ class AnalyseShare(object):
                  self.share = DirectoryShare(
                          self.data['name'], self.data['client_address'], 
                          int(self.data['port']), self.data['path'], 
-                         self.data['protocol'], float(self.data['size']),
+                         self.data['protocol'],
                          date.fromtimestamp(int(self.data['last_modified']) / 1000),
                          self.data['nickname'])
          else:
@@ -103,5 +103,5 @@ class FileShare(Share):
         Share.__init__(self, name, client_address, port, path, protocol, size, last_modified, nickname, False)
 
 class DirectoryShare(Share):
-    def __init__(self, name, client_address, port, path, protocol, size, last_modified, nickname):
-        Share.__init__(self, name, client_address, port, path, protocol, size, last_modified, nickname, True)
+    def __init__(self, name, client_address, port, path, protocol, last_modified, nickname):
+        Share.__init__(self, name, client_address, port, path, protocol, 0, last_modified, nickname, True)
