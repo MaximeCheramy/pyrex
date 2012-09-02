@@ -12,7 +12,7 @@ class Configuration(object):
     icon                        = 0
     share_downloads             = True
     display_mine                = False
-    ip_daemon                   = "120.0.0.1"
+    ip_daemon                   = "127.0.0.1"
     log_in_file                 = 1
     adv_mode                    = False
     

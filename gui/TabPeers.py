@@ -1,6 +1,6 @@
 import PyQt4.uic
 from PyQt4.QtGui import QWidget, QTableWidgetItem
-from PyQt4.QtCore import pyqtSignal, QTimer
+from PyQt4.QtCore import pyqtSignal, QTimer, Qt
 
 from peers import PeersGet
 from stats import StatisticsGet
@@ -10,13 +10,19 @@ class TabPeers(QWidget):
     statsReceived = pyqtSignal(object)
     def __init__(self, parent):
         QWidget.__init__(self, parent)
+        # Load de l'UI
         PyQt4.uic.loadUi('ui/peers.ui', self)
+        # Vars
         self.peers_get = None
-        self.peersReceived.connect(self.set_peers)
-        self.statsReceived.connect(self.set_stats)
         self.stats_get = None
         self.timer = None
         self.cache = {}
+        # Config affichage
+        self.table_peers.sortItems(0)
+        self.table_peers.setColumnWidth(0, 200)
+        # Signaux
+        self.peersReceived.connect(self.set_peers)
+        self.statsReceived.connect(self.set_stats)
 
     def update_peers(self):
         if self.peers_get is None:
@@ -30,6 +36,7 @@ class TabPeers(QWidget):
         item.peer = peer
         self.table_peers.setItem(rows, 0, item)
         self.table_peers.setItem(rows, 1, QTableWidgetItem(peer.ip))
+        self.table_peers.item(rows, 1).setTextAlignment(Qt.AlignCenter)
 
     def set_peers(self, peers):
         while self.table_peers.rowCount():

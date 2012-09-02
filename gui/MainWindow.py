@@ -13,6 +13,7 @@ from TabOptions import TabOptions
 from TabShares import TabShares
 from TabAdvSearch import TabAdvSearch
 from TabInformations import TabInformations
+from configuration import Configuration
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -20,20 +21,20 @@ class MainWindow(QMainWindow):
 
         PyQt4.uic.loadUi('ui/pyrex.ui', self)
 
+        # Icon:
+        self.setWindowIcon(QIcon("res/rex_18.png"))
+
         # Tray Icon:
         self.trayIcon = QSystemTrayIcon(QIcon("res/rex_18.png"), self)
         trayMenu = QMenu()
-        actionQuit = QAction("Quitter", trayMenu)
-        actionQuit.triggered.connect(self.close)
-        trayMenu.addAction(actionQuit)
+        self.actionQuit = QAction("Quitter", trayMenu)
+        self.actionQuit.triggered.connect(self.close)
+        trayMenu.addAction(self.actionQuit)
         self.trayIcon.setContextMenu(trayMenu)
-        self.trayIcon.show()
+        #self.trayIcon.show()
 
-        QObject.connect(self.trayIcon,
-                               SIGNAL("activated(QSystemTrayIcon::ActivationReason)"),
-                               self.icon_activated)
+        QObject.connect(self.trayIcon, SIGNAL("activated(QSystemTrayIcon::ActivationReason)"), self.icon_activated)
  
-
         # Tabs:
         self.tabs = QTabWidget()
         QObject.connect(self.tabs, SIGNAL('currentChanged(int)'), self.change_tab)
@@ -67,13 +68,25 @@ class MainWindow(QMainWindow):
             self.informations.update_informations()
 
     def closeEvent(self, event):
-        #TODO: Voir le comportement souhaité lorsqu'on ferme la fenetre.
-        event.accept()
+        if not self.trayIcon.isVisible() and Configuration.icon:
+            self.trayIcon.show()
+            self.hide()
+            event.ignore()
+        else:
+            event.accept()
+   
+    def changeEvent(self, event):
+        if event.type() == QEvent.WindowStateChange:
+            if self.isMinimized():
+                self.trayIcon.show()
+                self.hide()
  
     def icon_activated(self, reason):
         if reason == QSystemTrayIcon.Trigger:
             if self.isVisible():
                 self.hide()
             else:
+                self.setWindowState(self.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+                self.activateWindow()
                 self.show()
-
+                self.trayIcon.hide()

@@ -5,7 +5,6 @@ from PyQt4.QtCore import QObject, QRunnable, QThreadPool
 
 from configuration import Configuration
 
-HOSTNAME = 'localhost'
 PORT = 1111
 
 class Worker(QRunnable):
@@ -51,9 +50,7 @@ class Worker(QRunnable):
 class Client(QObject):
     def __init__(self, element, content_handler, hostname=None):
         QObject.__init__(self)
-        if hostname is None:
-            hostname = HOSTNAME
-        self.worker = Worker(element, content_handler, hostname)
+        self.worker = Worker(element, content_handler, str(Configuration.ip_daemon))
 
     def start(self):
         QThreadPool.globalInstance().start(self.worker)

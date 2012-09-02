@@ -21,9 +21,12 @@ class TabOptions(QWidget):
         PyQt4.uic.loadUi('ui/options.ui', self)
         # Variables du daemon : au cas ou il ne répondrait pas
         self.setDaemonVarsDefault()
+        # Config initiale affichage
+        self.setExpertMode(self.check_expert_mode.isChecked())
         # Signaux
         self.varsDaemonUpdated.connect(self.setDaemonVars)
         self.varsDaemonToCheck.connect(self.checkDaemonVars)
+        QObject.connect(self.check_expert_mode, SIGNAL('stateChanged(int)'), self. setExpertMode)
         
     def update_conf(self):
         self.setGuiVars()
@@ -114,15 +117,15 @@ class TabOptions(QWidget):
     def setDaemonVars(self, daemonVars):
         # Debug
         print "Config reçue du daemon : "
-        print "Nickname :", daemonVars.nickname
-        print "Time_between_scan :", daemonVars.time_between_scan
-        print "Nb_ips_scan_lan :", daemonVars.nb_ips_scan_lan
-        print "Ip_range :", daemonVars.ip_range
-        print "Ips_remote_control :", daemonVars.ips_remote_control
-        print "Ftp_enabled :", daemonVars.ftp_enabled
-        print "Ftp_port :", daemonVars.ftp_port
-        print "Ftp_maxlogins :", daemonVars.ftp_maxlogins
-        print "Ftp_show_downloads :", daemonVars.ftp_show_downloads
+        #print "Nickname :", daemonVars.nickname
+        #print "Time_between_scan :", daemonVars.time_between_scan
+        #print "Nb_ips_scan_lan :", daemonVars.nb_ips_scan_lan
+        #print "Ip_range :", daemonVars.ip_range
+        #print "Ips_remote_control :", daemonVars.ips_remote_control
+        #print "Ftp_enabled :", daemonVars.ftp_enabled
+        #print "Ftp_port :", daemonVars.ftp_port
+        #print "Ftp_maxlogins :", daemonVars.ftp_maxlogins
+        #print "Ftp_show_downloads :", daemonVars.ftp_show_downloads
         
         self.nickname           = daemonVars.nickname
         self.time_between_scan  = int(daemonVars.time_between_scan)
@@ -152,6 +155,20 @@ class TabOptions(QWidget):
         self.ftp_port           = 0
         self.ftp_maxlogins      = 0
         self.ftp_show_downloads  = 0
+        
+    def setExpertMode(self, active):
+        if active:
+            self.spin_nb_ip_scan.show()     ; self.label_32.show()
+            self.spin_tps_scan.show()       ; self.label_34.show()
+            self.edit_plage_ip.show()       ; self.label_35.show()
+            self.edit_ip_conf_daemon.show() ; self.label_33.show()
+            self.combo_aff_myShares.show()  ; self.label_36.show()
+        else:
+            self.spin_nb_ip_scan.hide()     ; self.label_32.hide()
+            self.spin_tps_scan.hide()       ; self.label_34.hide()
+            self.edit_plage_ip.hide()       ; self.label_35.hide()
+            self.edit_ip_conf_daemon.hide() ; self.label_33.hide()
+            self.combo_aff_myShares.hide()  ; self.label_36.hide()
         
     # TODO : vérifier que le daemon a bien pris les modifs et envoyer des erreurs avec cette fonction
     def checkDaemonVars(self, daemonVars):

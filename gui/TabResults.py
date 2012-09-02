@@ -21,12 +21,11 @@ class TabResults(QWidget):
 
     def __init__(self, search, tabs_results):
         super(TabResults, self).__init__(tabs_results)
-
+        # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
-
-        self.tabs_results = tabs_results
+        # Signaux
         self.resultsReceived.connect(self.add_results)
-
+        # On envoie la recherche
         search.do_search(self.resultsReceived.emit)
 
     def _add_share(self, share):
@@ -54,7 +53,7 @@ class TabResults(QWidget):
 
 
     def download(self, share):
-        dl = Download.get_download(share, Configuration.save_dir + share.name, date.today())
+        dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
         TabDownloads.instance.add_download(dl)
         dl.start_download()
 
