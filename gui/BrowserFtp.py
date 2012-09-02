@@ -3,7 +3,7 @@ from datetime import date
 from configuration import Configuration
 from TabDownloads import TabDownloads
 from downloads import Download
-from Share import FileShare, DirectoryShare
+from Share import FileShare
 from Tools import convert_size_str
 from PyQt4.QtGui import QWidget, QTableWidgetItem
 from PyQt4.QtCore import QUrl
@@ -35,13 +35,13 @@ class BrowserFtp(QWidget):
         self.ftp.connectToHost(self._url.host(), self._url.port(21))
         self.ftp.login()
 
-        self._change_dir()
+        self._change_dir('.')
 
     def _cd_parent_dir(self):
-        self._url = self._url.resolved(QUrl(".."))
-        self._change_dir()
+        self._change_dir('..')
 
-    def _change_dir(self):
+    def _change_dir(self, rel_path):
+        self._url = self._url.resolved(QUrl(rel_path))
         self.ftp.cd(self._url.path())
         self.address_bar.setText(self._url.toString())
 
@@ -54,9 +54,7 @@ class BrowserFtp(QWidget):
             TabDownloads.instance.add_download(dl)
             dl.start_download()
         else:
-            share = DirectoryShare(name, self._url.host(), self._url.port(21), self._url.path(), 'FTP', 0, '')
-            self._url = QUrl(share.url)
-            self._change_dir()
+            self._change_dir(name)
 
     def list_info(self, url_info):
         rows = self.list_table.rowCount()
