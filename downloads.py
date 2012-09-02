@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from datetime import date
-from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice
+from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice, pyqtSignal
 from PyQt4.QtNetwork import QFtp
 
 from Share import AnalyseShare
@@ -11,6 +11,7 @@ import Tools
 class Download(QObject):
     def __init__(self, file_share, local_path, date):
         QObject.__init__(self)
+        # Variables
         self._file_share = file_share
         self._local_path = local_path
         self._date = date
@@ -54,6 +55,10 @@ class Download(QObject):
             return u'Connexion interrompue'
 
 class DownloadFtp(Download):
+    progressModified    = pyqtSignal(object)
+    stateChanged        = pyqtSignal(object)
+    downloadFinished    = pyqtSignal(object)
+    
     def __init__(self, file_share, local_path, date):
         Download.__init__(self, file_share, local_path, date)
         self.ftp = QFtp(self)
@@ -73,18 +78,23 @@ class DownloadFtp(Download):
             self.ftp.get(self.url.path(), self.out_file)
 
     def stop(self):
-        self.ftp
+        self.ftp.close()
 
     def state_changed(self, state):
         if state == 1 or state == 2:
             self._state = 1
+        elif state == 3 or state == 4:
+            self._state = 3
+        self.stateChanged.emit(self)
 
     def download_finished(self, _):
         print "finished !"
+        self.downloadFinished.emit(self)
 
     def update_progress(self, read_bytes, total_bytes):
         self.read_bytes = read_bytes
-
+        self.progressModified.emit(self)
+        
 
 class AnalyseDownload(object):
     def __init__(self):
