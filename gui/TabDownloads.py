@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import os
+import time
 import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem
@@ -18,8 +19,9 @@ class TabDownloads(QWidget):
         # Vars 
         TabDownloads.instance = self
         self.downloads = []
-        # Signaux
-        #QObject.connect(self.check_expert_mode, SIGNAL('stateChanged(int)'), self. setExpertMode)
+        self.count     = 0
+        self.last_size = 0
+        self.last_time = time.time()
         # Init
         self.load_downloads()
 
@@ -36,6 +38,7 @@ class TabDownloads(QWidget):
         self.downloads_table.setItem(rows, 0, QTableWidgetItem(download.file_share.name))
         self.downloads_table.setItem(rows, 1, QTableWidgetItem(download.get_progress()))
         self.downloads_table.setItem(rows, 2, QTableWidgetItem(download.state))
+        self.downloads_table.setItem(rows, 3, QTableWidgetItem("0 ko/s"))
         self.downloads_table.setItem(rows, 5, QTableWidgetItem(download.date.strftime('%d/%m/%y')))
         self.downloads.append(download)
         # Signaux
@@ -51,6 +54,25 @@ class TabDownloads(QWidget):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
         self.downloads_table.item(row, 1).setText(download.get_progress())
+        # Pour la vitesse instantannée
+        if self.count == 100:
+            progression = download.read_bytes - self.last_size
+            tps = time.time() - self.last_time
+            progression = progression/tps
+            if progression > 1024*1024:
+                progression = "{0:.1f} {1}".format(progression/(1024*1024), "Mio/s")
+            elif progression > 1024:
+                progression = "{0:.1f} {1}".format(progression/1024, "kio/s")
+            elif progression > 0:
+                progression = "{0:.1f} {1}".format(progression, "io/s")
+            else:
+                progression = "0 ko/s"
+            self.downloads_table.item(row, 3).setText(progression)
+            self.last_time = time.time()
+            self.last_size = download.read_bytes
+            self.count = 0
+        else:
+            self.count += 1
         
     def update_state(self, download):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
