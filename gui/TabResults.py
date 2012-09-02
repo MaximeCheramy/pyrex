@@ -21,6 +21,7 @@ class TabResults(QWidget):
 
     def __init__(self, search, tabs_results):
         super(TabResults, self).__init__(tabs_results)
+        self.tabs_results = tabs_results
         # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
         # Signaux
