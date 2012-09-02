@@ -12,7 +12,7 @@ from PyQt4.QtNetwork import QFtp
 class SizeItem(QTableWidgetItem):
     def __init__(self, is_dir, size):
         if is_dir:
-            super(SizeItem, self).__init__('Dossier')
+            super(SizeItem, self).__init__('dossier')
         else:
             super(SizeItem, self).__init__(convert_size_str(size))
 
@@ -40,9 +40,8 @@ class BrowserFtp(QWidget):
 
     def activated(self, row, col):
         name = self.list_table.item(row, 0).text()
-        if self.list_table.item(row, 1).text():
-            size = self.list_table.item(row, 1).size
-
+        size = self.list_table.item(row, 1).size
+        if size:
             share = FileShare(name, self._url.host(), self._url.port(21), self._url.path(), 'FTP', size, 0, '')
             dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
             TabDownloads.instance.add_download(dl)
