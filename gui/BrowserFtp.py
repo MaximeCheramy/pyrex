@@ -35,8 +35,11 @@ class BrowserFtp(QWidget):
         self.ftp.connectToHost(self._url.host(), self._url.port(21))
         self.ftp.login()
 
-        if self._url.path():
-            self.ftp.cd(self._url.path())
+        self._change_dir()
+
+    def _change_dir(self):
+        self.ftp.cd(self._url.path())
+        self.address_bar.setText(self._url.path())
 
     def activated(self, row, col):
         name = self.list_table.item(row, 0).text()
@@ -49,7 +52,7 @@ class BrowserFtp(QWidget):
         else:
             share = DirectoryShare(name, self._url.host(), self._url.port(21), self._url.path(), 'FTP', 0, '')
             self._url = QUrl(share.url)
-            self.ftp.cd(self._url.path())
+            self._change_dir()
 
     def list_info(self, url_info):
         rows = self.list_table.rowCount()
