@@ -140,9 +140,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>next_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>_next()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>60</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>prev_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>_prev()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>24</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activated(int,int)</slot>
   <slot>_cd_parent_dir()</slot>
+  <slot>_prev()</slot>
+  <slot>_next()</slot>
  </slots>
 </ui>
