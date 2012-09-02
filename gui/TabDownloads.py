@@ -19,6 +19,7 @@ class TabDownloads(QWidget):
         # Vars 
         TabDownloads.instance = self
         self.downloads = []
+        self.pas       = 100
         self.count     = 0
         self.last_size = 0
         self.last_time = time.time()
@@ -55,19 +56,32 @@ class TabDownloads(QWidget):
         row = self.downloads_table.row(item)
         self.downloads_table.item(row, 1).setText(download.get_progress())
         # Pour la vitesse instantannée
-        if self.count == 100:
+        if self.count == self.pas:
             progression = download.read_bytes - self.last_size
             tps = time.time() - self.last_time
             progression = progression/tps
             if progression > 1024*1024:
-                progression = "{0:.1f} {1}".format(progression/(1024*1024), "Mio/s")
+                s_progression = "{0:.1f} {1}".format(progression/(1024*1024), "Mio/s")
+                self.pas = 175
             elif progression > 1024:
-                progression = "{0:.1f} {1}".format(progression/1024, "kio/s")
+                s_progression = "{0:.1f} {1}".format(progression/1024, "kio/s")
+                if progression/1024 > 500:
+                    self.pas = 125
+                elif progression/1024 > 250:
+                    self.pas = 100
+                elif progression/1024 > 100:
+                    self.pas = 50
+                elif progression/1024 > 50:
+                    self.pas = 25
+                else:
+                    self.pas = 10
             elif progression > 0:
-                progression = "{0:.1f} {1}".format(progression, "io/s")
+                s_progression = "{0:.1f} {1}".format(progression, "io/s")
+                self.pas = 1
             else:
-                progression = "0 ko/s"
-            self.downloads_table.item(row, 3).setText(progression)
+                s_progression = "0 ko/s"
+                self.pas = 1
+            self.downloads_table.item(row, 3).setText(s_progression)
             self.last_time = time.time()
             self.last_size = download.read_bytes
             self.count = 0
@@ -80,7 +94,12 @@ class TabDownloads(QWidget):
         self.downloads_table.item(row, 2).setText(download.state)
         
     def download_finished(self, download):
-        item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
-        row = self.downloads_table.row(item)
-        self.downloads_table.item(row, 2).setText("Finished!")
-        
+        if download.read_bytes == download.file_share.size:
+            item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+            row = self.downloads_table.row(item)
+            self.downloads_table.item(row, 2).setText("Finished!")
+        else:
+            print "Erreur dans le téléchargement"
+            item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+            row = self.downloads_table.row(item)
+            self.downloads_table.item(row, 2).setText("Error :(")
