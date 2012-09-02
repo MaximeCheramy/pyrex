@@ -105,4 +105,3 @@ class FileShare(Share):
 class DirectoryShare(Share):
     def __init__(self, name, client_address, port, path, protocol, size, last_modified, nickname):
         Share.__init__(self, name, client_address, port, path, protocol, size, last_modified, nickname, True)
-        print "dire"

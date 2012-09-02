@@ -2,9 +2,11 @@ import PyQt4.uic
 from PyQt4.QtGui import QWidget, QTabWidget, QTableWidgetItem
 from PyQt4.QtCore import *
 
+from Share import FileShare
 from downloads import Download
 from TabDownloads import TabDownloads
 from configuration import Configuration
+from BrowserFtp import BrowserFtp
 
 from datetime import date
 
@@ -17,11 +19,12 @@ class MyQTableWidgetItem(QTableWidgetItem):
 class TabResults(QWidget):
     resultsReceived = pyqtSignal(list)
 
-    def __init__(self, search, parent=None):
-        super(TabResults, self).__init__(parent)
+    def __init__(self, search, tabs_results):
+        super(TabResults, self).__init__(tabs_results)
 
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
 
+        self.tabs_results = tabs_results
         self.resultsReceived.connect(self.add_results)
 
         search.do_search(self.resultsReceived.emit)
@@ -41,7 +44,14 @@ class TabResults(QWidget):
             self._add_share(share)
 
     def double_clicked(self, row, col):
-        self.download(self.table_results.item(row, 0).share)
+        share = self.table_results.item(row, 0).share
+        if type(share) is FileShare:
+            self.download(share)
+        else:
+            browser = BrowserFtp(share.url, self.tabs_results)
+            self.tabs_results.addTab(browser, share.url)
+            self.tabs_results.setCurrentWidget(browser)
+
 
     def download(self, share):
         dl = Download.get_download(share, Configuration.save_dir + share.name, date.today())

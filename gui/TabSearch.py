@@ -26,6 +26,6 @@ class TabSearch(QWidget):
             self.add_search(Search(query))
 
     def add_search(self, search):
-        tab_result = TabResults(search, parent=self.tabs_results)
+        tab_result = TabResults(search, self.tabs_results)
         self.tabs_results.addTab(tab_result, search.query)
         self.tabs_results.setCurrentWidget(tab_result)
