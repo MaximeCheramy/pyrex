@@ -18,7 +18,6 @@ class TabPeers(QWidget):
         self.timer = None
         self.cache = {}
         # Config affichage
-        self.table_peers.sortItems(0)
         self.table_peers.setColumnWidth(0, 200)
         # Signaux
         self.peersReceived.connect(self.set_peers)
@@ -36,6 +35,7 @@ class TabPeers(QWidget):
         item.peer = peer
         self.table_peers.setItem(rows, 0, item)
         self.table_peers.setItem(rows, 1, QTableWidgetItem(peer.ip))
+        print peer.nickname, peer.ip
         self.table_peers.item(rows, 1).setTextAlignment(Qt.AlignCenter)
 
     def set_peers(self, peers):
@@ -44,6 +44,7 @@ class TabPeers(QWidget):
         for peer in peers:
             self.add_peer(peer)
         self.peers_get = None
+        self.table_peers.sortItems(0)
 
     def set_stats(self, stats):
         if stats:
