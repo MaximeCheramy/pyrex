@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import time
 from datetime import date
 from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice, pyqtSignal
 from PyQt4.QtNetwork import QFtp
@@ -17,10 +18,19 @@ class Download(QObject):
         self._date = date
         self._state = 5
 
+        self._speed = 0
+        self._count = 0
+        self._last_time = time.time()
+        self._last_size = 0
+
     @classmethod
     def get_download(cls, file_share, local_path, date):
         # TODO DownloadSmb
         return DownloadFtp(file_share, local_path, date)
+
+    @property
+    def speed(self):
+        return self._speed
 
     @property
     def date(self):
@@ -89,9 +99,18 @@ class DownloadFtp(Download):
 
     def download_finished(self, _):
         print "finished !"
+        self._speed = 0
         self.downloadFinished.emit(self)
 
     def update_progress(self, read_bytes, total_bytes):
+        if self._count == 100:
+            delta = time.time() - self._last_time
+            self._speed = float(read_bytes - self._last_size) / delta
+            self.last_time = time.time()
+            self.last_size = read_bytes
+        else:
+            self._count += 1
+
         self.read_bytes = read_bytes
         self.progressModified.emit(self)
         

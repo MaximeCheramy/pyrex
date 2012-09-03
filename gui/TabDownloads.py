@@ -2,12 +2,13 @@
 # coding=utf-8
 
 import os
-import time
 import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem
 
 from downloads import AnalyseDownloads
+
+from Tools import convert_speed_str
 
 class TabDownloads(QWidget):
     instance = None
@@ -19,10 +20,6 @@ class TabDownloads(QWidget):
         # Vars 
         TabDownloads.instance = self
         self.downloads = []
-        self.pas       = 100
-        self.count     = 0
-        self.last_size = 0
-        self.last_time = time.time()
         # Init
         self.load_downloads()
 
@@ -31,7 +28,7 @@ class TabDownloads(QWidget):
         parser = xml.sax.make_parser()
         parser.setContentHandler(AnalyseDownloads(self.add_downloads))
         for line in open(os.path.expanduser("~") + '/.rex/downloads.xml'):
-          parser.feed(line)
+            parser.feed(line)
 
     def add_download(self, download):
         rows = self.downloads_table.rowCount()
@@ -55,38 +52,8 @@ class TabDownloads(QWidget):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
         self.downloads_table.item(row, 1).setText(download.get_progress())
-        # Pour la vitesse instantannée
-        if self.count == self.pas:
-            progression = download.read_bytes - self.last_size
-            tps = time.time() - self.last_time
-            progression = progression/tps
-            if progression > 1024*1024:
-                s_progression = "{0:.1f} {1}".format(progression/(1024*1024), "Mio/s")
-                self.pas = 175
-            elif progression > 1024:
-                s_progression = "{0:.1f} {1}".format(progression/1024, "kio/s")
-                if progression/1024 > 500:
-                    self.pas = 125
-                elif progression/1024 > 250:
-                    self.pas = 100
-                elif progression/1024 > 100:
-                    self.pas = 50
-                elif progression/1024 > 50:
-                    self.pas = 25
-                else:
-                    self.pas = 10
-            elif progression > 0:
-                s_progression = "{0:.1f} {1}".format(progression, "io/s")
-                self.pas = 1
-            else:
-                s_progression = "0 ko/s"
-                self.pas = 1
-            self.downloads_table.item(row, 3).setText(s_progression)
-            self.last_time = time.time()
-            self.last_size = download.read_bytes
-            self.count = 0
-        else:
-            self.count += 1
+        
+        self.downloads_table.item(row, 3).setText(convert_speed_str(download.speed))
         
     def update_state(self, download):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
