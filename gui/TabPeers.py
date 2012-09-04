@@ -19,6 +19,7 @@ class TabPeers(QWidget):
         self.cache = {}
         # Config affichage
         self.table_peers.setColumnWidth(0, 200)
+        self.table_peers.sortItems(0)
         # Signaux
         self.peersReceived.connect(self.set_peers)
         self.statsReceived.connect(self.set_stats)
