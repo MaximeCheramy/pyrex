@@ -9,6 +9,7 @@ from downloads import Download
 from TabDownloads import TabDownloads
 from configuration import Configuration
 from BrowserFtp import BrowserFtp
+from search import Search
 
 from datetime import date
 
@@ -25,6 +26,7 @@ class TabResults(QWidget):
         super(TabResults, self).__init__(tabs_results)
         self.tabs_results = tabs_results
         self.pos = None
+        self.blacklist = set()
         # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
         # On autorise la creation de menu contextuel
@@ -47,7 +49,10 @@ class TabResults(QWidget):
 
     def add_results(self, results):
         for share in results:
-            self._add_share(share)
+            if share.nickname in self.blacklist:
+                pass
+            else:    
+                self._add_share(share)
 
     def double_clicked(self, row, col):
         share = self.table_results.item(row, 0).share
@@ -76,7 +81,7 @@ class TabResults(QWidget):
         copyAction          = menu.addAction("Copier l'URL")
         openAction          = menu.addAction("Ouvrir")
         exploreAction       = menu.addAction("Parcourir le dossier")
-        shareAction         = menu.addAction("Afficher les partages de l'utilisateur")
+        displaySharesAction = menu.addAction("Afficher les partages de l'utilisateur")
         noShareAction       = menu.addAction("Masquer les partages de l'utilisateur")
         searchSameAction    = menu.addAction("Rechercher des fichiers similaires")
         # Signaux
@@ -85,9 +90,9 @@ class TabResults(QWidget):
         self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)
         self.connect(openAction, SIGNAL('triggered()'), self.open_Action)
         self.connect(exploreAction, SIGNAL('triggered()'), self.open_Action)
-        #self.connect(shareAction, SIGNAL('triggered()'), self.)
-        #self.connect(noShareAction, SIGNAL('triggered()'), self.)
-        #self.connect(searchSameAction, SIGNAL('triggered()'), self.)
+        self.connect(displaySharesAction, SIGNAL('triggered()'), self.display_shares_Action)
+        self.connect(noShareAction, SIGNAL('triggered()'), self.no_share_Action)
+        self.connect(searchSameAction, SIGNAL('triggered()'), self.search_same_Action)
         menu.exec_(self.mapToGlobal(pos))
 
     def getShare(self):
@@ -110,6 +115,23 @@ class TabResults(QWidget):
         browser = BrowserFtp(share.url, self.tabs_results)
         self.tabs_results.addTab(browser, share.client_address)
         self.tabs_results.setCurrentWidget(browser)
+        
+    def no_share_Action(self):
+        share = self.getShare()
+        self.blacklist.add(share.nickname)
+        
+    def display_shares_Action(self):
+        share = self.getShare()
+        browser = BrowserFtp("ftp://"+str(share.client_address)+":"+str(share.port), self.tabs_results)
+        self.tabs_results.addTab(browser, share.client_address)
+        self.tabs_results.setCurrentWidget(browser)
+        
+    def search_same_Action(self):
+        share = self.getShare()
+        search = Search(share.name)
+        tab_result = TabResults(search, self.tabs_results)
+        self.tabs_results.addTab(tab_result, search.query)
+        self.tabs_results.setCurrentWidget(tab_result)
         
 class TabsResults(QTabWidget):
     def __init__(self, parent):
