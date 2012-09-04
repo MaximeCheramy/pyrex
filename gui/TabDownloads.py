@@ -43,6 +43,7 @@ class TabDownloads(QWidget):
         download.progressModified.connect(self.update_progress)
         download.stateChanged.connect(self.update_state)
         download.downloadFinished.connect(self.download_finished)
+        download.speedModified.connect(self.update_speed)
 
     def add_downloads(self, downloads):
         for download in downloads:
@@ -52,7 +53,10 @@ class TabDownloads(QWidget):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
         self.downloads_table.item(row, 1).setText(download.get_progress())
-        
+
+    def update_speed(self, download):
+        item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+        row = self.downloads_table.row(item)
         self.downloads_table.item(row, 3).setText(convert_speed_str(download.speed))
         
     def update_state(self, download):
