@@ -81,6 +81,10 @@ class TabResults(QWidget):
         displaySharesAction = menu.addAction("Afficher les partages de l'utilisateur")
         noShareAction       = menu.addAction("Masquer les partages de l'utilisateur")
         searchSameAction    = menu.addAction("Rechercher des fichiers similaires")
+        # Desactivation d'actions impossibles
+        if type(self.getShare()) is not FileShare:
+            downloadAction.setEnabled(False)
+            downloadToAction.setEnabled(False)            
         # Signaux
         self.connect(downloadAction, SIGNAL('triggered()'), self.download_Action)
         self.connect(downloadToAction, SIGNAL('triggered()'), self.download_to_Action)

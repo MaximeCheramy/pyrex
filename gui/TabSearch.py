@@ -14,9 +14,9 @@ class TabSearch(QWidget):
 
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
-
+        # Load de l'UI
         PyQt4.uic.loadUi('ui/search.ui', self)
-
+        # Init
         self.tabs_results = TabsResults(self.widget_searches)
         self.widget_searches.layout().addWidget(self.tabs_results)
 

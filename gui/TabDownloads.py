@@ -99,6 +99,16 @@ class TabDownloads(QWidget):
         supprDiskAction     = menu.addAction("Supprimer de la liste et du disque")
         copyAction          = menu.addAction("Copier l'URL")
         searchAction        = menu.addAction("Rechercher des fichiers similaires")
+        # On désactive les actions s'il n'y a pas de downloads
+        if self.downloads == [] or self.downloads_table.currentRow() < 0:
+            forceAction.setEnabled(False)
+            continueAction.setEnabled(False)
+            pauseAction.setEnabled(False)
+            openAction.setEnabled(False)
+            supprListeAction.setEnabled(False)
+            supprDiskAction.setEnabled(False)
+            copyAction.setEnabled(False)
+            searchAction.setEnabled(False)
         # Signaux
         self.connect(forceAction, SIGNAL('triggered()'), self.force_Action)
         self.connect(continueAction, SIGNAL('triggered()'), self.continue_Action)

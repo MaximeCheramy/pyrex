@@ -102,9 +102,8 @@ class TabPeers(QWidget):
         return self.table_peers.item(row, 0).peer
         
     def show_Action(self):
-        #peer = getPeer()
-        print "Todo"
-        
+        print "TODO"
+                
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
         pressPaper.setText(self.getPeer().ip)       

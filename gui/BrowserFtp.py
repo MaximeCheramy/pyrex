@@ -20,24 +20,22 @@ class SizeItem(QTableWidgetItem):
 
 
 class BrowserFtp(QWidget):
-
     def __init__(self, url, parent=None):
         super(BrowserFtp, self).__init__(parent)
-
+        # Load de l'UI
         PyQt4.uic.loadUi('ui/browser.ui', self)
-
+        # Init FTP
         self._url = QUrl(url)
         self.ftp = QFtp(self)
-
+        # Signaux
         self.ftp.commandFinished.connect(self.command_finished)
         self.ftp.listInfo.connect(self.list_info)
-
+        # Load FTP
         self.ftp.connectToHost(self._url.host(), self._url.port(21))
         self.ftp.login()
-
+        # Vars
         self._history = []
         self._cur_pos = 0
-
         self._change_dir('.')
 
     def _cd_parent_dir(self):
