@@ -18,7 +18,6 @@ class MyQTableWidgetItem(QTableWidgetItem):
         QTableWidgetItem.__init__(self, string)
         self.share = share
 
-
 class TabResults(QWidget):
     resultsReceived = pyqtSignal(list)
 
@@ -93,6 +92,7 @@ class TabResults(QWidget):
         self.connect(displaySharesAction, SIGNAL('triggered()'), self.display_shares_Action)
         self.connect(noShareAction, SIGNAL('triggered()'), self.no_share_Action)
         self.connect(searchSameAction, SIGNAL('triggered()'), self.search_same_Action)
+        # On affiche le menu
         menu.exec_(self.mapToGlobal(pos))
 
     def getShare(self):

@@ -1,6 +1,6 @@
 import PyQt4.uic
-from PyQt4.QtGui import QWidget, QTableWidgetItem
-from PyQt4.QtCore import pyqtSignal, QTimer, Qt
+from PyQt4.QtGui import QWidget, QTableWidgetItem, QApplication, QMenu
+from PyQt4.QtCore import pyqtSignal, QTimer, Qt, SIGNAL
 
 from peers import PeersGet
 from stats import StatisticsGet
@@ -8,19 +8,25 @@ from stats import StatisticsGet
 class TabPeers(QWidget):
     peersReceived = pyqtSignal(list)
     statsReceived = pyqtSignal(object)
-    def __init__(self, parent):
-        QWidget.__init__(self, parent)
+    def __init__(self, tabs_results, tabs):
+        QWidget.__init__(self, tabs)
+        self.tabs_results = tabs_results
+        self.tabs         = tabs
         # Load de l'UI
         PyQt4.uic.loadUi('ui/peers.ui', self)
         # Vars
-        self.peers_get = None
-        self.stats_get = None
-        self.timer = None
-        self.cache = {}
+        self.peers_get  = None
+        self.stats_get  = None
+        self.timer      = None
+        self.cache      = {}
+        self.pos        = None
         # Config affichage
         self.table_peers.setColumnWidth(0, 200)
         self.table_peers.sortItems(0)
+        # On autorise la creation de menu contextuel
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux
+        self.customContextMenuRequested.connect(self.contextMenu)
         self.peersReceived.connect(self.set_peers)
         self.statsReceived.connect(self.set_stats)
 
@@ -80,4 +86,27 @@ class TabPeers(QWidget):
 
             self.stats_get = StatisticsGet(self.statsReceived.emit, item.peer.ip)
             self.stats_get.do_get()
-
+            
+    def contextMenu(self, pos):
+        self.pos = pos
+        menu = QMenu()
+        # Actions
+        showAction      = menu.addAction("Afficher ses partages")
+        copyAction      = menu.addAction("Copier l'IP")
+        # Signaux
+        self.connect(showAction, SIGNAL('triggered()'), self.show_Action)
+        self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)
+        # On affiche le menu
+        menu.exec_(self.mapToGlobal(pos))
+        
+    def getPeer(self):
+        row = self.table_peers.itemAt(self.pos).row()
+        return self.table_peers.item(row-2, 0).peer
+        
+    def show_Action(self):
+        #peer = getPeer()
+        print "Todo"
+        
+    def copy_Action(self):
+        pressPaper = QApplication.clipboard()
+        pressPaper.setText(self.getPeer().ip)       

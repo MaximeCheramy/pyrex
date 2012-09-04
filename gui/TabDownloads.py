@@ -2,13 +2,20 @@
 # coding=utf-8
 
 import os
+import subprocess
+import sys
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QWidget, QTableWidgetItem
+from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication
 
 from downloads import AnalyseDownloads
 
 from Tools import convert_speed_str
+
+class MyQTableWidgetItem(QTableWidgetItem):
+    def __init__(self, string, download):
+        QTableWidgetItem.__init__(self, string)
+        self.download = download
 
 class TabDownloads(QWidget):
     instance = None
@@ -19,7 +26,12 @@ class TabDownloads(QWidget):
         PyQt4.uic.loadUi('ui/downloads.ui', self)
         # Vars 
         TabDownloads.instance = self
-        self.downloads = []
+        self.downloads        = []
+        self.pos              = None
+        # On autorise la creation de menu contextuel
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        # Signaux
+        self.customContextMenuRequested.connect(self.contextMenu)
         # Init
         self.load_downloads()
 
@@ -33,7 +45,7 @@ class TabDownloads(QWidget):
     def add_download(self, download):
         rows = self.downloads_table.rowCount()
         self.downloads_table.insertRow(rows)
-        self.downloads_table.setItem(rows, 0, QTableWidgetItem(download.file_share.name))
+        self.downloads_table.setItem(rows, 0, MyQTableWidgetItem(download.file_share.name, download))
         self.downloads_table.setItem(rows, 1, QTableWidgetItem(download.get_progress()))
         self.downloads_table.setItem(rows, 2, QTableWidgetItem(download.state))
         self.downloads_table.setItem(rows, 3, QTableWidgetItem("0 ko/s"))
@@ -74,3 +86,61 @@ class TabDownloads(QWidget):
             item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
             row = self.downloads_table.row(item)
             self.downloads_table.item(row, 2).setText("Error :(")
+            
+    def contextMenu(self, pos):
+        self.pos = pos
+        menu = QMenu()
+        # Actions 
+        forceAction         = menu.addAction("Forcer la reprise")
+        continueAction      = menu.addAction("Reprise")
+        pauseAction         = menu.addAction("Pause")
+        openAction          = menu.addAction("Ouvrir le dossier")
+        supprListeAction    = menu.addAction("Supprimer de la liste")
+        supprDiskAction     = menu.addAction("Supprimer de la liste et du disque")
+        copyAction          = menu.addAction("Copier l'URL")
+        searchAction        = menu.addAction("Rechercher des fichiers similaires")
+        # Signaux
+        self.connect(forceAction, SIGNAL('triggered()'), self.force_Action)
+        self.connect(continueAction, SIGNAL('triggered()'), self.continue_Action)
+        self.connect(pauseAction, SIGNAL('triggered()'), self.pause_Action)
+        self.connect(openAction, SIGNAL('triggered()'), self.open_Action)
+        self.connect(supprListeAction, SIGNAL('triggered()'), self.suppr_liste_Action)
+        self.connect(supprDiskAction, SIGNAL('triggered()'), self.suppr_disk_Action)
+        self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)
+        self.connect(searchAction, SIGNAL('triggered()'), self.search_Action)
+        # On affiche le menu
+        menu.exec_(self.mapToGlobal(pos))
+      
+    def getDownload(self):
+        row = self.downloads_table.itemAt(self.pos).row()
+        return self.downloads_table.item(row-2, 0).download
+          
+    def force_Action(self):
+        print "TODO"
+        
+    def continue_Action(self):
+        print "TODO"
+        
+    def pause_Action(self):
+        print "TODO"
+        
+    def open_Action(self):
+        download = self.getDownload()
+        if sys.platform == 'linux2':
+            print download.local_path.strip(download.file_share.name)
+            subprocess.check_call(['gnome-open', download.local_path.strip(download.file_share.name)])
+        elif sys.platform == 'windows':
+            subprocess.check_call(['explorer', download.local_path.strip(download.file_share.name)])
+        
+    def suppr_liste_Action(self):
+        print "TODO"
+        
+    def suppr_disk_Action(self):
+        print "TODO"
+        
+    def copy_Action(self):
+        pressPaper = QApplication.clipboard()
+        pressPaper.setText(self.getDownload().local_path)
+        
+    def search_Action(self):
+        print "TODO"
