@@ -127,7 +127,6 @@ class TabDownloads(QWidget):
     def open_Action(self):
         download = self.getDownload()
         if sys.platform == 'linux2':
-            print download.local_path.strip(download.file_share.name)
             subprocess.check_call(['gnome-open', download.local_path.strip(download.file_share.name)])
         elif sys.platform == 'windows':
             subprocess.check_call(['explorer', download.local_path.strip(download.file_share.name)])

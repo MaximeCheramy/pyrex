@@ -3,17 +3,16 @@ from Tools import convert_size_str
 
 from DefaultHandler import DefaultHandler
 from Client import Client
+from configuration import Configuration
 
 class StatisticsGet(object):
-    def __init__(self, callback, hostname=None):
+    def __init__(self, callback, hostname=Configuration.ip_daemon):
         self.hostname = hostname
         self.callback = callback
 
     def do_get(self):
         search_element = Element('statistics', {'type': 'get'})
-
-        self.client = Client(search_element, AnalyseStatistics(self.callback),
-                        self.hostname)
+        self.client = Client(search_element, AnalyseStatistics(self.callback), self.hostname)
         self.client.start()
 
     def cancel(self):
@@ -65,14 +64,16 @@ class AnalyseStatistics(DefaultHandler):
         DefaultHandler.startElement(self, name, attrs)
         if name == 'statistics':
             self.data = {'nickname': '', 'ip': '', 'users': '0', 'shares_size_total': '0', 'shares_size_mine': '0'}
+            
     def endElement(self, name):
         if name == 'error':
             self.callback(None)
         elif name == 'statistics':
-            self.callback(Statistics(self.data['nickname'], self.data['ip'],
-                          int(self.data['users']), 
-                          float(self.data['shares_size_total']),
-                          float(self.data['shares_size_mine'])))
+            self.callback(Statistics(self.data['nickname'], 
+                                     self.data['ip'],
+                                     int(self.data['users']), 
+                                     float(self.data['shares_size_total']),
+                                     float(self.data['shares_size_mine'])))
         else:
             self.data[name] = self.buf
 
