@@ -35,22 +35,22 @@ class TabPeers(QWidget):
         item.peer = peer
         self.table_peers.setItem(rows, 0, item)
         self.table_peers.setItem(rows, 1, QTableWidgetItem(peer.ip))
-        print peer.nickname, peer.ip
         self.table_peers.item(rows, 1).setTextAlignment(Qt.AlignCenter)
 
     def set_peers(self, peers):
         while self.table_peers.rowCount():
             self.table_peers.removeRow(0)
+        self.table_peers.setSortingEnabled(False)
         for peer in peers:
             self.add_peer(peer)
         self.peers_get = None
-        self.table_peers.sortItems(0)
+        self.table_peers.setSortingEnabled(True)
 
     def set_stats(self, stats):
         if stats:
             self.cache[stats.ip] = stats
             row = self.table_peers.currentRow()
-            if self.table_peers.item(row, 0).peer.ip == stats.ip:
+            if row >= 0 and self.table_peers.item(row, 0).peer.ip == stats.ip:
                 self.label_size_shares.setText(stats.shares_size_mine_str)
                 self.label_size_total_shares.setText(stats.shares_size_total_str)
                 self.label_peers.setText(str(stats.users))
