@@ -24,7 +24,6 @@ class TabResults(QWidget):
     def __init__(self, search, tabs_results):
         super(TabResults, self).__init__(tabs_results)
         self.tabs_results = tabs_results
-        self.pos = None
         self.blacklist = set()
         # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
@@ -72,7 +71,6 @@ class TabResults(QWidget):
         dl.start_download()
       
     def contextMenu(self, pos):
-        self.pos = pos
         menu = QMenu()
         # Actions 
         downloadAction      = menu.addAction(u"Télécharger")
@@ -96,8 +94,8 @@ class TabResults(QWidget):
         menu.exec_(self.mapToGlobal(pos))
 
     def getShare(self):
-        row = self.table_results.itemAt(self.pos).row()
-        return self.table_results.item(row-2, 0).share
+        row = self.table_results.currentRow()
+        return self.table_results.item(row, 0).share
         
     def download_Action(self):
         self.download(self.getShare())

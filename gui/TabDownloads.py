@@ -112,8 +112,8 @@ class TabDownloads(QWidget):
         menu.exec_(self.mapToGlobal(pos))
       
     def getDownload(self):
-        row = self.downloads_table.itemAt(self.pos).row()
-        return self.downloads_table.item(row-2, 0).download
+        row = self.downloads_table.currentRow()
+        return self.downloads_table.item(row, 0).download
           
     def force_Action(self):
         print "TODO"

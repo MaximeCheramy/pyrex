@@ -19,7 +19,6 @@ class TabPeers(QWidget):
         self.stats_get  = None
         self.timer      = None
         self.cache      = {}
-        self.pos        = None
         # Config affichage
         self.table_peers.setColumnWidth(0, 200)
         self.table_peers.sortItems(0)
@@ -88,7 +87,6 @@ class TabPeers(QWidget):
             self.stats_get.do_get()
             
     def contextMenu(self, pos):
-        self.pos = pos
         menu = QMenu()
         # Actions
         showAction      = menu.addAction("Afficher ses partages")
@@ -100,8 +98,8 @@ class TabPeers(QWidget):
         menu.exec_(self.mapToGlobal(pos))
         
     def getPeer(self):
-        row = self.table_peers.itemAt(self.pos).row()
-        return self.table_peers.item(row-2, 0).peer
+        row = self.table_peers.currentRow()
+        return self.table_peers.item(row, 0).peer
         
     def show_Action(self):
         #peer = getPeer()
