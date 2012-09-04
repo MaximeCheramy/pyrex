@@ -2,7 +2,7 @@
 
 import time
 from datetime import date
-from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice, pyqtSignal
+from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice, pyqtSignal, QTimer
 from PyQt4.QtNetwork import QFtp
 
 from Share import AnalyseShare
@@ -17,7 +17,6 @@ class Download(QObject):
         self._local_path = local_path
         self._date = date
         self._state = 5
-
         self._speed = 0
         self._count = 0
         self._last_time = time.time()
@@ -68,22 +67,28 @@ class DownloadFtp(Download):
     progressModified    = pyqtSignal(object)
     stateChanged        = pyqtSignal(object)
     downloadFinished    = pyqtSignal(object)
+    speedModified       = pyqtSignal(object)
     
     def __init__(self, file_share, local_path, date):
         Download.__init__(self, file_share, local_path, date)
         self.ftp = QFtp(self)
+        # Signaux
         self.ftp.dataTransferProgress.connect(self.update_progress)
         self.ftp.done.connect(self.download_finished)
         self.ftp.stateChanged.connect(self.state_changed)
+        # Ouverture de fichiers
         self.url = QUrl(self._file_share.url)
         self.out_file = QFile(self.local_path)
-
-        self.read_bytes = self.out_file.size() 
+        # Vars
+        self.read_bytes = self.out_file.size()
+        # Timer
+        self.timer = QTimer()
+        self.timer.start(750)
+        self.timer.timeout.connect(self.update_speed)
  
     def start_download(self):
         self.ftp.connectToHost(self.url.host(), self.url.port(21))
         self.ftp.login()
-        
         if self.out_file.open(QIODevice.WriteOnly):
             self.ftp.get(self.url.path(), self.out_file)
 
@@ -100,17 +105,17 @@ class DownloadFtp(Download):
     def download_finished(self, _):
         print "finished !"
         self._speed = 0
+        self.timer.stop()
         self.downloadFinished.emit(self)
 
+    def update_speed(self):
+        delta = time.time() - self._last_time
+        self._speed = float(self.read_bytes - self._last_size) / delta
+        self.last_time = time.time()
+        self.last_size = self.read_bytes
+        self.speedModified.emit(self)
+        
     def update_progress(self, read_bytes, total_bytes):
-        if self._count == 100:
-            delta = time.time() - self._last_time
-            self._speed = float(read_bytes - self._last_size) / delta
-            self.last_time = time.time()
-            self.last_size = read_bytes
-        else:
-            self._count += 1
-
         self.read_bytes = read_bytes
         self.progressModified.emit(self)
         
