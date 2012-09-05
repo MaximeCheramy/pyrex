@@ -22,6 +22,12 @@ class TabPeers(QWidget):
         # Config affichage
         self.table_peers.setColumnWidth(0, 200)
         self.table_peers.sortItems(0)
+        self.table_peers.setStyleSheet(\
+                "QTableView::item{ \
+                 border-right-style:solid; \
+                 border-width:0.5; \
+                 border-color: #9B9B9B; \
+                 }")
         # On autorise la creation de menu contextuel
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux

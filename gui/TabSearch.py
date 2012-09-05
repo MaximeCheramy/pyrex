@@ -12,20 +12,25 @@ from TabResults import TabResults, TabsResults
 class TabSearch(QWidget):
     instance = None
 
-    def __init__(self, search, parent=None):
+    def __init__(self, search, tab_downloads, parent):
         QWidget.__init__(self, parent)
+        self.tab_downloads = tab_downloads
+        self.tabs = parent
         # Load de l'UI
         PyQt4.uic.loadUi('ui/search.ui', self)
         # Init
         self.tabs_results = TabsResults(self.widget_searches)
         self.widget_searches.layout().addWidget(self.tabs_results)
-
+        
     def search(self):
         query = str(self.search_edit.text())
         if len(query) > 1:
             self.add_search(Search(query))
 
     def add_search(self, search):
-        tab_result = TabResults(search, self.tabs_results)
+        tab_result = TabResults(search, self.tabs_results, self.tab_downloads, self.tabs)
         self.tabs_results.addTab(tab_result, search.query)
         self.tabs_results.setCurrentWidget(tab_result)
+        # On connecte les icones copier et télécharger sélection
+        self.btn_copy_url.clicked.connect(tab_result.instance.copy_Action)
+        self.btn_download.clicked.connect(tab_result.instance.download_Action)

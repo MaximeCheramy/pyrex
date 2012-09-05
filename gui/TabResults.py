@@ -20,13 +20,23 @@ class MyQTableWidgetItem(QTableWidgetItem):
 
 class TabResults(QWidget):
     resultsReceived = pyqtSignal(list)
+    instance = None
 
-    def __init__(self, search, tabs_results):
+    def __init__(self, search, tabs_results, tab_downloads, tabs):
         super(TabResults, self).__init__(tabs_results)
         self.tabs_results = tabs_results
+        self.tab_downloads = tab_downloads
+        self.tabs = tabs
         self.blacklist = set()
         # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
+        # Affichage custom
+        self.table_results.setStyleSheet(\
+                "QTableView::item{ \
+                 border-right-style:solid; \
+                 border-width:0.5; \
+                 border-color: #9B9B9B; \
+                 }")
         # On autorise la creation de menu contextuel
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux
@@ -34,6 +44,8 @@ class TabResults(QWidget):
         self.resultsReceived.connect(self.add_results)
         # On envoie la recherche
         search.do_search(self.resultsReceived.emit)
+        # Instance
+        TabResults.instance = self
 
     def _add_share(self, share):
         rows = self.table_results.rowCount()
@@ -61,7 +73,6 @@ class TabResults(QWidget):
             self.tabs_results.addTab(browser, share.client_address)
             self.tabs_results.setCurrentWidget(browser)
 
-
     def download(self, share, directory=None):
         if not directory:
             dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
@@ -69,6 +80,7 @@ class TabResults(QWidget):
             dl = Download.get_download(share, directory + "/" + share.name, date.today())
         TabDownloads.instance.add_download(dl)
         dl.start_download()
+        self.tabs.setCurrentWidget(self.tab_downloads)
       
     def contextMenu(self, pos):
         menu = QMenu()

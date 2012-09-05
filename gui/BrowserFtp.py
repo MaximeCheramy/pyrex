@@ -24,6 +24,13 @@ class BrowserFtp(QWidget):
         super(BrowserFtp, self).__init__(parent)
         # Load de l'UI
         PyQt4.uic.loadUi('ui/browser.ui', self)
+        # Affichage custom
+        self.list_table.setStyleSheet(\
+                "QTableView::item{ \
+                 border-right-style:solid; \
+                 border-width:0.5; \
+                 border-color: #9B9B9B; \
+                 }")
         # Init FTP
         self._url = QUrl(url)
         self.ftp = QFtp(self)

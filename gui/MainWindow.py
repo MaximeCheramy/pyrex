@@ -39,10 +39,10 @@ class MainWindow(QMainWindow):
         self.tabs = QTabWidget()
         QObject.connect(self.tabs, SIGNAL('currentChanged(int)'), self.change_tab)
 
-        self.search = TabSearch(self.tabs)
+        self.downloads = TabDownloads(self.tabs)
+        self.search = TabSearch(None, self.downloads, self.tabs)
         self.adv_search = TabAdvSearch(self.search, self.tabs)
         self.peers = TabPeers(self.search, self.tabs)
-        self.downloads = TabDownloads(self.tabs)
         self.options = TabOptions(self.tabs)
         self.shares = TabShares(self.tabs)
         self.informations = TabInformations(self.tabs)
