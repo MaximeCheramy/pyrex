@@ -37,6 +37,8 @@ class TabResults(QWidget):
                  border-width:0.5; \
                  border-color: #9B9B9B; \
                  }")
+        self.table_results.horizontalHeader().setStretchLastSection(True)
+        self.table_results.resizeColumnsToContents()
         # On autorise la creation de menu contextuel
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux

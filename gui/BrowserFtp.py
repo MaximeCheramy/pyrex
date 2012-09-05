@@ -31,6 +31,8 @@ class BrowserFtp(QWidget):
                  border-width:0.5; \
                  border-color: #9B9B9B; \
                  }")
+        self.list_table.horizontalHeader().setStretchLastSection(True)
+        self.list_table.resizeColumnsToContents()
         # Init FTP
         self._url = QUrl(url)
         self.ftp = QFtp(self)
