@@ -1,0 +1,39 @@
+FORMS   +=  ui/adv_search.ui
+FORMS   +=  ui/browser.ui
+FORMS   +=  ui/downloads.ui
+FORMS   +=  ui/informations.ui
+FORMS   +=  ui/options.ui
+FORMS   +=  ui/peers.ui
+FORMS   +=  ui/pyrex.ui
+FORMS   +=  ui/search.ui
+FORMS   +=  ui/shares.ui
+FORMS   +=  ui/tabresult.ui
+
+SOURCES +=  Client.py
+SOURCES +=  confDaemon.py
+SOURCES +=  configuration.py
+SOURCES +=  DefaultHandler.py
+SOURCES +=  downloads.py
+SOURCES +=  peers.py
+SOURCES +=  pyrex.py
+SOURCES +=  search.py
+SOURCES +=  Share.py
+SOURCES +=  sharedirs.py
+SOURCES +=  stats.py
+SOURCES +=  Tools.py
+SOURCES +=  version.py
+
+SOURCES +=  gui/BrowserFtp.py
+SOURCES +=  gui/images.py
+SOURCES +=  gui/__init__.py
+SOURCES +=  gui/MainWindow.py
+SOURCES +=  gui/TabAdvSearch.py
+SOURCES +=  gui/TabDownloads.py
+SOURCES +=  gui/TabInformations.py
+SOURCES +=  gui/TabOptions.py
+SOURCES +=  gui/TabPeers.py
+SOURCES +=  gui/TabResults.py
+SOURCES +=  gui/TabSearch.py
+SOURCES +=  gui/TabShares.py
+
+TRANSLATIONS += pyrex_fr_FR.ts
