@@ -38,4 +38,10 @@ class TabShares(QWidget):
             self.add_share(sharedir)
 
         self.sharedirs_get = None
+        
+    def resizeEvent(self, event):
+        maxSize = self.table_sharedirs.size().width()
+        # Nom du partage : 35%
+        self.table_sharedirs.horizontalHeader().resizeSection(0, maxSize*.35)
+        event.accept() 
     

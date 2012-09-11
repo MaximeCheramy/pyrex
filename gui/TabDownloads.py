@@ -160,3 +160,17 @@ class TabDownloads(QWidget):
         
     def search_Action(self):
         print "TODO"
+        
+    def resizeEvent(self, event):
+        maxSize = self.downloads_table.size().width()
+        # Nom Ficher : 24%
+        self.downloads_table.horizontalHeader().resizeSection(0, maxSize*.24)
+        # Avancement : 22%
+        self.downloads_table.horizontalHeader().resizeSection(1, maxSize*.22)
+        # Etat : 17%
+        self.downloads_table.horizontalHeader().resizeSection(2, maxSize*.17)
+        # Vitesse : 13% 
+        self.downloads_table.horizontalHeader().resizeSection(3, maxSize*.13)
+        # Fin : 12%
+        self.downloads_table.horizontalHeader().resizeSection(4, maxSize*.12)
+        event.accept()

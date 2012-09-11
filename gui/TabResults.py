@@ -149,6 +149,20 @@ class TabResults(QWidget):
         self.tabs_results.addTab(tab_result, search.query)
         self.tabs_results.setCurrentWidget(tab_result)
         
+    def resizeEvent(self, event):
+        maxSize = self.table_results.size().width()
+        # Nom Ficher : 30%
+        self.table_results.horizontalHeader().resizeSection(0, maxSize*.30)
+        # Taille : 14%
+        self.table_results.horizontalHeader().resizeSection(1, maxSize*.14)
+        # Pseudo : 13%
+        self.table_results.horizontalHeader().resizeSection(2, maxSize*.13)
+        # Score : 10% 
+        self.table_results.horizontalHeader().resizeSection(3, maxSize*.10)
+        # Dernière modification : 18%
+        self.table_results.horizontalHeader().resizeSection(4, maxSize*.18)
+        event.accept()
+        
 class TabsResults(QTabWidget):
     def __init__(self, parent):
         QTabWidget.__init__(self, parent)

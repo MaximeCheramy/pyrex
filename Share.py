@@ -92,7 +92,7 @@ class Share(object):
 
     @property
     def str_last_modified(self):
-        return self._last_modified.strftime("%d/%m/%y %H:%M")
+        return self._last_modified.strftime("%d/%m/%y")
 
     @property
     def nickname(self):

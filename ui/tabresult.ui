@@ -68,7 +68,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Dernière modification</string>
+       <string>Dernière modif.</string>
       </property>
      </column>
      <column>

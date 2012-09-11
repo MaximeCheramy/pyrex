@@ -102,3 +102,10 @@ class BrowserFtp(QWidget):
                 self.list_table.removeRow(0)
             self.ftp.list()
 
+    def resizeEvent(self, event):
+        maxSize = self.list_table.size().width()
+        # Nom Ficher : 40%
+        self.list_table.horizontalHeader().resizeSection(0, maxSize*.40)
+        # Taille : 30%
+        self.list_table.horizontalHeader().resizeSection(1, maxSize*.30)
+        event.accept()

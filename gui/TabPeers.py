@@ -20,7 +20,6 @@ class TabPeers(QWidget):
         self.timer      = None
         self.cache      = {}
         # Config affichage
-        self.table_peers.setColumnWidth(0, 200)
         self.table_peers.sortItems(0)
         self.table_peers.setStyleSheet(\
                 "QTableView::item{ \
@@ -47,7 +46,6 @@ class TabPeers(QWidget):
         item.peer = peer
         self.table_peers.setItem(rows, 0, item)
         self.table_peers.setItem(rows, 1, QTableWidgetItem(peer.ip))
-        self.table_peers.item(rows, 1).setTextAlignment(Qt.AlignCenter)
 
     def set_peers(self, peers):
         while self.table_peers.rowCount():
@@ -112,4 +110,10 @@ class TabPeers(QWidget):
                 
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
-        pressPaper.setText(self.getPeer().ip)       
+        pressPaper.setText(self.getPeer().ip)
+        
+    def resizeEvent(self, event):
+        maxSize = self.table_peers.size().width()
+        # Pseudo : 35%
+        self.table_peers.horizontalHeader().resizeSection(0, maxSize*.35)
+        event.accept()       
