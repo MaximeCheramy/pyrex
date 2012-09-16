@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>TabShares</class>
+ <widget class="QWidget" name="TabShares">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -21,6 +21,9 @@
        <width>400</width>
        <height>0</height>
       </size>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::SolidLine</enum>
      </property>
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>false</bool>
@@ -70,16 +73,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="btn_supprimer_partage">
        <property name="text">
         <string>Supprimer</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_7">
-       <property name="text">
-        <string>Modifier</string>
        </property>
       </widget>
      </item>
@@ -88,5 +84,42 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>btn_ajouter_partage</sender>
+   <signal>clicked()</signal>
+   <receiver>TabShares</receiver>
+   <slot>add_directory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>74</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_supprimer_partage</sender>
+   <signal>clicked()</signal>
+   <receiver>TabShares</receiver>
+   <slot>suppr_directory()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>343</x>
+     <y>276</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>add_directory()</slot>
+  <slot>suppr_directory()</slot>
+ </slots>
 </ui>

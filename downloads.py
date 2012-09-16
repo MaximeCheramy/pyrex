@@ -107,6 +107,7 @@ class DownloadFtp(Download):
         self._speed = 0
         self.timer.stop()
         self.downloadFinished.emit(self)
+        self.ftp.close()
 
     def update_speed(self):
         delta = time.time() - self._last_time

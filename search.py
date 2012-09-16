@@ -35,7 +35,7 @@ class Search(object):
     def __init__(self, query, protocol=None, type_share=None, extensions="", sizeinf=None, sizesup=None, dateinf=None, datesup=None):
         self.query       = query
         self.protocol    = protocol
-        self.type_share        = type_share
+        self.type_share  = type_share
         self.extensions  = extensions
         self.sizeinf     = sizeinf
         self.sizesup     = sizesup
@@ -43,8 +43,7 @@ class Search(object):
         self.datesup     = datesup
         
     def do_search(self, callback):
-        search_element = Element('search', 
-                           {'ttl': '3', 'id': str(randint(1, 10000000))})
+        search_element = Element('search', {'ttl': '3', 'id': str(randint(1, 10000000))})
         query_element = SubElement(search_element, 'query')
         query_element.text = self.query
         if self.protocol: 

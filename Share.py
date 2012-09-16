@@ -35,7 +35,6 @@ class AnalyseShare(object):
 
 
 class Share(object):
-
     def __init__(self, name, client_address, port, path, protocol, size, last_modified, nickname, is_directory):
         self._name = name
         self._client_address = client_address
