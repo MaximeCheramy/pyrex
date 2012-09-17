@@ -39,6 +39,7 @@ class TabDownloads(QWidget):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux
         self.customContextMenuRequested.connect(self.contextMenu)
+        self.downloads_table.itemClicked.connect(self.show_info_download)
         # Init
         self.load_downloads()
 
@@ -160,6 +161,14 @@ class TabDownloads(QWidget):
         
     def search_Action(self):
         print "TODO"
+        
+    def show_info_download(self):
+        download = self.getDownload()
+        self.name_label.setText(u"Nom : {}".format(download.local_path.split("/")[-1]))
+        self.path_label.setText(u"Chemin local : {}".format(download.local_path))
+        #self.url_label.setText(u"URL : {}".format(download.url))
+        #self.size_label.setText(u"Taille : {}".format(download.size))        
+        #self.progress_label.setText(u"Avancement : {}".format(download.progress))
         
     def resizeEvent(self, event):
         maxSize = self.downloads_table.size().width()
