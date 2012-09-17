@@ -29,12 +29,12 @@ class TabDownloads(QWidget):
         self.downloads        = []
         self.pos              = None
         # Affichage custom
-        self.downloads_table.setStyleSheet(\
-                "QTableView::item{ \
-                 border-right-style:solid; \
-                 border-width:0.5; \
-                 border-color: #9B9B9B; \
-                 }")
+        #self.downloads_table.setStyleSheet(\
+        #        "QTableView::item{ \
+        #         border-right-style:solid; \
+        #         border-width:0.5; \
+        #         border-color: #9B9B9B; \
+        #         }")
         # On autorise la creation de menu contextuel
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux

@@ -31,12 +31,12 @@ class TabResults(QWidget):
         # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
         # Affichage custom
-        self.table_results.setStyleSheet(\
-                "QTableView::item{ \
-                 border-right-style:solid; \
-                 border-width:0.5; \
-                 border-color: #9B9B9B; \
-                 }")
+        #self.table_results.setStyleSheet(\
+        #        "QTableView::item{ \
+        #         border-right-style:solid; \
+        #         border-width:0.5; \
+        #         border-color: #9B9B9B; \
+        #         }")
         self.table_results.horizontalHeader().setStretchLastSection(True)
         self.table_results.resizeColumnsToContents()
         # On autorise la creation de menu contextuel

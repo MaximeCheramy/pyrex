@@ -25,12 +25,12 @@ class BrowserFtp(QWidget):
         # Load de l'UI
         PyQt4.uic.loadUi('ui/browser.ui', self)
         # Affichage custom
-        self.list_table.setStyleSheet(\
-                "QTableView::item{ \
-                 border-right-style:solid; \
-                 border-width:0.5; \
-                 border-color: #9B9B9B; \
-                 }")
+        #self.list_table.setStyleSheet(\
+        #        "QTableView::item{ \
+        #         border-right-style:solid; \
+        #         border-width:0.5; \
+        #         border-color: #9B9B9B; \
+        #         }")
         self.list_table.horizontalHeader().setStretchLastSection(True)
         self.list_table.resizeColumnsToContents()
         # Init FTP
