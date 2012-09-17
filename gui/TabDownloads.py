@@ -90,6 +90,7 @@ class TabDownloads(QWidget):
             item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
             row = self.downloads_table.row(item)
             self.downloads_table.item(row, 2).setText("Finished!")
+            self.downloads_table.item(row, 3).setText("")
         else:
             print "Erreur dans le téléchargement"
             item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]

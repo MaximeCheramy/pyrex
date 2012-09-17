@@ -115,8 +115,16 @@ class TabResults(QWidget):
         row = self.table_results.currentRow()
         return self.table_results.item(row, 0).share
         
+    def getMultipleShare(self):
+        if len(self.table_results.selectionModel().selectedRows()) > 1:
+            return [self.table_results.item(row.row(), 0).share for row in self.table_results.selectionModel().selectedRows()]
+        else:
+            return self.getShare()
+        
     def download_Action(self):
-        self.download(self.getShare())
+        shares = self.getMultipleShare()
+        for share in shares:
+            self.download(share)
         
     def download_to_Action(self):
         directory = QFileDialog.getExistingDirectory(self)
