@@ -23,7 +23,7 @@ class TabShares(QWidget):
         # Signaux
         self.sharedirsReceived.connect(self.set_shares)
         self.table_sharedirs.itemChanged.connect(self.get_modif_name)
-        self.table_sharedirs.itemClicked.connect(self.get_modif_path)
+        self.table_sharedirs.itemActivated.connect(self.get_modif_path)
         # Vars
         self.sharedirs_get = None
         self.sharedirs_set = None
@@ -39,6 +39,7 @@ class TabShares(QWidget):
         self.table_sharedirs.insertRow(rows)
         self.table_sharedirs.setItem(rows, 0, MyQTableWidgetItem(sharedir.name, sharedir))
         self.table_sharedirs.setItem(rows, 1, QTableWidgetItem(sharedir.path))
+        self.table_sharedirs.item(rows, 1).setFlags(self.table_sharedirs.item(rows, 1).flags() ^ Qt.ItemIsEditable)
         self.sharedirs.append(sharedir)
 
     def set_shares(self, sharedirs):
