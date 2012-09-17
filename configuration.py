@@ -19,7 +19,11 @@ class Configuration(object):
     @staticmethod
     def write_config():
         # On écrit dans config.ini tout ce qui se rapporte au gui
-        config = codecs.open("config.ini", "w", encoding='utf-8')
+        try:
+            os.mkdir('~/.pyrex')
+        except:
+            pass
+        config = codecs.open("~/.pyrex/config.ini", "w", encoding='utf-8')
         for key in ['save_dir', 'max_simultaneous_downloads', 'max_results', 'clean_dl_list', 'icon', 'share_downloads', 'display_mine', 'ip_daemon', 'log_in_file', 'adv_mode']:
             var = u"{}={}\n".format(key, Configuration.__dict__[key])
             config.write(var)
