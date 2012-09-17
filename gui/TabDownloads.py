@@ -42,6 +42,7 @@ class TabDownloads(QWidget):
         self.downloads_table.itemClicked.connect(self.show_info_download)
         # Init
         self.load_downloads()
+        self.progressBar.hide()
 
     def load_downloads(self):
         import xml.sax
@@ -68,7 +69,7 @@ class TabDownloads(QWidget):
     def add_downloads(self, downloads):
         for download in downloads:
           self.add_download(download)
-          
+        
     def update_progress(self, download):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
@@ -164,11 +165,12 @@ class TabDownloads(QWidget):
         
     def show_info_download(self):
         download = self.getDownload()
-        self.name_label.setText(u"Nom : {}".format(download.local_path.split("/")[-1]))
+        self.name_label.setText(u"Nom : {}".format(download.file_share.name))
         self.path_label.setText(u"Chemin local : {}".format(download.local_path))
-        #self.url_label.setText(u"URL : {}".format(download.url))
-        #self.size_label.setText(u"Taille : {}".format(download.size))        
-        #self.progress_label.setText(u"Avancement : {}".format(download.progress))
+        self.url_label.setText(u"URL : {}".format(download.file_share.url))
+        self.size_label.setText(u"Taille : {}".format(download.file_share.str_size))   
+        #self.progressBar.show()     
+        #self.progressBar.setValue(download.progress)
         
     def resizeEvent(self, event):
         maxSize = self.downloads_table.size().width()

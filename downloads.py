@@ -42,6 +42,10 @@ class Download(QObject):
     @property
     def local_path(self):
         return self._local_path
+        
+    @property
+    def progress(self):
+        return 100.0 * float(self.read_bytes) / self._file_share.size
 
     def get_progress(self):
         p = 100.0 * float(self.read_bytes) / self._file_share.size
@@ -83,7 +87,7 @@ class DownloadFtp(Download):
         self.read_bytes = self.out_file.size()
         # Timer
         self.timer = QTimer()
-        self.timer.start(750)
+        self.timer.start(500)
         self.timer.timeout.connect(self.update_speed)
  
     def start_download(self):
