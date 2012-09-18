@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 
+import os
 import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem, QFileDialog
@@ -56,10 +57,11 @@ class TabShares(QWidget):
         self.sharedirs_set.do_set(self.sharedirs, self.sharedirsReceived.emit)
     
     def add_directory(self):
-        directory = QFileDialog.getExistingDirectory(self)
-        sharedir = ShareDir(unicode(directory.split("/")[-1].toUtf8(), 'utf-8') , unicode(directory.toUtf8(), 'utf-8'))
-        self.add_share(sharedir)
-        self.set_sharedirs()
+        directory = QFileDialog.getExistingDirectory(self, u"Sélectionnez un dossier", os.path.expanduser("~"))
+        if directory:
+            sharedir = ShareDir(unicode(directory.split("/")[-1].toUtf8(), 'utf-8') , unicode(directory.toUtf8(), 'utf-8'))
+            self.add_share(sharedir)
+            self.set_sharedirs()
                 
     def get_sharedir(self):
         row = self.table_sharedirs.currentRow()
@@ -92,9 +94,10 @@ class TabShares(QWidget):
             sharedir = self.table_sharedirs.item(row, 0).sharedir
             try:
                 self.sharedirs.remove(sharedir)
-                self.sharedirs.append(ShareDir(sharedir.name, \
-                     unicode(QFileDialog.getExistingDirectory(self, tr(u"Sélectionnez un dossier"), os.path.expanduser("~")).toUtf8(), 'utf-8')))
-                self.set_sharedirs()
+                directory = QFileDialog.getExistingDirectory(self, u"Sélectionnez un dossier", os.path.expanduser("~"))
+                if directory:
+                    self.sharedirs.append(ShareDir(sharedir.name, unicode(directory.toUtf8(), 'utf-8')))
+                    self.set_sharedirs()
             except ValueError:
                 pass
     
