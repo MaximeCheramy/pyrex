@@ -22,10 +22,10 @@ if __name__ == '__main__':
         app.installTranslator(appTranslator)
     
     # On vérifie que le dossier ~/.pyrex existe, si non on le créé
-    if not os.path.isdir(os.path.expanduser("~") + "/.pyrex/"):
+    if not os.path.isdir(os.path.expanduser("~/.pyrex/")):
         try:
             print "Création du dossier ~/.pyrex"
-            os.mkdir(os.path.expanduser("~") + "/.pyrex/")
+            os.mkdir(os.path.expanduser("~/.pyrex/"))
         except OSError:
             print "Erreur : le dossier n'a pas pu être créé"
             

@@ -182,4 +182,4 @@ class TabOptions(QWidget):
         pass
     
     def chooseDirectory(self):
-        self.dir_button.setText(QFileDialog.getExistingDirectory(self))
+        self.dir_button.setText(QFileDialog.getExistingDirectory(self, u"Sélectionnez un dossier", os.path.expanduser("~")))

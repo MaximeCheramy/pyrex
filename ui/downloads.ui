@@ -359,6 +359,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>downloads_table</sender>
+   <signal>cellDoubleClicked(int,int)</signal>
+   <receiver>Telechargements</receiver>
+   <slot>double_clicked(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>192</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open_Action()</slot>
@@ -366,5 +382,6 @@
   <slot>continue_Action()</slot>
   <slot>pause_Action()</slot>
   <slot>suppr_liste_Action()</slot>
+  <slot>double_clicked(int,int)</slot>
  </slots>
 </ui>
