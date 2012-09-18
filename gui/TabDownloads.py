@@ -69,7 +69,7 @@ class TabDownloads(QWidget):
         self.downloads_table.insertRow(rows)
         self.downloads_table.setItem(rows, 0, MyQTableWidgetItem(download.file_share.name, download))
         self.downloads_table.setItem(rows, 1, QTableWidgetItem(download.get_progress()))
-        self.downloads_table.setItem(rows, 2, QTableWidgetItem(download.state))
+        self.downloads_table.setItem(rows, 2, QTableWidgetItem(download.state_str))
         self.downloads_table.setItem(rows, 3, QTableWidgetItem("0 ko/s"))
         self.downloads_table.setItem(rows, 5, QTableWidgetItem(download.date.strftime('%d/%m/%y')))
         self.downloads.append(download)
@@ -96,7 +96,7 @@ class TabDownloads(QWidget):
     def update_state(self, download):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
-        self.downloads_table.item(row, 2).setText(download.state)
+        self.downloads_table.item(row, 2).setText(download.state_str)
         
     def download_finished(self, download):
         if download.read_bytes == download.file_share.size:
@@ -208,7 +208,7 @@ class TabDownloads(QWidget):
     def double_clicked(self, row, col):
         print "Double_clicked!"
         download = self.downloads_table.item(row, 0).download
-        if download.state == u'Terminé':
+        if download.state == 4:
             if sys.platform.startswith('darwin'):
                 subprocess.call(('open', download.local_path))
             elif os.name == 'nt':

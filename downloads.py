@@ -13,6 +13,24 @@ from DefaultHandler import DefaultHandler
 from xml.etree.ElementTree import Element, SubElement
 import Tools
 
+def status_to_int(status):
+    if status == 'waiting':
+        return 3
+    elif status == 'finished':
+        return 4
+    elif status == 'paused':
+        return 5
+    else:
+        return 1
+
+def int_to_status(status):
+    if status == 4:
+        return 'finished'
+    elif status == '5':
+        return 'paused'
+    else:
+        return 'waiting'
+
 class Downloads(list):
     def __init__(self):
         list.__init__(self)
@@ -22,35 +40,35 @@ class Downloads(list):
         for download in self:
             download_element = SubElement(downloads_element, 'download')
             SubElement(download_element, 'localpath').text = download.local_path
-            # Je me demande si c'est vraiment utile.
-            SubElement(download_element, 'status').text = 'TODO'
+            SubElement(download_element, 'status').text = int_to_status(download.state)
             SubElement(download_element, 'date').text = str(download.date) #TODO format !
             share_element = download.file_share.xml_element()
             download_element.append(share_element)
 
         xml_str = Tools.prettify(downloads_element)
-        f = codecs.open(os.path.expanduser('~/.pyrex/downloads2.xml'), 'w', encoding='utf-8')
-        print xml_str
+        f = codecs.open(os.path.expanduser('~/.pyrex/downloads2.xml'), 'w',
+                encoding='utf-8') # Le nom du fichier sera à changer une fois le code prêt.
+        print xml_str #to remove.
         f.write(xml_str)
         f.close()
 
 class Download(QObject):
-    def __init__(self, file_share, local_path, date):
+    def __init__(self, file_share, local_path, date, state):
         QObject.__init__(self)
         # Variables
         self._file_share = file_share
         self._local_path = local_path
         self._date = date
-        self._state = 5
+        self._state = state
         self._speed = 0
         self._count = 0
         self._last_time = time.time()
         self._last_size = 0
 
     @classmethod
-    def get_download(cls, file_share, local_path, date):
+    def get_download(cls, file_share, local_path, date, state):
         # TODO DownloadSmb
-        return DownloadFtp(file_share, local_path, date)
+        return DownloadFtp(file_share, local_path, date, state)
 
     @property
     def speed(self):
@@ -79,6 +97,10 @@ class Download(QObject):
 
     @property
     def state(self):
+        return self._state
+
+    @property
+    def state_str(self):
         if self._state == 1:
             return 'Connexion...'
         elif self._state == 2:
@@ -98,8 +120,8 @@ class DownloadFtp(Download):
     downloadFinished    = pyqtSignal(object)
     speedModified       = pyqtSignal(object)
     
-    def __init__(self, file_share, local_path, date):
-        Download.__init__(self, file_share, local_path, date)
+    def __init__(self, file_share, local_path, date, state):
+        Download.__init__(self, file_share, local_path, date, state)
         self.ftp = QFtp(self)
         # Signaux
         self.ftp.dataTransferProgress.connect(self.update_progress)
@@ -176,7 +198,8 @@ class AnalyseDownload(object):
                 self.share = self.analyse_share.share
                 self.analyse_share = None
         elif name == "download":
-            self.download = Download.get_download(self.share, self.local_path, self.date)
+            self.download = Download.get_download(self.share, self.local_path,
+                    self.date, status_to_int(self.status))
         elif name == "localpath":
             self.local_path = buf
         elif name == "status":
