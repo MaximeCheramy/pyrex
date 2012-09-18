@@ -73,11 +73,14 @@ class TabDownloads(QWidget):
         self.downloads_table.setItem(rows, 3, QTableWidgetItem("0 ko/s"))
         self.downloads_table.setItem(rows, 5, QTableWidgetItem(download.date.strftime('%d/%m/%y')))
         self.downloads.append(download)
-        # Signaux
-        download.progressModified.connect(self.update_progress)
-        download.stateChanged.connect(self.update_state)
-        download.downloadFinished.connect(self.download_finished)
-        download.speedModified.connect(self.update_speed)
+        
+        # TODO : à modifier probablement quand on aura le resume pour les downloads
+        if download.state != 4 and download.progress == 0:
+            # Signaux
+            download.progressModified.connect(self.update_progress)
+            download.stateChanged.connect(self.update_state)
+            download.downloadFinished.connect(self.download_finished)
+            download.speedModified.connect(self.update_speed)
 
     def add_downloads(self, downloads):
         for download in downloads:
@@ -109,6 +112,7 @@ class TabDownloads(QWidget):
             item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
             row = self.downloads_table.row(item)
             self.downloads_table.item(row, 2).setText("Error :(")
+            self.downloads_table.item(row, 3).setText("")
             
     def contextMenu(self, pos):
         self.pos = pos

@@ -48,7 +48,7 @@ class Downloads(list):
         xml_str = Tools.prettify(downloads_element)
         f = codecs.open(os.path.expanduser('~/.pyrex/downloads2.xml'), 'w',
                 encoding='utf-8') # Le nom du fichier sera à changer une fois le code prêt.
-        print xml_str #to remove.
+        #print xml_str #to remove.
         f.write(xml_str)
         f.close()
 
@@ -162,6 +162,8 @@ class DownloadFtp(Download):
         self.ftp.abort()
         self.ftp.close()
         self.ftp.done.disconnect(self.download_finished)
+        self.ftp.stateChanged.disconnect(self.state_changed)
+        self.ftp.dataTransferProgress.disconnect(self.update_progress)
         self.downloadFinished.emit(self)
 
     def update_speed(self):

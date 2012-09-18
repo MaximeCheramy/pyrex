@@ -77,9 +77,9 @@ class TabResults(QWidget):
 
     def download(self, share, directory=None):
         if not directory:
-            dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
+            dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today(), 1)
         else:
-            dl = Download.get_download(share, directory + "/" + share.name, date.today())
+            dl = Download.get_download(share, directory + "/" + share.name, date.today(), 1)
         TabDownloads.instance.add_download(dl)
         dl.start_download()
         self.tabs.setCurrentWidget(self.tab_downloads)
