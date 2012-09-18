@@ -3,7 +3,7 @@
 
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon, QMenu, QAction, QMessageBox
+from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon, QMenu, QAction, QMessageBox, QCheckBox
 
 import images
 from TabSearch import TabSearch
@@ -79,8 +79,21 @@ class MainWindow(QMainWindow):
                 if download.state == 3:
                     termine = False
             # Si il y a un download en cours on affiche la fenêtre
-            if not termine:
-                if QMessageBox.question(self, u"Voulez-vous vraiment quitter?", u"Un ou plusieurs téléchargements sont en cours, et pyRex ne gère pas encore la reprise des téléchargements. Si vous quittez maintenant, toute progression sera perdue!", QMessageBox.No | QMessageBox.Yes) == QMessageBox.Yes:
+            if not termine and not Configuration.close_window:
+                # Un petit messageBox avec bouton clickable :)
+                msgBox = QMessageBox(QMessageBox.Question, u"Voulez-vous vraiment quitter?", u"Un ou plusieurs téléchargements sont en cours, et pyRex ne gère pas encore la reprise des téléchargements. Si vous quittez maintenant, toute progression sera perdue!")
+                checkBox = QCheckBox(u"Ne plus afficher ce message", msgBox)
+                checkBox.blockSignals(True)
+                msgBox.addButton(checkBox, QMessageBox.ActionRole)
+                msgBox.addButton("Annuler", QMessageBox.NoRole)
+                yesButton = msgBox.addButton("Valider", QMessageBox.YesRole)
+                msgBox.exec_()
+                
+                if msgBox.clickedButton() == yesButton:
+                    # On save l'état du bouton à cliquer
+                    if checkBox.checkState() == Qt.Checked:
+                        Configuration.close_window = True
+                        Configuration.write_config()
                     event.accept()
                 else:
                     event.ignore()

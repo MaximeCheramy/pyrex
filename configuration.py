@@ -15,13 +15,14 @@ class Configuration(object):
     ip_daemon                   = "127.0.0.1"
     log_in_file                 = 1
     adv_mode                    = False
+    close_window                = False
     
     @staticmethod
     def write_config():
         # On écrit dans config.ini tout ce qui se rapporte au gui
         config = codecs.open(os.path.expanduser("~/.pyrex/") + "config.ini", "w", encoding='utf-8')
         for key in ['save_dir', 'max_simultaneous_downloads', 'max_results', 'clean_dl_list', \
-                    'icon', 'share_downloads', 'display_mine', 'ip_daemon', 'log_in_file', 'adv_mode']:
+                    'icon', 'share_downloads', 'display_mine', 'ip_daemon', 'log_in_file', 'adv_mode', 'close_window']:
             var = u"{}={}\n".format(key, Configuration.__dict__[key])
             config.write(var)
         config.close()           
