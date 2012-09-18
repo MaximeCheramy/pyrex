@@ -1,5 +1,6 @@
 from Tools import convert_size_str
 from datetime import date
+from xml.etree.ElementTree import Element, SubElement
 
 class AnalyseShare(object):
     def __init__(self):
@@ -96,6 +97,19 @@ class Share(object):
     @property
     def nickname(self):
         return self._nickname
+
+    def xml_element(self):
+        share_element = Element('share', {'type': self._is_directory and 'directory' or 'file'})
+        SubElement(share_element, 'name').text = self.name
+        SubElement(share_element, 'client_address').text = self.client_address
+        if self.port > 0:
+            SubElement(share_element, 'port').text = str(self.port)
+        SubElement(share_element, 'path').text = self.path
+        SubElement(share_element, 'protocol').text = self.protocol
+        SubElement(share_element, 'last_modified').text = str(self.last_modified) #TODO format date.
+        SubElement(share_element, 'nickname').text = self.nickname
+        SubElement(share_element, 'size').text = str(self.size)
+        return share_element
 
 class FileShare(Share):
     def __init__(self, name, client_address, port, path, protocol, size, last_modified, nickname):

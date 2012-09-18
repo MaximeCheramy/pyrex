@@ -2,8 +2,14 @@
 
 import os
 import time
-from datetime import date
 import codecs
+from datetime import date
+<<<<<<< HEAD
+import codecs
+=======
+from xml.etree.ElementTree import Element, SubElement
+
+>>>>>>> 658f66b2dc630b319d376add49fe3eab4554469c
 from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice, pyqtSignal, QTimer
 from PyQt4.QtNetwork import QFtp
 
@@ -33,6 +39,10 @@ class Downloads(list):
         f.write(xml_str)
         f.close()
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 658f66b2dc630b319d376add49fe3eab4554469c
 class Download(QObject):
     def __init__(self, file_share, local_path, date):
         QObject.__init__(self)
