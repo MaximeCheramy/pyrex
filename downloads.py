@@ -77,6 +77,9 @@ class Download(QObject):
         read_bytes_str = Tools.convert_size_str(self.read_bytes)
         return '%d%% (%s / %s)' % (int(p), read_bytes_str, self._file_share.str_size)
 
+    def get_state(self):
+        return self._state
+        
     @property
     def state(self):
         if self._state == 1:
