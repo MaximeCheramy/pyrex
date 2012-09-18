@@ -1,7 +1,11 @@
 # coding=utf-8
 
+import os
 import time
+import codecs
 from datetime import date
+from xml.etree.ElementTree import Element, SubElement
+
 from PyQt4.QtCore import QFile, QUrl, QObject, QIODevice, pyqtSignal, QTimer
 from PyQt4.QtNetwork import QFtp
 
@@ -12,6 +16,24 @@ import Tools
 class Downloads(list):
     def __init__(self):
         list.__init__(self)
+
+    def save(self):
+        downloads_element = Element('downloads')
+        for download in self:
+            download_element = SubElement(downloads_element, 'download')
+            SubElement(download_element, 'localpath').text = download.local_path
+            # Je me demande si c'est vraiment utile.
+            SubElement(download_element, 'status').text = 'TODO'
+            SubElement(download_element, 'date').text = str(download.date) #TODO format !
+            share_element = download.file_share.xml_element()
+            download_element.append(share_element)
+
+        xml_str = Tools.prettify(downloads_element)
+        f = codecs.open(os.path.expanduser('~/.pyrex/downloads2.xml'), 'w', encoding='utf-8')
+        print xml_str
+        f.write(xml_str)
+        f.close()
+
 
 class Download(QObject):
     def __init__(self, file_share, local_path, date):

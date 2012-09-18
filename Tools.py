@@ -1,3 +1,6 @@
+from xml.etree import ElementTree
+from xml.dom import minidom
+
 GIBI = 1024.0 * 1024 * 1024
 MEBI = 1024.0 * 1024
 KIBI = 1024.0
@@ -24,3 +27,9 @@ def convert_speed_str(speed):
         str_speed = "0 Kio/s"
     return str_speed
 
+def prettify(elem):
+    """Return a pretty-printed XML string for the Element.
+    """
+    rough_string = ElementTree.tostring(elem, 'utf-8')
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="\t")

@@ -51,6 +51,7 @@ class TabDownloads(QWidget):
         try:
             for line in open(os.path.expanduser("~") + '/.pyrex/downloads.xml'):
                 parser.feed(line)
+            self.downloads.save()
         except:
             pass
 
