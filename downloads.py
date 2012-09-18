@@ -9,6 +9,10 @@ from Share import AnalyseShare
 from DefaultHandler import DefaultHandler
 import Tools
 
+class Downloads(list):
+    def __init__(self):
+        list.__init__(self)
+
 class Download(QObject):
     def __init__(self, file_share, local_path, date):
         QObject.__init__(self)

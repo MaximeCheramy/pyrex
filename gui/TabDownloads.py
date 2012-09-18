@@ -8,7 +8,7 @@ import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication
 
-from downloads import AnalyseDownloads
+from downloads import AnalyseDownloads, Downloads
 
 from Tools import convert_speed_str
 
@@ -26,7 +26,7 @@ class TabDownloads(QWidget):
         PyQt4.uic.loadUi('ui/downloads.ui', self)
         # Vars 
         TabDownloads.instance = self
-        self.downloads        = []
+        self.downloads        = Downloads()
         self.pos              = None
         # Affichage custom
         #self.downloads_table.setStyleSheet(\
