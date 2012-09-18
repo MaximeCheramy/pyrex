@@ -58,19 +58,11 @@ class TabDownloads(QWidget):
         parser = xml.sax.make_parser()
         parser.setContentHandler(AnalyseDownloads(self.add_downloads))
         try:
-<<<<<<< HEAD
-             for line in open(os.path.expanduser("~") + '/.pyrex/downloads.xml'):	
-                 parser.feed(line)
- 	         self.downloads.save()
-         except:
-             pass
-=======
             for line in open(os.path.expanduser("~") + '/.pyrex/downloads.xml'):
                 parser.feed(line)
             self.downloads.save()
         except:
             pass
->>>>>>> 658f66b2dc630b319d376add49fe3eab4554469c
 
     def add_download(self, download):
         rows = self.downloads_table.rowCount()
