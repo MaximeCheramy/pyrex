@@ -113,6 +113,8 @@ class Download(QObject):
             return u'En pause'
         elif self._state == 6:
             return u'Connexion interrompue'
+        elif self._state == 7:
+            return u'Error :('
 
 class DownloadFtp(Download):
     progressModified    = pyqtSignal(object)
@@ -144,6 +146,7 @@ class DownloadFtp(Download):
             self.ftp.get(self.url.path(), self.out_file)
 
     def stop(self):
+        self._state = 5
         self.ftp.abort()
         self.timer.stop()
         self.ftp.close()
@@ -157,6 +160,8 @@ class DownloadFtp(Download):
 
     def download_finished(self, _):
         print "finished !"
+        if self.read_bytes != self.file_share.size:
+            self._state = 7
         self._speed = 0
         self.timer.stop()
         self.ftp.abort()

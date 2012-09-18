@@ -2,9 +2,9 @@
 # coding=utf-8
 
 import os
-
+import sys
 from PyQt4.QtGui import QApplication
-from PyQt4 import QtCore
+from PyQt4.QtCore import *
 
 from gui import MainWindow
 from configuration import Configuration
@@ -13,11 +13,14 @@ if __name__ == '__main__':
     app = QApplication([])
     
     # Translation process
-    locale = QtCore.QLocale.system().name()
-    qtTranslator = QtCore.QTranslator()
+    locale = QLocale.system().name()
+    qtTranslator = QTranslator()
     if qtTranslator.load("qt_" + locale):
         app.installTranslator(qtTranslator)
-    appTranslator = QtCore.QTranslator()
+    buttonTranslator = QTranslator()
+    if buttonTranslator.load("qt_" + locale, QLibraryInfo.location(QLibraryInfo.TranslationsPath)) :
+        app.installTranslator(buttonTranslator)
+    appTranslator = QTranslator()
     if appTranslator.load("pyrex_" + locale):
         app.installTranslator(appTranslator)
     

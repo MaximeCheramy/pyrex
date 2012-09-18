@@ -3,7 +3,7 @@
 
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon, QMenu, QAction
+from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon, QMenu, QAction, QMessageBox
 
 import images
 from TabSearch import TabSearch
@@ -73,7 +73,19 @@ class MainWindow(QMainWindow):
             self.hide()
             event.ignore()
         else:
-            event.accept()
+            termine = True
+            # On vérifie que tous les téléchargements soient finis
+            for download in self.downloads.instance.downloads:
+                if download.state == 3:
+                    termine = False
+            # Si il y a un download en cours on affiche la fenêtre
+            if not termine:
+                if QMessageBox.question(self, u"Voulez-vous vraiment quitter?", u"Un ou plusieurs téléchargements sont en cours, et pyRex ne gère pas encore la reprise des téléchargements. Si vous quittez maintenant, toute progression sera perdue!", QMessageBox.No | QMessageBox.Yes) == QMessageBox.Yes:
+                    event.accept()
+                else:
+                    event.ignore()
+            else:
+                event.accept()
    
     def changeEvent(self, event):
         if event.type() == QEvent.WindowStateChange:

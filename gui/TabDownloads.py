@@ -211,14 +211,14 @@ class TabDownloads(QWidget):
         
     def double_clicked(self, row, col):
         print "Double_clicked!"
-        download = self.downloads_table.item(row, 0).download
-        if download.state == 4:
-            if sys.platform.startswith('darwin'):
-                subprocess.call(('open', download.local_path))
-            elif os.name == 'nt':
-                os.startfile(download.local_path)
-            elif os.name == 'posix':
-                subprocess.call(('xdg-open', download.local_path))
+        #download = self.downloads_table.item(row, 0).download
+        #if download.state == 4:
+        #    if sys.platform.startswith('darwin'):
+        #        subprocess.call(('open', download.local_path))
+        #    elif os.name == 'nt':
+        #        os.startfile(download.local_path)
+        #    elif os.name == 'posix':
+        #        subprocess.call(('xdg-open', download.local_path))
             
     def resizeEvent(self, event):
         maxSize = self.downloads_table.size().width()
