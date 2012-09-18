@@ -14,7 +14,10 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_8">
      <item>
-      <widget class="QToolButton" name="toolButton_2">
+      <widget class="QToolButton" name="button_folder">
+       <property name="toolTip">
+        <string>Ouvre le dossier des téléchargements</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -25,7 +28,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_5">
+      <widget class="QToolButton" name="button_copy">
+       <property name="toolTip">
+        <string>Copier l'URL</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -36,7 +42,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_4">
+      <widget class="QToolButton" name="button_resume">
+       <property name="toolTip">
+        <string>Reprendre le téléchargement</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -47,7 +56,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton_3">
+      <widget class="QToolButton" name="button_pause">
+       <property name="toolTip">
+        <string>Mettre en pause</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -58,7 +70,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QToolButton" name="toolButton">
+      <widget class="QToolButton" name="button_delete">
+       <property name="toolTip">
+        <string>Supprimer le téléchargement</string>
+       </property>
        <property name="text">
         <string>...</string>
        </property>
@@ -144,21 +159,24 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_9">
      <item>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="button_clean_list">
+       <property name="toolTip">
+        <string/>
+       </property>
        <property name="text">
         <string>Nettoyer la liste</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="button_stop_all">
        <property name="text">
         <string>Tout arrêter</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="button_resume_all">
        <property name="text">
         <string>Tout reprendre</string>
        </property>
@@ -260,5 +278,93 @@
  <resources>
   <include location="images.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>button_folder</sender>
+   <signal>clicked()</signal>
+   <receiver>Telechargements</receiver>
+   <slot>open_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>20</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_copy</sender>
+   <signal>clicked()</signal>
+   <receiver>Telechargements</receiver>
+   <slot>copy_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_resume</sender>
+   <signal>clicked()</signal>
+   <receiver>Telechargements</receiver>
+   <slot>continue_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_pause</sender>
+   <signal>clicked()</signal>
+   <receiver>Telechargements</receiver>
+   <slot>pause_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_delete</sender>
+   <signal>clicked()</signal>
+   <receiver>Telechargements</receiver>
+   <slot>suppr_liste_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>132</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>open_Action()</slot>
+  <slot>copy_Action()</slot>
+  <slot>continue_Action()</slot>
+  <slot>pause_Action()</slot>
+  <slot>suppr_liste_Action()</slot>
+ </slots>
 </ui>

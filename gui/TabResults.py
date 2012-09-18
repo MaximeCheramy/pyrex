@@ -63,7 +63,7 @@ class TabResults(QWidget):
         for share in results:
             if share.nickname in self.blacklist:
                 pass
-            else:    
+            elif share.protocol == "ftp" and share.nickname != "":    
                 self._add_share(share)
 
     def double_clicked(self, row, col):
@@ -98,7 +98,11 @@ class TabResults(QWidget):
         # Desactivation d'actions impossibles
         if type(self.getShare()) is not FileShare:
             downloadAction.setEnabled(False)
-            downloadToAction.setEnabled(False)            
+            downloadToAction.setEnabled(False)
+        #########################################################
+        # On désactive les boutons qui sont pas encore implantés
+        noShareAction.setEnabled(False)   
+        #########################################################            
         # Signaux
         self.connect(downloadAction, SIGNAL('triggered()'), self.download_Action)
         self.connect(downloadToAction, SIGNAL('triggered()'), self.download_to_Action)
@@ -116,7 +120,7 @@ class TabResults(QWidget):
         return self.table_results.item(row, 0).share
         
     def getMultipleShare(self):
-        if len(self.table_results.selectionModel().selectedRows()) > 1:
+        if len(self.table_results.selectionModel().selectedRows()) > 0:
             return [self.table_results.item(row.row(), 0).share for row in self.table_results.selectionModel().selectedRows()]
         else:
             return self.getShare()
@@ -153,7 +157,7 @@ class TabResults(QWidget):
     def search_same_Action(self):
         share = self.getShare()
         search = Search(share.name)
-        tab_result = TabResults(search, self.tabs_results)
+        tab_result = TabResults(search, self.tabs_results, self.tab_downloads, self.tabs)
         self.tabs_results.addTab(tab_result, search.query)
         self.tabs_results.setCurrentWidget(tab_result)
         

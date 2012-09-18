@@ -27,6 +27,13 @@ class TabOptions(QWidget):
         self.varsDaemonUpdated.connect(self.setDaemonVars)
         self.varsDaemonToCheck.connect(self.checkDaemonVars)
         QObject.connect(self.check_expert_mode, SIGNAL('stateChanged(int)'), self. setExpertMode)
+        #########################################################
+        # On désactive les boutons qui sont pas encore implantés
+        self.spin_max_dwl.setEnabled(False)
+        self.spin_nb_res_page.setEnabled(False)
+        self.check_clean_dl_list.setEnabled(False)
+        self.combo_logs.setEnabled(False)  
+        #########################################################  
         
     def update_conf(self):
         self.setGuiVars()

@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import PyQt4.uic
 from PyQt4.QtGui import QWidget, QTableWidgetItem, QApplication, QMenu
 from PyQt4.QtCore import pyqtSignal, QTimer, Qt, SIGNAL
@@ -95,6 +97,10 @@ class TabPeers(QWidget):
         # Actions
         showAction      = menu.addAction("Afficher ses partages")
         copyAction      = menu.addAction("Copier l'IP")
+        #########################################################
+        # On désactive les boutons qui sont pas encore implantés
+        showAction.setEnabled(False)   
+        #########################################################  
         # Signaux
         self.connect(showAction, SIGNAL('triggered()'), self.show_Action)
         self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)

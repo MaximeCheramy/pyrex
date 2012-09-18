@@ -8,7 +8,7 @@ import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication
 
-from downloads import AnalyseDownloads
+from downloads import AnalyseDownloads, Downloads
 
 from Tools import convert_speed_str
 
@@ -26,7 +26,7 @@ class TabDownloads(QWidget):
         PyQt4.uic.loadUi('ui/downloads.ui', self)
         # Vars 
         TabDownloads.instance = self
-        self.downloads        = []
+        self.downloads        = Downloads()
         self.pos              = None
         # Affichage custom
         #self.downloads_table.setStyleSheet(\
@@ -43,13 +43,26 @@ class TabDownloads(QWidget):
         # Init
         self.load_downloads()
         self.progressBar.hide()
+        #########################################################
+        # On désactive les boutons qui sont pas encore implantés
+        self.button_resume.setEnabled(False)
+        self.button_pause.setEnabled(False)
+        self.button_delete.setEnabled(False)        
+        self.button_clean_list.setEnabled(False)
+        self.button_stop_all.setEnabled(False)        
+        self.button_resume_all.setEnabled(False)
+        #########################################################
 
     def load_downloads(self):
         import xml.sax
         parser = xml.sax.make_parser()
         parser.setContentHandler(AnalyseDownloads(self.add_downloads))
-        for line in open(os.path.expanduser("~") + '/.rex/downloads.xml'):
-            parser.feed(line)
+        try:
+             for line in open(os.path.expanduser("~") + '/.pyrex/downloads.xml'):	
+                 parser.feed(line)
+ 	         self.downloads.save()
+         except:
+             pass
 
     def add_download(self, download):
         rows = self.downloads_table.rowCount()
@@ -105,6 +118,7 @@ class TabDownloads(QWidget):
         continueAction      = menu.addAction("Reprise")
         pauseAction         = menu.addAction("Pause")
         openAction          = menu.addAction("Ouvrir le dossier")
+        abortAction         = menu.addAction("Annuler")
         supprListeAction    = menu.addAction("Supprimer de la liste")
         supprDiskAction     = menu.addAction("Supprimer de la liste et du disque")
         copyAction          = menu.addAction("Copier l'URL")
@@ -115,15 +129,26 @@ class TabDownloads(QWidget):
             continueAction.setEnabled(False)
             pauseAction.setEnabled(False)
             openAction.setEnabled(False)
+            abortAction.setEnabled(False)
             supprListeAction.setEnabled(False)
             supprDiskAction.setEnabled(False)
             copyAction.setEnabled(False)
             searchAction.setEnabled(False)
+        #########################################################
+        # On désactive les boutons qui sont pas encore implantés
+        forceAction.setEnabled(False)
+        continueAction.setEnabled(False)
+        pauseAction.setEnabled(False)        
+        supprListeAction.setEnabled(False)
+        supprDiskAction.setEnabled(False)
+        searchAction.setEnabled(False)        
+        #########################################################
         # Signaux
         self.connect(forceAction, SIGNAL('triggered()'), self.force_Action)
         self.connect(continueAction, SIGNAL('triggered()'), self.continue_Action)
         self.connect(pauseAction, SIGNAL('triggered()'), self.pause_Action)
         self.connect(openAction, SIGNAL('triggered()'), self.open_Action)
+        self.connect(abortAction, SIGNAL('triggered()'), self.abort_Action)
         self.connect(supprListeAction, SIGNAL('triggered()'), self.suppr_liste_Action)
         self.connect(supprDiskAction, SIGNAL('triggered()'), self.suppr_disk_Action)
         self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)
@@ -151,8 +176,15 @@ class TabDownloads(QWidget):
         elif sys.platform == 'windows':
             subprocess.check_call(['explorer', download.local_path.strip(download.file_share.name)])
         
+    def abort_Action(self):
+        download = self.getDownload()
+        download.stop()
+        row = self.downloads_table.currentRow()
+        self.downloads_table.item(row, 2).setText(u"Annulé!")
+        self.downloads_table.item(row, 3).setText("")
+        
     def suppr_liste_Action(self):
-        print "TODO"
+        print "Todo"
         
     def suppr_disk_Action(self):
         print "TODO"
