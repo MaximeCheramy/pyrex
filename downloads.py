@@ -15,19 +15,27 @@ import Tools
 
 def status_to_int(status):
     if status == 'waiting':
+        return 2
+    elif status == 'downloading':
         return 3
     elif status == 'finished':
         return 4
     elif status == 'paused':
         return 5
+    elif status == 'error':
+        return 7
     else:
         return 1
 
 def int_to_status(status):
-    if status == 4:
+    if status == 3:
+        return 'downloading'
+    elif status == 4:
         return 'finished'
     elif status == '5':
         return 'paused'
+    elif status == '7':
+        return 'error'
     else:
         return 'waiting'
 
@@ -41,14 +49,12 @@ class Downloads(list):
             download_element = SubElement(downloads_element, 'download')
             SubElement(download_element, 'localpath').text = download.local_path
             SubElement(download_element, 'status').text = int_to_status(download.state)
-            SubElement(download_element, 'date').text = str(download.date) #TODO format !
+            SubElement(download_element, 'date').text = str(int(time.mktime(time.strptime(str(download.date), '%Y-%m-%d')) * 1000))
             share_element = download.file_share.xml_element()
             download_element.append(share_element)
 
         xml_str = Tools.prettify(downloads_element)
-        f = codecs.open(os.path.expanduser('~/.pyrex/downloads2.xml'), 'w',
-                encoding='utf-8') # Le nom du fichier sera à changer une fois le code prêt.
-        #print xml_str #to remove.
+        f = codecs.open(os.path.expanduser('~/.pyrex/downloads.xml'), 'w', encoding='utf-8')
         f.write(xml_str)
         f.close()
 
@@ -166,6 +172,8 @@ class DownloadFtp(Download):
         self.timer.stop()
         self.ftp.abort()
         self.ftp.close()
+        self._state = 4
+        self.stateChanged.emit(self)
         self.ftp.done.disconnect(self.download_finished)
         self.ftp.stateChanged.disconnect(self.state_changed)
         self.ftp.dataTransferProgress.disconnect(self.update_progress)

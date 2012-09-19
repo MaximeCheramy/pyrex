@@ -1,3 +1,4 @@
+import time
 from Tools import convert_size_str
 from datetime import date
 from xml.etree.ElementTree import Element, SubElement
@@ -106,7 +107,7 @@ class Share(object):
             SubElement(share_element, 'port').text = str(self.port)
         SubElement(share_element, 'path').text = self.path
         SubElement(share_element, 'protocol').text = self.protocol
-        SubElement(share_element, 'last_modified').text = str(self.last_modified) #TODO format date.
+        SubElement(share_element, 'last_modified').text = str(int(time.mktime(time.strptime(str(self.last_modified), '%Y-%m-%d')) * 1000))
         SubElement(share_element, 'nickname').text = self.nickname
         SubElement(share_element, 'size').text = str(self.size)
         return share_element

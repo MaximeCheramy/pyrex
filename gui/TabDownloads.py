@@ -47,8 +47,6 @@ class TabDownloads(QWidget):
         # On désactive les boutons qui sont pas encore implantés
         self.button_resume.setEnabled(False)
         self.button_pause.setEnabled(False)
-        self.button_delete.setEnabled(False)        
-        self.button_clean_list.setEnabled(False)
         self.button_stop_all.setEnabled(False)        
         self.button_resume_all.setEnabled(False)
         #########################################################
@@ -65,15 +63,19 @@ class TabDownloads(QWidget):
             pass
 
     def add_download(self, download):
-        rows = self.downloads_table.rowCount()
-        self.downloads_table.insertRow(rows)
-        self.downloads_table.setItem(rows, 0, MyQTableWidgetItem(download.file_share.name, download))
-        self.downloads_table.setItem(rows, 1, QTableWidgetItem(download.get_progress()))
-        self.downloads_table.setItem(rows, 2, QTableWidgetItem(download.state_str))
-        self.downloads_table.setItem(rows, 3, QTableWidgetItem("0 ko/s"))
-        self.downloads_table.setItem(rows, 5, QTableWidgetItem(download.date.strftime('%d/%m/%y')))
-        self.downloads.append(download)
-        
+        # Avant de filtrer on écrit le download
+        #self.downloads.append(download) #TODO : pour quand on pourra resume
+                
+        if download.state == 4 or download.progress == 0:
+            rows = self.downloads_table.rowCount()
+            self.downloads_table.insertRow(rows)
+            self.downloads_table.setItem(rows, 0, MyQTableWidgetItem(download.file_share.name, download))
+            self.downloads_table.setItem(rows, 1, QTableWidgetItem(download.get_progress()))
+            self.downloads_table.setItem(rows, 2, QTableWidgetItem(download.state_str))
+            self.downloads_table.setItem(rows, 3, QTableWidgetItem("0 ko/s"))
+            self.downloads_table.setItem(rows, 5, QTableWidgetItem(download.date.strftime('%d/%m/%y')))
+            self.downloads.append(download)
+                    
         # TODO : à modifier probablement quand on aura le resume pour les downloads
         if download.state != 4 and download.progress == 0:
             # Signaux
@@ -81,7 +83,10 @@ class TabDownloads(QWidget):
             download.stateChanged.connect(self.update_state)
             download.downloadFinished.connect(self.download_finished)
             download.speedModified.connect(self.update_speed)
-
+        
+        # On save
+        self.downloads.save()
+        
     def add_downloads(self, downloads):
         for download in downloads:
           self.add_download(download)
@@ -100,6 +105,8 @@ class TabDownloads(QWidget):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
         self.downloads_table.item(row, 2).setText(download.state_str)
+        # On save
+        self.downloads.save()
         
     def download_finished(self, download):
         if download.read_bytes == download.file_share.size:
@@ -107,12 +114,16 @@ class TabDownloads(QWidget):
             row = self.downloads_table.row(item)
             self.downloads_table.item(row, 2).setText("Finished!")
             self.downloads_table.item(row, 3).setText("")
+            # On save
+            self.downloads.save()
         else:
             print "Erreur dans le téléchargement"
             item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
             row = self.downloads_table.row(item)
             self.downloads_table.item(row, 2).setText("Error :(")
             self.downloads_table.item(row, 3).setText("")
+            # On save
+            self.downloads.save()
             
     def contextMenu(self, pos):
         self.pos = pos
@@ -143,8 +154,6 @@ class TabDownloads(QWidget):
         forceAction.setEnabled(False)
         continueAction.setEnabled(False)
         pauseAction.setEnabled(False)        
-        supprListeAction.setEnabled(False)
-        supprDiskAction.setEnabled(False)
         searchAction.setEnabled(False)        
         #########################################################
         # Signaux
@@ -187,11 +196,27 @@ class TabDownloads(QWidget):
         self.downloads_table.item(row, 2).setText(u"Annulé!")
         self.downloads_table.item(row, 3).setText("")
         
-    def suppr_liste_Action(self):
-        print "Todo"
+    def suppr_liste_Action(self, row=None, download=None):
+        if not download:
+            download = self.getDownload()
+        download.stop()
+        if not row:
+            row = self.downloads_table.currentRow()
+        # On supprime la ligne
+        self.downloads_table.removeRow(row)
+        # On supprime de la liste
+        self.downloads.remove(download)    
+        # On save
+        self.downloads.save()
+        # Pour suppr_disk
+        return download
         
     def suppr_disk_Action(self):
-        print "TODO"
+        download = self.suppr_liste_Action()
+        try:
+            os.remove(download.local_path)
+        except:
+            print "Erreur dans la suppression du fichier"
         
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
@@ -209,6 +234,16 @@ class TabDownloads(QWidget):
         #self.progressBar.show()     
         #self.progressBar.setValue(download.progress)
         
+    def clean_list_Action(self):
+        for download in self.downloads:
+            if download.state == 4 or download.state == 7:
+                try:
+                    item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+                    row = self.downloads_table.row(item)
+                    self.suppr_liste_Action(row, download) 
+                except:
+                    print "Erreur ligne 244 : TabDownloads.py"
+                               
     def double_clicked(self, row, col):
         print "Double_clicked!"
         #download = self.downloads_table.item(row, 0).download

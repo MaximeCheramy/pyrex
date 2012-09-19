@@ -347,7 +347,7 @@
    <sender>button_delete</sender>
    <signal>clicked()</signal>
    <receiver>Telechargements</receiver>
-   <slot>suppr_liste_Action()</slot>
+   <slot>suppr_disk_Action()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>132</x>
@@ -375,13 +375,30 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>button_clean_list</sender>
+   <signal>clicked()</signal>
+   <receiver>Telechargements</receiver>
+   <slot>clean_list_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>223</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>203</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open_Action()</slot>
   <slot>copy_Action()</slot>
   <slot>continue_Action()</slot>
   <slot>pause_Action()</slot>
-  <slot>suppr_liste_Action()</slot>
+  <slot>suppr_disk_Action()</slot>
   <slot>double_clicked(int,int)</slot>
+  <slot>clean_list_Action()</slot>
  </slots>
 </ui>
