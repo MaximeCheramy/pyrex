@@ -199,13 +199,10 @@ class TabDownloads(QWidget):
         self.downloads_table.item(row, 2).setText(u"Annulé!")
         self.downloads_table.item(row, 3).setText("")
         
-    def suppr_liste_Action(self, row=None, download=None):
-        if not download:
-            download = self.getDownload()
-        if download:
-            download.stop()
-        if not row:
-            row = self.downloads_table.currentRow()
+    def suppr_liste_Action(self):
+        download = self.getDownload()
+        download.stop()
+        row = self.downloads_table.currentRow()
         # On supprime la ligne
         self.downloads_table.removeRow(row)
         # On supprime de la liste
@@ -239,14 +236,21 @@ class TabDownloads(QWidget):
         #self.progressBar.setValue(download.progress)
         
     def clean_list_Action(self):
+        remove_list = []
         for download in self.downloads:
             if download.state == 4 or download.state == 7:
-                try:
-                    item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
-                    row = self.downloads_table.row(item)
-                    self.suppr_liste_Action(row, download) 
-                except:
-                    print "Erreur ligne 244 : TabDownloads.py"
+                # On trouve la ligne
+                item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+                row = self.downloads_table.row(item)
+                # On la supprime
+                self.downloads_table.removeRow(row)
+                # On save pour après la boucle for
+                remove_list.append(download)
+        # On supprime de la liste
+        for download in remove_list:
+            self.downloads.remove(download)    
+        # On save
+        self.downloads.save()
                                
     def double_clicked(self, row, col):
         print "Double_clicked!"
