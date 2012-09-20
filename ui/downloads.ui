@@ -81,6 +81,9 @@
         <iconset resource="images.qrc">
          <normaloff>:/button/res/button_remove_24.png</normaloff>:/button/res/button_remove_24.png</iconset>
        </property>
+       <property name="shortcut">
+        <string>Del</string>
+       </property>
       </widget>
      </item>
      <item>

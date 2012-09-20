@@ -171,7 +171,10 @@ class TabDownloads(QWidget):
       
     def getDownload(self):
         row = self.downloads_table.currentRow()
-        return self.downloads_table.item(row, 0).download
+        try:
+            return self.downloads_table.item(row, 0).download
+        except:
+            return None
           
     def force_Action(self):
         print "TODO"
@@ -199,7 +202,8 @@ class TabDownloads(QWidget):
     def suppr_liste_Action(self, row=None, download=None):
         if not download:
             download = self.getDownload()
-        download.stop()
+        if download:
+            download.stop()
         if not row:
             row = self.downloads_table.currentRow()
         # On supprime la ligne

@@ -44,7 +44,7 @@
         <string>Copier l'URL</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="images.qrc">
          <normaloff>:/button/res/button_copy.png</normaloff>:/button/res/button_copy.png</iconset>
        </property>
       </widget>
@@ -61,8 +61,11 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="images.qrc">
          <normaloff>:/button/res/button_download.png</normaloff>:/button/res/button_download.png</iconset>
+       </property>
+       <property name="shortcut">
+        <string>Space</string>
        </property>
       </widget>
      </item>
