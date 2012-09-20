@@ -5,5 +5,5 @@ import py2exe
 
 setup(
 	windows=[{"script":"pyrex.py"}],
-	options={"py2exe":{"includes":["sip", "PyQt4.QtCore", "PyQt4._qt"]}}
+	options={"py2exe":{"includes":["sip", "PyQt4.QtCore"]}}
 )
