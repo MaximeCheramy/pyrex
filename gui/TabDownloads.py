@@ -77,7 +77,7 @@ class TabDownloads(QWidget):
 
     def add_download(self, download):
         # Avant de filtrer on écrit le download
-        #self.downloads.append(download) #TODO : pour quand on pourra resume
+        #self.downloads.append(download) #TODO : pour quand on pourra resume, décommenter la ligne et ramener le save ici
                 
         if download.state == 4 or download.progress == 0:
             rows = self.downloads_table.rowCount()
