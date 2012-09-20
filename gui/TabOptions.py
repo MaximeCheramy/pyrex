@@ -31,7 +31,6 @@ class TabOptions(QWidget):
         # On désactive les boutons qui sont pas encore implantés
         self.spin_max_dwl.setEnabled(False)
         self.spin_nb_res_page.setEnabled(False)
-        self.check_clean_dl_list.setEnabled(False)
         self.combo_logs.setEnabled(False)  
         #########################################################  
         

@@ -8,7 +8,7 @@ class Configuration(object):
     save_dir                    = os.path.expanduser('~')
     max_simultaneous_downloads  = 10
     max_results                 = 100
-    clean_dl_list               = 1
+    clean_dl_list               = 0
     icon                        = 0
     share_downloads             = True
     display_mine                = False

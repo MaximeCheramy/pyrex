@@ -9,6 +9,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication
 
 from downloads import AnalyseDownloads, Downloads
+from configuration import Configuration
 
 from Tools import convert_speed_str
 
@@ -43,6 +44,9 @@ class TabDownloads(QWidget):
         # Init
         self.load_downloads()
         self.progressBar.hide()
+        # On remove les finis et en erreur si Config.clean_dl_list = 1
+        if Configuration.clean_dl_list == 1:
+            self.clean_list_Action()
         #########################################################
         # On désactive les boutons qui sont pas encore implantés
         self.button_resume.setEnabled(False)
