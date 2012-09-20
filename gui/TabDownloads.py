@@ -6,7 +6,7 @@ import subprocess
 import sys
 import PyQt4.uic
 from PyQt4.QtCore import *
-from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication
+from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication, QProgressBar, QBoxLayout
 
 from downloads import AnalyseDownloads, Downloads
 from configuration import Configuration
@@ -25,10 +25,20 @@ class TabDownloads(QWidget):
         QWidget.__init__(self, parent)
         # Load de l'UI
         PyQt4.uic.loadUi('ui/downloads.ui', self)
+        # Ajout de la progressBar
+        self.progressBar = QProgressBar()
+        self.progressBar.setMinimum(0)
+        self.progressBar.setMaximum(100)
+        self.progressBar.hide()
+        self.HLayout = QBoxLayout(QBoxLayout.LeftToRight)
+        self.HLayout.addWidget(self.progress_label)
+        self.HLayout.addWidget(self.progressBar)
+        self.formLayout_3.addRow(self.HLayout)
         # Vars 
         TabDownloads.instance = self
         self.downloads        = Downloads()
         self.pos              = None
+        self.download_looked  = None
         # Affichage custom
         #self.downloads_table.setStyleSheet(\
         #        "QTableView::item{ \
@@ -43,7 +53,6 @@ class TabDownloads(QWidget):
         self.downloads_table.itemClicked.connect(self.show_info_download)
         # Init
         self.load_downloads()
-        self.progressBar.hide()
         # On remove les finis et en erreur si Config.clean_dl_list = 1
         if Configuration.clean_dl_list == 1:
             self.clean_list_Action()
@@ -99,6 +108,9 @@ class TabDownloads(QWidget):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
         row = self.downloads_table.row(item)
         self.downloads_table.item(row, 1).setText(download.get_progress())
+        # On update la barre de progression si on est en train de regarder un download
+        if self.download_looked == download:
+            self.progressBar.setValue(int(download.progress))
 
     def update_speed(self, download):
         item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
@@ -236,8 +248,9 @@ class TabDownloads(QWidget):
         self.path_label.setText(u"Chemin local : {}".format(download.local_path))
         self.url_label.setText(u"URL : {}".format(download.file_share.url))
         self.size_label.setText(u"Taille : {}".format(download.file_share.str_size))   
-        #self.progressBar.show()     
-        #self.progressBar.setValue(download.progress)
+        self.progressBar.show()     
+        self.progressBar.setValue(int(download.progress))
+        self.download_looked = download
         
     def clean_list_Action(self):
         remove_list = []
