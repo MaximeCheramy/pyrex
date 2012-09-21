@@ -72,7 +72,7 @@ class Download(QObject):
         self._last_size = 0
 
     @classmethod
-    def get_download(cls, file_share, local_path, date, state):
+    def get_download(cls, file_share, local_path, date, state=1):
         # TODO DownloadSmb
         return DownloadFtp(file_share, local_path, date, state)
 
