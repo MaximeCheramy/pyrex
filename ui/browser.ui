@@ -172,11 +172,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>address_bar</sender>
+   <signal>returnPressed()</signal>
+   <receiver>Form</receiver>
+   <slot>_address_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>283</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>go_button</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>_address_changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>469</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>215</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activated(int,int)</slot>
   <slot>_cd_parent_dir()</slot>
   <slot>_prev()</slot>
   <slot>_next()</slot>
+  <slot>_address_changed()</slot>
  </slots>
 </ui>

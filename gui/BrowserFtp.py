@@ -47,6 +47,9 @@ class BrowserFtp(QWidget):
         self._cur_pos = 0
         self._change_dir('.')
 
+    def _address_changed(self):
+        self._change_dir(self.address_bar.text())
+
     def _cd_parent_dir(self):
         self._change_dir('..')
 
@@ -55,13 +58,13 @@ class BrowserFtp(QWidget):
             self._cur_pos -= 1
             self._url = self._history[self._cur_pos - 1]
             self.ftp.cd(self._url.path())
-            self.address_bar.setText(self._url.toString())
+            self.address_bar.setText(self._url.path())
 
     def _next(self):
         if self._cur_pos < len(self._history):
             self._url = self._history[self._cur_pos]
             self.ftp.cd(self._url.path())
-            self.address_bar.setText(self._url.toString())
+            self.address_bar.setText(self._url.path())
             self._cur_pos += 1
 
     def _change_dir(self, rel_path):
@@ -72,7 +75,7 @@ class BrowserFtp(QWidget):
             self._cur_pos += 1
             self._url = url
             self.ftp.cd(self._url.path())
-            self.address_bar.setText(self._url.toString())
+            self.address_bar.setText(self._url.path())
 
     def activated(self, row, col):
         name = self.list_table.item(row, 0).text()
