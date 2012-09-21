@@ -43,6 +43,7 @@ class BrowserFtp(QWidget):
         self.ftp.connectToHost(self._url.host(), self._url.port(21))
         self.ftp.login()
         # Vars
+        self._cmd_prev_next = False
         self._history = []
         self._cur_pos = 0
         self._change_dir('.')
@@ -56,26 +57,23 @@ class BrowserFtp(QWidget):
     def _prev(self):
         if self._cur_pos > 1:
             self._cur_pos -= 1
-            self._url = self._history[self._cur_pos - 1]
-            self.ftp.cd(self._url.path())
-            self.address_bar.setText(self._url.path())
+            self._next_url = self._history[self._cur_pos - 1]
+            self._cmd_prev_next = True
+            self.ftp.cd(self._next_url.path())
 
     def _next(self):
         if self._cur_pos < len(self._history):
-            self._url = self._history[self._cur_pos]
-            self.ftp.cd(self._url.path())
-            self.address_bar.setText(self._url.path())
+            self._next_url = self._history[self._cur_pos]
+            self._cmd_prev_next = True
+            self.ftp.cd(self._next_url.path())
             self._cur_pos += 1
 
     def _change_dir(self, rel_path):
         url = self._url.resolved(QUrl(rel_path))
         if url != rel_path:
-            self._history = self._history[:self._cur_pos]
-            self._history.append(url)
-            self._cur_pos += 1
-            self._url = url
-            self.ftp.cd(self._url.path())
-            self.address_bar.setText(self._url.path())
+            self._cmd_prev_next = False
+            self._next_url = url
+            self.ftp.cd(url.path())
 
     def activated(self, row, col):
         name = self.list_table.item(row, 0).text()
@@ -101,9 +99,19 @@ class BrowserFtp(QWidget):
 
     def command_finished(self, _, err):
         if self.ftp.currentCommand() == QFtp.Cd:
-            while self.list_table.rowCount() > 0:
-                self.list_table.removeRow(0)
-            self.ftp.list()
+            if err:
+                self.address_bar.setText(self._url.path())
+            else:
+                if not self._cmd_prev_next:
+                    self._history = self._history[:self._cur_pos]
+                    self._history.append(self._next_url)
+                    self._cur_pos += 1
+                self._url = self._next_url
+                self.address_bar.setText(self._url.path())
+
+                while self.list_table.rowCount() > 0:
+                    self.list_table.removeRow(0)
+                self.ftp.list()
 
     def resizeEvent(self, event):
         maxSize = self.list_table.size().width()
