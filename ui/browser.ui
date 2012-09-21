@@ -18,6 +18,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="prev_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -29,6 +32,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="next_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string/>
        </property>
