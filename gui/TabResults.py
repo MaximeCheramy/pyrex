@@ -63,7 +63,7 @@ class TabResults(QWidget):
         for share in results:
             if share.nickname in self.blacklist:
                 pass
-            elif share.protocol == "ftp" and share.nickname != "" and (int(share.size) > 0 or type(share) == DirectoryShare):    
+            elif share.protocol == "ftp" and (int(share.size) > 0 or type(share) == DirectoryShare):    
                 self._add_share(share)
 
     def double_clicked(self, row, col):
