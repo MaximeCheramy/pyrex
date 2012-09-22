@@ -92,15 +92,16 @@ class BrowserFtp(QWidget):
             self._change_dir(name)
 
     def list_info(self, url_info):
-        rows = self.list_table.rowCount()
-        self.list_table.insertRow(rows)
-        if url_info.isDir():
-            self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name() + '/'))
-            self.list_table.setItem(rows, 1, SizeItem(True, 0))
-        else:
-            self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name()))
-            self.list_table.setItem(rows, 1, SizeItem(False, url_info.size()))
-        self.list_table.setItem(rows, 2, QTableWidgetItem(url_info.lastModified().toString('dd/MM/yyyy')))
+        if url_info.size() > 0 or url_info.isDir():
+            rows = self.list_table.rowCount()
+            self.list_table.insertRow(rows)
+            if url_info.isDir():
+                self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name() + '/'))
+                self.list_table.setItem(rows, 1, SizeItem(True, 0))
+            else:
+                self.list_table.setItem(rows, 0, QTableWidgetItem(url_info.name()))
+                self.list_table.setItem(rows, 1, SizeItem(False, url_info.size()))
+            self.list_table.setItem(rows, 2, QTableWidgetItem(url_info.lastModified().toString('dd/MM/yyyy')))
 
     def command_finished(self, _, err):
         if self.ftp.currentCommand() == QFtp.Cd:

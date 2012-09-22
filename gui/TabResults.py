@@ -4,7 +4,7 @@ import PyQt4.uic
 from PyQt4.QtGui import QWidget, QTabWidget, QTableWidgetItem, QMenu, QFileDialog, QApplication
 from PyQt4.QtCore import *
 
-from Share import FileShare
+from Share import FileShare, DirectoryShare
 from downloads import Download
 from TabDownloads import TabDownloads
 from configuration import Configuration
@@ -63,7 +63,7 @@ class TabResults(QWidget):
         for share in results:
             if share.nickname in self.blacklist:
                 pass
-            elif share.protocol == "ftp" and share.nickname != "":    
+            elif share.protocol == "ftp" and share.nickname != "" and (int(share.size) > 0 or type(share) == DirectoryShare):    
                 self._add_share(share)
 
     def double_clicked(self, row, col):
