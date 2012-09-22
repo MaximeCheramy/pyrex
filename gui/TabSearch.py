@@ -14,6 +14,7 @@ class TabSearch(QWidget):
 
     def __init__(self, search, tab_downloads, parent):
         QWidget.__init__(self, parent)
+        TabSearch.instance = self
         self.tab_downloads = tab_downloads
         self.tabs = parent
         # Load de l'UI

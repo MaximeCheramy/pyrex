@@ -6,13 +6,15 @@ from PyQt4.QtCore import pyqtSignal, QTimer, Qt, SIGNAL
 
 from peers import PeersGet
 from stats import StatisticsGet
+from BrowserFtp import BrowserFtp
 
 class TabPeers(QWidget):
     peersReceived = pyqtSignal(list)
     statsReceived = pyqtSignal(object)
-    def __init__(self, tabs_results, tabs):
+    def __init__(self, tab_search, tabs):
         QWidget.__init__(self, tabs)
-        self.tabs_results = tabs_results
+        self.tab_search   = tab_search
+        self.tabs_results = self.tab_search.instance.tabs_results
         self.tabs         = tabs
         # Load de l'UI
         PyQt4.uic.loadUi('ui/peers.ui', self)
@@ -23,6 +25,8 @@ class TabPeers(QWidget):
         self.cache      = {}
         # Config affichage
         self.table_peers.sortItems(0)
+        self.button_SMB.hide()
+        self.button_FTP.hide()
         #self.table_peers.setStyleSheet(\
         #        "QTableView::item{ \
         #         border-right-style:solid; \
@@ -66,6 +70,7 @@ class TabPeers(QWidget):
                 self.label_size_shares.setText(stats.shares_size_mine_str)
                 self.label_size_total_shares.setText(stats.shares_size_total_str)
                 self.label_peers.setText(str(stats.users))
+                self.button_FTP.show()
         else:
             if self.timer:
                 self.timer.stop()
@@ -79,8 +84,7 @@ class TabPeers(QWidget):
             item = self.table_peers.item(row, 0)
             self.label_nickname.setText(item.peer.nickname)
             self.label_ip.setText(item.peer.ip)
-            self.label_version.setText("%s %s" %
-                            (item.peer.name, item.peer.version))
+            self.label_version.setText("%s %s" % (item.peer.name, item.peer.version))
 
             if item.peer.ip in self.cache:
                 self.set_stats(self.cache[item.peer.ip])
@@ -97,10 +101,6 @@ class TabPeers(QWidget):
         # Actions
         showAction      = menu.addAction("Afficher ses partages")
         copyAction      = menu.addAction("Copier l'IP")
-        #########################################################
-        # On désactive les boutons qui sont pas encore implantés
-        showAction.setEnabled(False)   
-        #########################################################  
         # Signaux
         self.connect(showAction, SIGNAL('triggered()'), self.show_Action)
         self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)
@@ -112,11 +112,19 @@ class TabPeers(QWidget):
         return self.table_peers.item(row, 0).peer
         
     def show_Action(self):
-        print "TODO"
+        peer = self.getPeer()
+        #TODO: ajouter le SMB quand ça existera :p
+        browser = BrowserFtp("ftp://"+str(peer.ip)+":2221", self.tabs_results)
+        self.tabs_results.addTab(browser, peer.nickname)
+        self.tabs_results.setCurrentWidget(browser)
+        self.tabs.setCurrentIndex(0)
                 
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
         pressPaper.setText(self.getPeer().ip)
+        
+    def double_clicked(self, row, col):
+        self.show_Action()
         
     def resizeEvent(self, event):
         maxSize = self.table_peers.size().width()

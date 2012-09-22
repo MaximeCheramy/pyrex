@@ -130,22 +130,15 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="label_49">
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_44">
         <property name="text">
-         <string/>
+         <string>Client Rex :</string>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
        <widget class="QLabel" name="label_version">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLabel" name="label_peers">
         <property name="text">
          <string/>
         </property>
@@ -158,12 +151,30 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="label_44">
+      <item row="6" column="1">
+       <widget class="QLabel" name="label_peers">
         <property name="text">
-         <string>Client Rex :</string>
+         <string/>
         </property>
        </widget>
+      </item>
+      <item row="4" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="button_FTP">
+          <property name="text">
+           <string>Parcourir FTP</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="button_SMB">
+          <property name="text">
+           <string>Parcourir SMB</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -188,8 +199,58 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>table_peers</sender>
+   <signal>cellDoubleClicked(int,int)</signal>
+   <receiver>utilisateurs</receiver>
+   <slot>double_clicked(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>268</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_FTP</sender>
+   <signal>clicked()</signal>
+   <receiver>utilisateurs</receiver>
+   <slot>show_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>295</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_SMB</sender>
+   <signal>clicked()</signal>
+   <receiver>utilisateurs</receiver>
+   <slot>show_Action()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>445</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>cell_selected(int,int,int,int)</slot>
+  <slot>double_clicked(int,int)</slot>
+  <slot>show_Action()</slot>
  </slots>
 </ui>
