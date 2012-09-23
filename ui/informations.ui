@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>533</width>
+    <width>560</width>
     <height>300</height>
    </rect>
   </property>
@@ -55,7 +55,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>60</height>
+       <height>50</height>
       </size>
      </property>
     </spacer>
@@ -113,10 +113,20 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>60</height>
+       <height>50</height>
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="author_label">
+     <property name="text">
+      <string>Créé par Max et Jerk. Logo par Draco.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QLabel" name="label_20">

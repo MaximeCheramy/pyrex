@@ -13,9 +13,9 @@ class TabInformations(QWidget):
     versionReceived = pyqtSignal(object)
     def __init__(self, search, parent=None):
         QWidget.__init__(self, parent)
-
+        # Load de l'UI
         PyQt4.uic.loadUi('ui/informations.ui', self)
-
+        # Signaux
         self.statsReceived.connect(self.set_statistics)
         self.versionReceived.connect(self.set_version)
 
@@ -35,5 +35,5 @@ class TabInformations(QWidget):
     def set_version(self, version):
         txt = "%s version %d.%d.%d\n" % \
            (version.name, version.major, version.minor, version.minor_minor)
-        txt += "PyRex version 0.0.1"
+        txt += "PyRex version 0.1"
         self.version_label.setText(txt)
