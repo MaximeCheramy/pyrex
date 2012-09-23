@@ -48,7 +48,9 @@ class Worker(QRunnable):
 
 
 class Client(QObject):
-    def __init__(self, element, content_handler, hostname=Configuration.ip_daemon):
+    def __init__(self, element, content_handler, hostname=None):
+        if hostname == None:
+            hostname = Configuration.ip_daemon
         QObject.__init__(self)
         self.worker = Worker(element, content_handler, str(hostname))
 
