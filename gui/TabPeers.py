@@ -11,9 +11,10 @@ from BrowserFtp import BrowserFtp
 class TabPeers(QWidget):
     peersReceived = pyqtSignal(list)
     statsReceived = pyqtSignal(object)
-    def __init__(self, tab_search, tabs):
+    def __init__(self, tab_search, tab_downloads, tabs):
         QWidget.__init__(self, tabs)
         self.tab_search   = tab_search
+        self.tab_downloads= tab_downloads
         self.tabs_results = self.tab_search.instance.tabs_results
         self.tabs         = tabs
         # Load de l'UI
@@ -114,7 +115,7 @@ class TabPeers(QWidget):
     def show_Action(self):
         peer = self.getPeer()
         #TODO: ajouter le SMB quand ça existera :p
-        browser = BrowserFtp("ftp://"+str(peer.ip)+":2221", self.tabs_results)
+        browser = BrowserFtp("ftp://"+str(peer.ip)+":2221", self.tabs, self.tab_downloads, self.tabs_results)
         self.tabs_results.addTab(browser, peer.nickname)
         self.tabs_results.setCurrentWidget(browser)
         self.tabs.setCurrentIndex(0)

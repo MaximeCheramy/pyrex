@@ -20,7 +20,7 @@ class SizeItem(QTableWidgetItem):
 
 
 class BrowserFtp(QWidget):
-    def __init__(self, url, parent=None):
+    def __init__(self, url, tabs, tab_download, parent=None):
         super(BrowserFtp, self).__init__(parent)
         # Load de l'UI
         PyQt4.uic.loadUi('ui/browser.ui', self)
@@ -43,9 +43,11 @@ class BrowserFtp(QWidget):
         self.ftp.connectToHost(self._url.host(), self._url.port(21))
         self.ftp.login()
         # Vars
+        self.tabs           = tabs
+        self.tab_download   = tab_download
         self._cmd_prev_next = False
-        self._history = []
-        self._cur_pos = 0
+        self._history       = []
+        self._cur_pos       = 0
         self._change_dir('.')
 
     def _address_changed(self):
@@ -84,10 +86,11 @@ class BrowserFtp(QWidget):
         name = self.list_table.item(row, 0).text()
         size = self.list_table.item(row, 1).size
         if size:
-            share = FileShare(name, self._url.host(), self._url.port(21), self._url.path(), 'FTP', size, 0, '')
+            share = FileShare(unicode(name.toUtf8(), 'utf-8'), unicode(self._url.host().toUtf8(), 'utf-8'), self._url.port(21), unicode(self._url.path().toUtf8(), 'utf-8'), 'FTP', size, 0, '')
             dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
             TabDownloads.instance.add_download(dl)
             dl.start_download()
+            self.tabs.setCurrentWidget(self.tab_download)
         else:
             self._change_dir(name)
 

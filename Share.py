@@ -107,7 +107,10 @@ class Share(object):
             SubElement(share_element, 'port').text = str(self.port)
         SubElement(share_element, 'path').text = self.path
         SubElement(share_element, 'protocol').text = self.protocol
-        SubElement(share_element, 'last_modified').text = str(int(time.mktime(time.strptime(str(self.last_modified), '%Y-%m-%d')) * 1000))
+        try:
+            SubElement(share_element, 'last_modified').text = str(int(time.mktime(time.strptime(str(self.last_modified), '%Y-%m-%d')) * 1000))
+        except ValueError:
+            SubElement(share_element, 'last_modified').text = str(0)
         SubElement(share_element, 'nickname').text = self.nickname
         SubElement(share_element, 'size').text = str(self.size)
         return share_element

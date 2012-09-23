@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         self.downloads = TabDownloads(self.tabs)
         self.search = TabSearch(None, self.downloads, self.tabs)
         self.adv_search = TabAdvSearch(self.search, self.tabs)
-        self.peers = TabPeers(self.search, self.tabs)
+        self.peers = TabPeers(self.search, self.downloads, self.tabs)
         self.options = TabOptions(self.tabs)
         self.shares = TabShares(self.tabs)
         self.informations = TabInformations(self.tabs)

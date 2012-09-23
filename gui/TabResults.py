@@ -71,7 +71,7 @@ class TabResults(QWidget):
         if type(share) is FileShare:
             self.download(share)
         else:
-            browser = BrowserFtp(share.url, self.tabs_results)
+            browser = BrowserFtp(share.url, self.tabs, self.tab_downloads, self.tabs_results)
             self.tabs_results.addTab(browser, share.client_address)
             self.tabs_results.setCurrentWidget(browser)
 
@@ -140,7 +140,7 @@ class TabResults(QWidget):
         
     def open_Action(self):
         share = self.getShare()
-        browser = BrowserFtp(share.url, self.tabs_results)
+        browser = BrowserFtp(share.url, self.tabs, self.tab_downloads, self.tabs_results)
         self.tabs_results.addTab(browser, share.client_address)
         self.tabs_results.setCurrentWidget(browser)
         
@@ -150,7 +150,7 @@ class TabResults(QWidget):
         
     def display_shares_Action(self):
         share = self.getShare()
-        browser = BrowserFtp("ftp://"+str(share.client_address)+":"+str(share.port), self.tabs_results)
+        browser = BrowserFtp("ftp://"+str(share.client_address)+":"+str(share.port), self.tabs, self.tab_downloads, self.tabs_results)
         self.tabs_results.addTab(browser, share.client_address)
         self.tabs_results.setCurrentWidget(browser)
         

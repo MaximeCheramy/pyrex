@@ -49,7 +49,10 @@ class Downloads(list):
             download_element = SubElement(downloads_element, 'download')
             SubElement(download_element, 'localpath').text = download.local_path
             SubElement(download_element, 'status').text = int_to_status(download.state)
-            SubElement(download_element, 'date').text = str(int(time.mktime(time.strptime(str(download.date), '%Y-%m-%d')) * 1000))
+            try:
+                SubElement(download_element, 'date').text = str(int(time.mktime(time.strptime(str(download.date), '%Y-%m-%d')) * 1000))
+            except ValueError:
+                SubElement(download_element, 'date').text = str(0)
             share_element = download.file_share.xml_element()
             download_element.append(share_element)
 
@@ -213,8 +216,7 @@ class AnalyseDownload(object):
                 self.share = self.analyse_share.share
                 self.analyse_share = None
         elif name == "download":
-            self.download = Download.get_download(self.share, self.local_path,
-                    self.date, status_to_int(self.status))
+            self.download = Download.get_download(self.share, self.local_path, self.date, status_to_int(self.status))
         elif name == "localpath":
             self.local_path = buf
         elif name == "status":
