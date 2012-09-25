@@ -8,10 +8,9 @@ read version
 if [ ! -d pyRex ]; then
     mkdir -p pyRex/DEBIAN/
     mkdir -p pyRex/usr/share/pyrex/
-    echo '#!/bin/bash
-# Create the pyrex executable
-echo "#!/bin/sh
-exec python /usr/share/pyrex/pyrex.py " > /usr/bin/pyrex' > pyRex/DEBIAN/postinst
+    mkdir -p pyRex/usr/bin/
+    echo "#!/bin/sh
+exec python /usr/share/pyrex/pyrex.py " > pyRex/usr/bin/pyrex
     echo '#!/bin/bash
 sudo rm -r /usr/share/pyrex
 sudo rm /usr/bin/pyrex' > pyRex/DEBIAN/prerm
@@ -27,7 +26,7 @@ Version: "$version"
 Section: Python
 Priority: optional
 Architecture: all
-Depends: bash, python (= 2.7), python-qt4 (>= 4.7)
+Depends: bash, python (= 2.7), python-qt4 (>= 4.7), rex
 Maintainer: J. SIVADIER <sivadier@etud.insa-toulouse.fr> and M. CHERAMY <mcheramy@etud.insa-toulouse.fr>
 Homepage: http://etud.insa-toulouse.fr/~rex
 Description: Client FTP pour les étudiants de l'INSA de Toulouse codé en python. Successeur de Rex." > DEBIAN/control
