@@ -11,6 +11,7 @@ if [ ! -d pyRex ]; then
     mkdir -p pyRex/usr/bin/
     cat > pyRex/usr/bin/pyrex << EOF
 #!/bin/sh
+cd /usr/share/pyrex/
 exec python /usr/share/pyrex/pyrex.py
 EOF
     cat > pyRex/DEBIAN/prerm << EOF
