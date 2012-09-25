@@ -4,25 +4,28 @@
 echo "entrez la version exacte du paquet"
 read version
 
+# Mémorise le répertoire courant
+pushd .
+
 ## Creation de la base du paquet si ça n'existe pas
-if [ ! -d pyRex ]; then
-    mkdir -p pyRex/DEBIAN/
-    mkdir -p pyRex/usr/share/pyrex/
-    mkdir -p pyRex/usr/bin/
-    cat > pyRex/usr/bin/pyrex << EOF
+if [ ! -d dist ]; then
+    mkdir -p dist/DEBIAN/
+    mkdir -p dist/usr/share/pyrex/
+    mkdir -p dist/usr/bin/
+    cat > dist/usr/bin/pyrex << EOF
 #!/bin/sh
 cd /usr/share/pyrex/
-exec python /usr/share/pyrex/pyrex.py
+exec python pyrex.py
 EOF
-    cat > pyRex/DEBIAN/prerm << EOF
+    cat > dist/DEBIAN/prerm << EOF
 sudo rm -rf /usr/share/pyrex/
 sudo rm /usr/bin/pyrex
 EOF
-    chmod +x pyRex/usr/bin/pyrex
+    chmod +x dist/usr/bin/pyrex
 fi
 
 ## On balance les infos dans le paquet
-cd pyRex
+cd dist
 cp -r ../pyrex/* usr/share/pyrex/
 rm usr/share/pyrex/*.pyc usr/share/pyrex/*~ usr/share/pyrex/gui/*.pyc usr/share/pyrex/gui/*~
 cat > DEBIAN/control << EOF
@@ -40,8 +43,8 @@ find usr -exec md5sum {} + > DEBIAN/md5sums
 chmod 755 DEBIAN/*
 
 ## On compile
-cd ../
-dpkg-deb --build pyRex
+popd
+dpkg-deb --build dist
 
 ## On change le nom
-mv pyRex.deb pyRex_$version.deb
+mv dist.deb pyrex_$version.deb
