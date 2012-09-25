@@ -17,10 +17,6 @@ if [ ! -d dist ]; then
 cd /usr/share/pyrex/
 exec python pyrex.py
 EOF
-    cat > dist/DEBIAN/prerm << EOF
-sudo rm -rf /usr/share/pyrex/
-sudo rm /usr/bin/pyrex
-EOF
     chmod +x dist/usr/bin/pyrex
 fi
 
@@ -44,7 +40,7 @@ chmod 755 DEBIAN/*
 
 ## On compile
 popd
-dpkg-deb --build dist
+fakeroot dpkg-deb --build dist
 
 ## On change le nom
 mv dist.deb pyrex_$version.deb
