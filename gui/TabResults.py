@@ -84,7 +84,7 @@ class TabResults(QWidget):
         TabDownloads.instance.add_download(dl)
         dl.start_download()
         self.tabs.setCurrentWidget(self.tab_downloads)
-                
+        
     def contextMenu(self, pos):
         menu = ShareContextMenu(self.getShare, self.getMultipleShare, self.download, self.tabs_results, self.tab_downloads, self.tabs, self, self.blacklist)
         # On affiche le menu

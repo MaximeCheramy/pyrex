@@ -99,8 +99,8 @@ class BrowserFtp(QWidget):
             share = FileShare(unicode(name.toUtf8(), 'utf-8'), unicode(self._url.host().toUtf8(), 'utf-8'), self._url.port(21), unicode(self._url.path().toUtf8(), 'utf-8'), 'FTP', size, 0, '')
             self.download(share)
         else:
-            self._change_dir(name)        
-
+            self._change_dir(name)
+            
     def list_info(self, url_info):
         if url_info.size() > 0 or url_info.isDir():
             rows = self.list_table.rowCount()
