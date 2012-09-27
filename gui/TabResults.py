@@ -9,7 +9,7 @@ from downloads import Download
 from TabDownloads import TabDownloads
 from configuration import Configuration
 from BrowserFtp import BrowserFtp
-from search import Search
+from ShareContextMenu import ShareContextMenu
 
 from datetime import date
 
@@ -24,10 +24,11 @@ class TabResults(QWidget):
 
     def __init__(self, search, tabs_results, tab_downloads, tabs):
         super(TabResults, self).__init__(tabs_results)
-        self.tabs_results = tabs_results
-        self.tab_downloads = tab_downloads
-        self.tabs = tabs
-        self.blacklist = set()
+        # Vars
+        self.tabs_results   = tabs_results
+        self.tab_downloads  = tab_downloads
+        self.tabs           = tabs
+        self.blacklist      = set()
         # Load de l'UI
         PyQt4.uic.loadUi('ui/tabresult.ui', self)
         # Affichage custom
@@ -71,11 +72,11 @@ class TabResults(QWidget):
         if type(share) is FileShare:
             self.download(share)
         else:
-            browser = BrowserFtp(share.url, self.tabs, self.tab_downloads, self.tabs_results)
+            browser = BrowserFtp(share.url, self.tabs, self.tabs_results, self.tab_downloads, self.tabs_results)
             self.tabs_results.addTab(browser, share.client_address)
             self.tabs_results.setCurrentWidget(browser)
-
-    def download(self, share, directory=None):
+            
+    def download(self, share, directory=None):    
         if not directory:
             dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today(), 1)
         else:
@@ -83,83 +84,22 @@ class TabResults(QWidget):
         TabDownloads.instance.add_download(dl)
         dl.start_download()
         self.tabs.setCurrentWidget(self.tab_downloads)
-      
+                
     def contextMenu(self, pos):
-        menu = QMenu()
-        # Actions 
-        downloadAction      = menu.addAction(u"Télécharger")
-        downloadToAction    = menu.addAction(u"Télécharger vers...")
-        copyAction          = menu.addAction("Copier l'URL")
-        openAction          = menu.addAction("Ouvrir")
-        exploreAction       = menu.addAction("Parcourir le dossier")
-        displaySharesAction = menu.addAction("Afficher les partages de l'utilisateur")
-        noShareAction       = menu.addAction("Masquer les partages de l'utilisateur")
-        searchSameAction    = menu.addAction("Rechercher des fichiers similaires")
-        # Desactivation d'actions impossibles
-        if type(self.getShare()) is not FileShare:
-            downloadAction.setEnabled(False)
-            downloadToAction.setEnabled(False)
-        #########################################################
-        # On désactive les boutons qui sont pas encore implantés
-        noShareAction.setEnabled(False)   
-        #########################################################            
-        # Signaux
-        self.connect(downloadAction, SIGNAL('triggered()'), self.download_Action)
-        self.connect(downloadToAction, SIGNAL('triggered()'), self.download_to_Action)
-        self.connect(copyAction, SIGNAL('triggered()'), self.copy_Action)
-        self.connect(openAction, SIGNAL('triggered()'), self.open_Action)
-        self.connect(exploreAction, SIGNAL('triggered()'), self.open_Action)
-        self.connect(displaySharesAction, SIGNAL('triggered()'), self.display_shares_Action)
-        self.connect(noShareAction, SIGNAL('triggered()'), self.no_share_Action)
-        self.connect(searchSameAction, SIGNAL('triggered()'), self.search_same_Action)
+        menu = ShareContextMenu(self.getShare, self.getMultipleShare, self.download, self.tabs_results, self.tab_downloads, self.tabs, self, self.blacklist)
         # On affiche le menu
         menu.exec_(self.mapToGlobal(pos))
-
-    def getShare(self):
-        row = self.table_results.currentRow()
+        
+    def getShare(self, row=None):
+        if not row:
+            row = self.table_results.currentRow()
         return self.table_results.item(row, 0).share
         
     def getMultipleShare(self):
         if len(self.table_results.selectionModel().selectedRows()) > 0:
-            return [self.table_results.item(row.row(), 0).share for row in self.table_results.selectionModel().selectedRows()]
+            return [self.getShare(row.row()) for row in self.table_results.selectionModel().selectedRows()]
         else:
             return self.getShare()
-        
-    def download_Action(self):
-        shares = self.getMultipleShare()
-        for share in shares:
-            self.download(share)
-        
-    def download_to_Action(self):
-        directory = QFileDialog.getExistingDirectory(self)
-        self.download(self.getShare(), directory)
-        
-    def copy_Action(self):
-        pressPaper = QApplication.clipboard()
-        pressPaper.setText(self.getShare().url)
-        
-    def open_Action(self):
-        share = self.getShare()
-        browser = BrowserFtp(share.url, self.tabs, self.tab_downloads, self.tabs_results)
-        self.tabs_results.addTab(browser, share.client_address)
-        self.tabs_results.setCurrentWidget(browser)
-        
-    def no_share_Action(self):
-        share = self.getShare()
-        self.blacklist.add(share.nickname)
-        
-    def display_shares_Action(self):
-        share = self.getShare()
-        browser = BrowserFtp("ftp://"+str(share.client_address)+":"+str(share.port), self.tabs, self.tab_downloads, self.tabs_results)
-        self.tabs_results.addTab(browser, share.client_address)
-        self.tabs_results.setCurrentWidget(browser)
-        
-    def search_same_Action(self):
-        share = self.getShare()
-        search = Search(share.name)
-        tab_result = TabResults(search, self.tabs_results, self.tab_downloads, self.tabs)
-        self.tabs_results.addTab(tab_result, search.query)
-        self.tabs_results.setCurrentWidget(tab_result)
         
     def resizeEvent(self, event):
         maxSize = self.table_results.size().width()
@@ -180,7 +120,8 @@ class TabsResults(QTabWidget):
         QTabWidget.__init__(self, parent)
         self.setTabsClosable(True)
         self.setMovable(True)
+        # Signaux
         QObject.connect(self, SIGNAL('tabCloseRequested(int)'), self.close_tab)
-        
+  
     def close_tab(self, index):
         self.removeTab(index)

@@ -47,7 +47,10 @@ class Downloads(list):
         downloads_element = Element('downloads')
         for download in self:
             download_element = SubElement(downloads_element, 'download')
-            SubElement(download_element, 'localpath').text = download.local_path
+            try:
+                SubElement(download_element, 'localpath').text = unicode(download.local_path.toUtf8(), 'utf-8')
+            except AttributeError:
+                SubElement(download_element, 'localpath').text = download.local_path
             SubElement(download_element, 'status').text = int_to_status(download.state)
             try:
                 SubElement(download_element, 'date').text = str(int(time.mktime(time.strptime(str(download.date), '%Y-%m-%d')) * 1000))

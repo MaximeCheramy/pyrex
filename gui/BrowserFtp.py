@@ -1,12 +1,17 @@
+# coding=utf-8
+
 import PyQt4.uic
 from datetime import date
+
+from ShareContextMenu import ShareContextMenu
+from Share import FileShare, DirectoryShare
 from configuration import Configuration
 from TabDownloads import TabDownloads
 from downloads import Download
-from Share import FileShare
 from Tools import convert_size_str
+
 from PyQt4.QtGui import QWidget, QTableWidgetItem
-from PyQt4.QtCore import QUrl
+from PyQt4.QtCore import QUrl, Qt
 from PyQt4.QtNetwork import QFtp
 
 class SizeItem(QTableWidgetItem):
@@ -20,7 +25,7 @@ class SizeItem(QTableWidgetItem):
 
 
 class BrowserFtp(QWidget):
-    def __init__(self, url, tabs, tab_download, parent=None):
+    def __init__(self, url, tabs, tabs_results, tab_downloads, parent=None):
         super(BrowserFtp, self).__init__(parent)
         # Load de l'UI
         PyQt4.uic.loadUi('ui/browser.ui', self)
@@ -36,7 +41,10 @@ class BrowserFtp(QWidget):
         # Init FTP
         self._url = QUrl(url)
         self.ftp = QFtp(self)
+        # On autorise la creation de menu contextuel
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
         # Signaux
+        self.customContextMenuRequested.connect(self.contextMenu)
         self.ftp.commandFinished.connect(self.command_finished)
         self.ftp.listInfo.connect(self.list_info)
         # Load FTP
@@ -44,7 +52,8 @@ class BrowserFtp(QWidget):
         self.ftp.login()
         # Vars
         self.tabs           = tabs
-        self.tab_download   = tab_download
+        self.tabs_results   = tabs_results
+        self.tab_downloads  = tab_downloads
         self._cmd_prev_next = False
         self._history       = []
         self._cur_pos       = 0
@@ -82,17 +91,15 @@ class BrowserFtp(QWidget):
             self._next_url = url
             self.ftp.cd(url.path())
 
+    
     def activated(self, row, col):
         name = self.list_table.item(row, 0).text()
         size = self.list_table.item(row, 1).size
         if size:
             share = FileShare(unicode(name.toUtf8(), 'utf-8'), unicode(self._url.host().toUtf8(), 'utf-8'), self._url.port(21), unicode(self._url.path().toUtf8(), 'utf-8'), 'FTP', size, 0, '')
-            dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today())
-            TabDownloads.instance.add_download(dl)
-            dl.start_download()
-            self.tabs.setCurrentWidget(self.tab_download)
+            self.download(share)
         else:
-            self._change_dir(name)
+            self._change_dir(name)        
 
     def list_info(self, url_info):
         if url_info.size() > 0 or url_info.isDir():
@@ -123,6 +130,37 @@ class BrowserFtp(QWidget):
                     self.list_table.removeRow(0)
                 self.ftp.list()
 
+    def download(self, share, directory=None):    
+        if not directory:
+            dl = Download.get_download(share, Configuration.save_dir + "/" + share.name, date.today(), 1)
+        else:
+            dl = Download.get_download(share, directory + "/" + share.name, date.today(), 1)
+        TabDownloads.instance.add_download(dl)
+        dl.start_download()
+        self.tabs.setCurrentWidget(self.tab_downloads)
+                
+    def contextMenu(self, pos):
+        menu = ShareContextMenu(self.getShare, self.getMultipleShare, self.download, self.tabs_results, self.tab_downloads, self.tabs, self)
+        # On affiche le menu
+        menu.exec_(self.mapToGlobal(pos))
+
+    def getShare(self, row=None):
+        if not row:
+            row = self.list_table.currentRow()
+        name = self.list_table.item(row, 0).text()
+        size = self.list_table.item(row, 1).size
+        if size:
+            share = FileShare(unicode(name.toUtf8(), 'utf-8'), unicode(self._url.host().toUtf8(), 'utf-8'), self._url.port(21), unicode(self._url.path().toUtf8(), 'utf-8'), 'FTP', size, 0, '')
+        else:
+            share = DirectoryShare(unicode(name.toUtf8(), 'utf-8'), unicode(self._url.host().toUtf8(), 'utf-8'), self._url.port(21), unicode(self._url.path().toUtf8(), 'utf-8'), 'FTP', 0, '')
+        return share
+        
+    def getMultipleShare(self):
+        if len(self.list_table.selectionModel().selectedRows()) > 0:             
+            return [self.getShare(row.row()) for row in self.list_table.selectionModel().selectedRows()]
+        else:
+            return self.getShare()
+    
     def resizeEvent(self, event):
         maxSize = self.list_table.size().width()
         # Nom Ficher : 40%

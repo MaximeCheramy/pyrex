@@ -6,7 +6,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget
 
 from search import Search
-
 from TabResults import TabResults, TabsResults
 
 class TabSearch(QWidget):
@@ -33,5 +32,6 @@ class TabSearch(QWidget):
         self.tabs_results.addTab(tab_result, search.query)
         self.tabs_results.setCurrentWidget(tab_result)
         # On connecte les icones copier et télécharger sélection
-        self.btn_copy_url.clicked.connect(tab_result.instance.copy_Action)
-        self.btn_download.clicked.connect(tab_result.instance.download_Action)
+        # TODO
+        #self.btn_copy_url.clicked.connect(.copy_Action)
+        #self.btn_download.clicked.connect(.menu.download_Action)

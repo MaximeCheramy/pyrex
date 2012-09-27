@@ -115,7 +115,7 @@ class TabPeers(QWidget):
     def show_Action(self):
         peer = self.getPeer()
         #TODO: ajouter le SMB quand ça existera :p
-        browser = BrowserFtp("ftp://"+str(peer.ip)+":2221", self.tabs, self.tab_downloads, self.tabs_results)
+        browser = BrowserFtp("ftp://"+str(peer.ip)+":2221", self.tabs, self.tabs_results, self.tab_downloads, self.tabs_results)
         self.tabs_results.addTab(browser, peer.nickname)
         self.tabs_results.setCurrentWidget(browser)
         self.tabs.setCurrentIndex(0)
