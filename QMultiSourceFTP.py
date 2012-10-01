@@ -33,6 +33,7 @@ class QMultiSourceFtp(QObject):
         self._size          = 0
         self._out_filename  = None
         self._read          = None
+        self._is_downloading= False
  
     def _get_size(self, urls):
         # On récupère la taille du fichier distant
@@ -170,27 +171,27 @@ class QMultiSourceFtp(QObject):
         self._data = []
         self._out_filename = out_filename
         self._urls = urls
-
         if not urls:
             return
-
         self._size = self._get_size(urls)
-
         # Creating temporary folder
         if resume: # Resume download
             self._load_info()
         else: 
             self._create_dir()
-         
         self._do_distribution()
-
         self._start_all()
+        self._is_downloading = True
         self._write_config()
+        
+    def manage_download(self, new_urls):
+        if self._is_downloading:
+            for url in new_urls:
+                self._let_me_help(url)               
 
     def _start_all(self):
         # Starting all downloads
         # Opening part index file
-
         for data in self._data:
             if not data['isFinished']:
                 self._start_download(data)

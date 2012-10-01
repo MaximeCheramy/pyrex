@@ -142,7 +142,6 @@ class DownloadMultipleFtp(Download):
     def __init__(self, file_share, local_path, date, state):
         Download.__init__(self, file_share, local_path, date, state)
         self._urls              = []
-        self._new_urls          = []
         self._ftp               = QMultiSourceFtp(self)
         self._is_downloading    = False
         self.read_bytes         = QFile(self.local_path).size()
@@ -161,12 +160,13 @@ class DownloadMultipleFtp(Download):
         self.timer.start(1000*60*2)
         self.timer.timeout.connect(self.ask_for_URLs)
         self._urls.append(QUrl(self.file_share.url))
-        self.manage_download()
+        print "Starting download!"
+        self._ftp.get(self._urls, self.local_path)
         
     def ask_for_URLs(self):
         """ 1) Envoie une recherche en background de fichiers similaires
         2) Lorsque les urls sont arrivées, set_URLs met à jour les urls puis appelle manage_download
-        3) Manage_download ajoute des urls pour aider au download"""
+        3) _ftp.Manage_download ajoute des urls pour aider au download"""
         print "Asking for urls"
         search = Search(self.file_share.name, self.file_share.protocol)
         # Signal
@@ -174,21 +174,12 @@ class DownloadMultipleFtp(Download):
         search.do_search(self.resultsReceived.emit)
                 
     def set_URLs(self, results):
-        self._new_urls = []
+        new_urls = []
         for result in results:
             if result.url not in self._urls:
-                self._new_urls.append(QUrl(result.url))
+                new_urls.append(QUrl(result.url))
                 self._urls.append(QUrl(result.url))
-        self.manage_download()
-            
-    def manage_download(self):
-        if self._is_downloading:
-            for url in self._new_urls:
-                self._ftp._let_me_help(url)
-        else:
-            print "Starting download!"
-            self._ftp.get(self._urls, self.local_path)
-            self._is_downloading = True               
+        self._ftp.manage_download(new_urls)            
     
     def stop(self):
         print "TBD"
