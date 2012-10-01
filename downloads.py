@@ -11,6 +11,9 @@ from PyQt4.QtNetwork import QFtp
 from Share import AnalyseShare
 from DefaultHandler import DefaultHandler
 from xml.etree.ElementTree import Element, SubElement
+
+from QMultiSourceFTP import QMultiSourceFtp
+from search import Search
 import Tools
 
 def status_to_int(status):
@@ -80,7 +83,8 @@ class Download(QObject):
     @classmethod
     def get_download(cls, file_share, local_path, date, state=1):
         # TODO DownloadSmb
-        return DownloadFtp(file_share, local_path, date, state)
+        #return DownloadFtp(file_share, local_path, date, state)
+        return DownloadMultipleFtp(file_share, local_path, date, state)
 
     @property
     def speed(self):
@@ -127,6 +131,98 @@ class Download(QObject):
             return u'Connexion interrompue'
         elif self._state == 7:
             return u'Error :('
+
+class DownloadMultipleFtp(Download):
+    progressModified    = pyqtSignal(object)
+    stateChanged        = pyqtSignal(object)
+    downloadFinished    = pyqtSignal(object)
+    speedModified       = pyqtSignal(object)
+    resultsReceived     = pyqtSignal(list)
+    
+    def __init__(self, file_share, local_path, date, state):
+        Download.__init__(self, file_share, local_path, date, state)
+        self._urls              = []
+        self._new_urls          = []
+        self._ftp               = QMultiSourceFtp(self)
+        self._is_downloading    = False
+        self.read_bytes         = QFile(self.local_path).size()
+        # Timer2
+        self.timer = QTimer()
+        self.timer2 = QTimer()
+        self.timer2.start(500)
+        self.timer2.timeout.connect(self.update_speed)
+        # Signaux
+        self._ftp.dataTransferProgress.connect(self.update_progress)
+        self._ftp.done.connect(self.download_finished)
+        self._ftp.stateChanged.connect(self.state_changed)
+         
+    def start_download(self):
+        self.ask_for_URLs()
+        self.timer.start(1000*60*2)
+        self.timer.timeout.connect(self.ask_for_URLs)
+        self._urls.append(QUrl(self.file_share.url))
+        self.manage_download()
+        
+    def ask_for_URLs(self):
+        """ 1) Envoie une recherche en background de fichiers similaires
+        2) Lorsque les urls sont arrivées, set_URLs met à jour les urls puis appelle manage_download
+        3) Manage_download ajoute des urls pour aider au download"""
+        print "Asking for urls"
+        search = Search(self.file_share.name, self.file_share.protocol)
+        # Signal
+        self.resultsReceived.connect(self.set_URLs)
+        search.do_search(self.resultsReceived.emit)
+                
+    def set_URLs(self, results):
+        self._new_urls = []
+        for result in results:
+            if result.url not in self._urls:
+                self._new_urls.append(QUrl(result.url))
+                self._urls.append(QUrl(result.url))
+        self.manage_download()
+            
+    def manage_download(self):
+        if self._is_downloading:
+            for url in self._new_urls:
+                self._ftp._let_me_help(url)
+        else:
+            print "Starting download!"
+            self._ftp.get(self._urls, self.local_path)
+            self._is_downloading = True               
+    
+    def stop(self):
+        print "TBD"
+
+    def state_changed(self, state):
+        if state == 1 or state == 2:
+            self._state = 1
+        elif state == 3 or state == 4:
+            self._state = 3
+        self.stateChanged.emit(self)
+
+    def download_finished(self, _):
+        print "finished !"
+        self._speed = 0
+        self.timer.stop()
+        self.timer2.stop()
+        self._state = 4
+        self.stateChanged.emit(self)
+        self._ftp.done.disconnect(self.download_finished)
+        self._ftp.stateChanged.disconnect(self.state_changed)
+        self._ftp.dataTransferProgress.disconnect(self.update_progress)
+        self.downloadFinished.emit(self)
+
+    def update_speed(self):
+        delta = time.time() - self._last_time
+        self._speed = float(self.read_bytes - self._last_size) / delta
+        self.last_time = time.time()
+        self.last_size = self.read_bytes
+        self.speedModified.emit(self)
+        
+    def update_progress(self, read_bytes, total_bytes):
+        self.read_bytes = read_bytes
+        self.progressModified.emit(self)
+    
 
 class DownloadFtp(Download):
     progressModified    = pyqtSignal(object)
