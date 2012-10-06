@@ -6,13 +6,13 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import QMainWindow, QTabWidget, QSystemTrayIcon, QIcon, QMenu, QAction, QMessageBox, QCheckBox
 
 import images
-from TabSearch import TabSearch
-from TabPeers import TabPeers
-from TabDownloads import TabDownloads
-from TabOptions import TabOptions
-from TabShares import TabShares
-from TabAdvSearch import TabAdvSearch
-from TabInformations import TabInformations
+from .TabSearch import TabSearch
+from .TabPeers import TabPeers
+from .TabDownloads import TabDownloads
+from .TabOptions import TabOptions
+from .TabShares import TabShares
+from .TabAdvSearch import TabAdvSearch
+from .TabInformations import TabInformations
 from configuration import Configuration
 
 class MainWindow(QMainWindow):

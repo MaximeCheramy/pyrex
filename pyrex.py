@@ -27,12 +27,12 @@ if __name__ == '__main__':
     # On vérifie que le dossier ~/.pyrex existe, si non on le créé
     if not os.path.isdir(os.path.expanduser("~/.pyrex/")):
         try:
-            print "Création du dossier ~/.pyrex"
+            print("Création du dossier ~/.pyrex")
             os.mkdir(os.path.expanduser("~/.pyrex/"))
         except OSError:
-            print "Erreur : le dossier n'a pas pu être créé"
+            print("Erreur : le dossier n'a pas pu être créé")
             
-    print "On loade la config du GUI"
+    print("On loade la config du GUI")
     Configuration.load_config()
 
     window = MainWindow()
