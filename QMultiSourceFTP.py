@@ -38,7 +38,7 @@ class QMultiSourceFtp(QObject):
         self._is_downloading= False
         self._urls          = []
         self._url_count     = dict()
-        self._max_b_count   = 2
+        self._max_b_count   = 1
         self._blacklist     = set()
  
     def _get_size(self, urls):
@@ -132,7 +132,7 @@ class QMultiSourceFtp(QObject):
                 whites.sort(key=lambda x: x['start'] - x['end'])
                 s = whites[0]['end'] - whites[0]['start']
                 # Si le morceau mérite d'être partagé... (arbitraire)
-                if s > 1000000:
+                if s > 100000:
                     whites.append({'url': url,
                             'start': whites[0]['start'] + s / 2,
                             'end': whites[0]['end'], 'free': False,
@@ -153,7 +153,7 @@ class QMultiSourceFtp(QObject):
                 key=lambda x: x['start'] + x['downloaded'] - x['end'])
         data = chunks[0]
         rest = data['end'] - (data['start'] + data['downloaded'])
-        if rest <= 1000000:
+        if rest <= 100000:
             return
 
         end = data['start'] + data['downloaded'] + rest / 2
@@ -206,7 +206,8 @@ class QMultiSourceFtp(QObject):
     def manage_download(self, new_urls):
         if self._is_downloading:
             for url in new_urls:
-                if url not in self._blacklist:
+                # Meme si c'est totalement impossible...
+                if url not in self._blaklist:
                     self._let_me_help(url)
         
     def _start_all(self):
@@ -247,7 +248,8 @@ class QMultiSourceFtp(QObject):
         if not ok:
             # Si ce compteur est déjà égal à 1... blacklist
             if data['url'] in self._url_count and self._url_count[data['url']] >= self._max_b_count:
-                self._blacklist.append(data['url'])
+                self._blacklist.add(data['url'])
+                # TODO : faire quelque chose pour les erreurs 421 (max_anonymous login)
                 print ("Blacklisted : ", data['url'])
             elif data['url'] not in self._url_count:
                 self._url_count[data['url']] = 1

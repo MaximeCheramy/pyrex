@@ -64,7 +64,7 @@ class DownloadPart(QThread):
             print "erreur", message
             self.stateChanged.emit(0)
             self.done.emit(False, self)
-        except ftplib.error_tempraise, message:
+        except ftplib.error_temp, message:
             print "erreur", message
             self.stateChanged.emit(0)
             self.done.emit(False, self)
