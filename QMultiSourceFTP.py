@@ -48,7 +48,7 @@ class QMultiSourceFtp(QObject):
         t_ftp.connect(str(urls[0].host()), str(urls[0].port(21)))
         t_ftp.login()
         t_ftp.sendcmd("TYPE I")
-        size = t_ftp.size(str(urls[0].path()))
+        size = t_ftp.size(str(urls[0].path().toUtf8()))
         t_ftp.close()
 
         return size
@@ -174,7 +174,7 @@ class QMultiSourceFtp(QObject):
         data['ftp'] = ftp
         data['downloaded'] = 0
         print("Lancement du download : " + data['out'] + " a partir de : " +
-                        data['url'].path())
+                        str(data['url'].path().toUtf8()))
         # Signaux
         ftp.done.connect(self.download_finished)
         ftp.dataTransferProgress.connect(self.data_transfer_progress)
@@ -207,7 +207,7 @@ class QMultiSourceFtp(QObject):
         if self._is_downloading:
             for url in new_urls:
                 # Meme si c'est totalement impossible...
-                if url not in self._blaklist:
+                if url not in self._blacklist:
                     self._let_me_help(url)
         
     def _start_all(self):
