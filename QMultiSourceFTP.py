@@ -38,7 +38,8 @@ class QMultiSourceFtp(QObject):
         self._is_downloading= False
         self._urls          = []
         self._url_count     = dict()
-        self._blacklist     = []
+        self._max_b_count   = 2
+        self._blacklist     = set()
  
     def _get_size(self, urls):
         # On récupère la taille du fichier distant
@@ -245,11 +246,13 @@ class QMultiSourceFtp(QObject):
         # Si on avait mal fini on incrémente le compteur de l'url
         if not ok:
             # Si ce compteur est déjà égal à 1... blacklist
-            if data['url'] in self._url_count and self._url_count[data['url']] == 1:
+            if data['url'] in self._url_count and self._url_count[data['url']] >= self._max_b_count:
                 self._blacklist.append(data['url'])
                 print ("Blacklisted : ", data['url'])
+            elif data['url'] not in self._url_count:
+                self._url_count[data['url']] = 1
             else:
-                self._url_count[data['url']] = 1   
+                self._url_count[data['url']] += 1
         # On arrete le FTP
         data['ftp'].exit()
         # On vérifie que tous les transferts sont finis
