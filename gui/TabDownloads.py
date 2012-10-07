@@ -105,24 +105,33 @@ class TabDownloads(QWidget):
           self.add_download(download)
         
     def update_progress(self, download):
-        item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
-        row = self.downloads_table.row(item)
-        self.downloads_table.item(row, 1).setText(download.get_progress())
-        # On update la barre de progression si on est en train de regarder un download
-        if self.download_looked == download:
-            self.progressBar.setValue(int(download.progress))
+        try:
+            item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+            row = self.downloads_table.row(item)
+            self.downloads_table.item(row, 1).setText(download.get_progress())
+            # On update la barre de progression si on est en train de regarder un download
+            if self.download_looked == download:
+                self.progressBar.setValue(int(download.progress))
+        except IndexError:
+            pass
 
     def update_speed(self, download):
-        item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
-        row = self.downloads_table.row(item)
-        self.downloads_table.item(row, 3).setText(convert_speed_str(download.speed))
+        try:
+            item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+            row = self.downloads_table.row(item)
+            self.downloads_table.item(row, 3).setText(convert_speed_str(download.speed))
+        except IndexError:
+            pass
         
     def update_state(self, download):
-        item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
-        row = self.downloads_table.row(item)
-        self.downloads_table.item(row, 2).setText(download.state_str)
-        # On save
-        self.downloads.save()
+        try:
+            item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
+            row = self.downloads_table.row(item)
+            self.downloads_table.item(row, 2).setText(download.state_str)
+            # On save
+            self.downloads.save()
+        except IndexError:
+            pass
         
     def download_finished(self, download):
         if download.read_bytes == download.file_share.size:
