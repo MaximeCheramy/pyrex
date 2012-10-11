@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import PyQt4.uic
-from PyQt4.QtGui import QWidget, QTabWidget, QTableWidgetItem, QMenu, QFileDialog, QApplication
+from PyQt4.QtGui import QWidget, QTabWidget, QTableWidgetItem
 from PyQt4.QtCore import *
 
 from Share import FileShare, DirectoryShare
@@ -91,7 +91,7 @@ class TabResults(QWidget):
         menu.exec_(self.mapToGlobal(pos))
         
     def getShare(self, row=None):
-        if not row:
+        if row is None:
             row = self.table_results.currentRow()
         return self.table_results.item(row, 0).share
         
