@@ -144,6 +144,7 @@ class DownloadMultipleFtp(Download):
         self._urls              = []
         self._ftp               = QMultiSourceFtp(self)
         self._is_downloading    = False
+        self._prev_state        = -1
         self.read_bytes         = QFile(self.local_path).size()
         # Timer2
         self.timer = QTimer()
@@ -181,8 +182,20 @@ class DownloadMultipleFtp(Download):
                 self._urls.append(QUrl(result.url))
         self._ftp.manage_download(new_urls)            
     
+    def _stop_all(self):
+        self._speed = 0
+        self.timer.stop()
+        self.timer2.stop()
+        self._ftp.done.disconnect(self.download_finished)
+        self._ftp.stateChanged.disconnect(self.state_changed)
+        self._ftp.dataTransferProgress.disconnect(self.update_progress)
+        
     def stop(self):
-        print "TBD"
+        try:
+            self._ftp.stop()
+        except TypeError:
+            pass
+        self._stop_all()
 
     def state_changed(self, state):
         if state == 1 or state == 2:
@@ -193,14 +206,9 @@ class DownloadMultipleFtp(Download):
 
     def download_finished(self, _):
         print "finished !"
-        self._speed = 0
-        self.timer.stop()
-        self.timer2.stop()
+        self._stop_all()
         self._state = 4
         self.stateChanged.emit(self)
-        self._ftp.done.disconnect(self.download_finished)
-        self._ftp.stateChanged.disconnect(self.state_changed)
-        self._ftp.dataTransferProgress.disconnect(self.update_progress)
         self.downloadFinished.emit(self)
 
     def update_speed(self):

@@ -36,6 +36,7 @@ class QMultiSourceFtp(QObject):
         self._out_filename  = None
         self._read          = None
         self._is_downloading= False
+        self._is_stopped    = False
         self._urls          = []
         self._url_count     = dict()
         self._max_b_count   = 1
@@ -204,11 +205,19 @@ class QMultiSourceFtp(QObject):
         self._write_config()
 
     def manage_download(self, new_urls):
-        if self._is_downloading:
+        if self._is_downloading and not self._is_stopped:
             for url in new_urls:
                 # Meme si c'est totalement impossible...
                 if url not in self._blacklist:
                     self._let_me_help(url)
+                    self._write_config()
+                    
+    def stop(self):
+        print "STOP requested"
+        self._is_stopped = True
+        for data in self._data:
+            # Stoppe tous les downloads
+            data['ftp'].cancel()
         
     def _start_all(self):
         # Starting all downloads
@@ -268,8 +277,9 @@ class QMultiSourceFtp(QObject):
             self._merge()
             print "FINI !!!!!!"
             self.done.emit(False)
-        elif data['url'] not in self._blacklist:
+        elif data['url'] not in self._blacklist and not self._is_stopped:
             self._let_me_help(data['url'])
+            self._write_config()
         else:
             pass
             

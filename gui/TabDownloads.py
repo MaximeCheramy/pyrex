@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import os
+import shutil
 import subprocess
 import sys
 import PyQt4.uic
@@ -203,10 +204,16 @@ class TabDownloads(QWidget):
         
     def open_Action(self):
         download = self.getDownload()
-        if sys.platform == 'linux2':
-            subprocess.check_call(['gnome-open', download.local_path.strip(download.file_share.name)])
-        elif sys.platform == 'windows':
-            subprocess.check_call(['explorer', download.local_path.strip(download.file_share.name)])
+        if download:
+            if sys.platform == 'linux2':
+                subprocess.check_call(['gnome-open', download.local_path.strip(download.file_share.name)])
+            elif sys.platform == 'windows':
+                subprocess.check_call(['explorer', download.local_path.strip(download.file_share.name)])
+        else:
+            if sys.platform == 'linux2':
+                subprocess.check_call(['gnome-open', Configuration.save_dir])
+            elif sys.platform == 'windows':
+                subprocess.check_call(['explorer', Configuration.save_dir])
         
     def abort_Action(self):
         download = self.getDownload()
@@ -217,23 +224,28 @@ class TabDownloads(QWidget):
         
     def suppr_liste_Action(self):
         download = self.getDownload()
-        download.stop()
-        row = self.downloads_table.currentRow()
-        # On supprime la ligne
-        self.downloads_table.removeRow(row)
-        # On supprime de la liste
-        self.downloads.remove(download)    
-        # On save
-        self.downloads.save()
-        # Pour suppr_disk
+        if download:
+            download.stop()
+            row = self.downloads_table.currentRow()
+            # On supprime la ligne
+            self.downloads_table.removeRow(row)
+            # On supprime de la liste
+            self.downloads.remove(download)    
+            # On save
+            self.downloads.save()
+            # Pour suppr_disk
         return download
         
     def suppr_disk_Action(self):
         download = self.suppr_liste_Action()
-        try:
-            os.remove(download.local_path)
-        except:
-            print "Erreur dans la suppression du fichier"
+        if download:
+            try:
+                os.remove(download.local_path)
+            except OSError:
+                try:
+                    shutil.rmtree(download.local_path)
+                except:
+                    print "Erreur dans la suppression du fichier"
         
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
