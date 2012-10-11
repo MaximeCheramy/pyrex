@@ -70,13 +70,8 @@ class ShareContextMenu(QMenu):
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
         shares = self.getMultipleShare()
-        if len(shares) == 1:
-            pressPaper.setText(shares.url)
-        else:
-            text = ""
-            for share in shares:
-                text += share.url + "\n"
-            pressPaper.setText(text)
+        text = '\n'.join([share.url for share in shares])
+        pressPaper.setText(text)
         
     def open_Action(self):
         share = self.getShare()
