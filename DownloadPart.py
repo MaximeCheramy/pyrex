@@ -40,7 +40,7 @@ class DownloadPart(QThread):
             self.stateChanged.emit(4)
             self.ftp.sendcmd("TYPE I")
             data_read = 0
-            conn = self.ftp.transfercmd('RETR ' + str(self.url.path()), rest=self._start)
+            conn = self.ftp.transfercmd('RETR ' + self.url.path().toUtf8(), rest=self._start)
             while data_read < self._to_read and not self.canceled:
                 chunk = conn.recv(8192)
                 size = min(self._to_read - data_read, len(chunk))
@@ -57,7 +57,9 @@ class DownloadPart(QThread):
             self.done.emit(not self.canceled, self)
             self.stateChanged.emit(0)
         except socket.error, (value, message):
-            print "erreur", message
+            # OLD : message au lieu de str(message)
+            # cf : http://grokbase.com/t/python/tutor/06bgn7jv0k/exception-problems-in-socket-programming
+            print "erreur", str(message)
             self.stateChanged.emit(0)
             self.done.emit(False, self)
         except ftplib.error_perm, message:

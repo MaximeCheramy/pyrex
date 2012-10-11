@@ -23,7 +23,7 @@ class TabSearch(QWidget):
         self.widget_searches.layout().addWidget(self.tabs_results)
         
     def search(self):
-        query = str(self.search_edit.text())
+        query = unicode(self.search_edit.text().toUtf8(), 'utf-8')
         if len(query) > 1:
             self.add_search(Search(query))
 

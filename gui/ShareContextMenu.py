@@ -71,7 +71,7 @@ class ShareContextMenu(QMenu):
         pressPaper = QApplication.clipboard()
         shares = self.getMultipleShare()
         if len(shares) == 1:
-            pressPaper.setText(shares.url)
+            pressPaper.setText(shares[0].url)
         else:
             text = ""
             for share in shares:
