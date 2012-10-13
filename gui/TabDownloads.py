@@ -147,7 +147,7 @@ class TabDownloads(QWidget):
         forceAction         = menu.addAction("Forcer la reprise")
         continueAction      = menu.addAction("Reprise")
         pauseAction         = menu.addAction("Pause")
-        openAction          = menu.addAction("Ouvrir le dossier")
+        openAction          = menu.addAction("Ouvrir")
         abortAction         = menu.addAction("Annuler")
         supprListeAction    = menu.addAction("Supprimer de la liste")
         supprDiskAction     = menu.addAction("Supprimer de la liste et du disque")
@@ -184,12 +184,9 @@ class TabDownloads(QWidget):
         # On affiche le menu
         menu.exec_(self.mapToGlobal(pos))
       
-    def getDownload(self):
-        row = self.downloads_table.currentRow()
-        try:
-            return self.downloads_table.item(row, 0).download
-        except:
-            return None
+    def getDownloads(self):
+        rows = self.downloads_table.selectionModel().selectedRows()
+        return [self.downloads_table.item(row.row(), 0).download for row in rows]
           
     def force_Action(self):
         print "TODO"
@@ -201,36 +198,27 @@ class TabDownloads(QWidget):
         print "TODO"
         
     def open_Action(self):
-        download = self.getDownload()
-        if download:
-            open_file(download.local_path.strip(download.file_share.name))
-        else:
-            open_file(Configuration.save_dir)
+        for download in self.getDownloads():
+            open_file(download.local_path)
         
     def abort_Action(self):
-        download = self.getDownload()
-        download.stop()
+        for download in self.getDownloads():
+            download.stop()
         row = self.downloads_table.currentRow()
         self.downloads_table.item(row, 2).setText(u"Annulé!")
         self.downloads_table.item(row, 3).setText("")
-        
-    def suppr_liste_Action(self):
-        download = self.getDownload()
-        if download:
-            download.stop()
-            row = self.downloads_table.currentRow()
-            # On supprime la ligne
-            self.downloads_table.removeRow(row)
-            # On supprime de la liste
-            self.downloads.remove(download)    
-            # On save
-            self.downloads.save()
-            # Pour suppr_disk
-        return download
-        
-    def suppr_disk_Action(self):
-        download = self.suppr_liste_Action()
-        if download:
+  
+    def remove_download(self, download, erase):
+        download.stop()
+        row = self.downloads_table.currentRow()
+        # On supprime la ligne
+        self.downloads_table.removeRow(row)
+        # On supprime de la liste
+        self.downloads.remove(download)    
+        # On save
+        self.downloads.save()
+
+        if erase:
             try:
                 os.remove(download.local_path)
             except OSError:
@@ -238,16 +226,25 @@ class TabDownloads(QWidget):
                     shutil.rmtree(download.local_path)
                 except:
                     print "Erreur dans la suppression du fichier"
+
+    def suppr_liste_Action(self):
+        for download in self.getDownload():
+            self.remove_download(download, False)
+        
+    def suppr_disk_Action(self):
+        for download in self.getDownloads():
+            self.remove_download(download, True)
         
     def copy_Action(self):
         pressPaper = QApplication.clipboard()
-        pressPaper.setText(self.getDownload().local_path)
+        text = '\n'.join([dl.local_path for dl in self.getDownloads()])
+        pressPaper.setText(text)
         
     def search_Action(self):
         print "TODO"
         
     def show_info_download(self):
-        download = self.getDownload()
+        download = self.getDownloads()[0]
         self.name_label.setText(u"Nom : {}".format(download.file_share.name))
         self.path_label.setText(u"Chemin local : {}".format(download.local_path))
         self.url_label.setText(u"URL : {}".format(download.file_share.url))
@@ -274,15 +271,9 @@ class TabDownloads(QWidget):
         self.downloads.save()
                                
     def double_clicked(self, row, col):
-        print "Double_clicked!"
-        #download = self.downloads_table.item(row, 0).download
-        #if download.state == 4:
-        #    if sys.platform.startswith('darwin'):
-        #        subprocess.call(('open', download.local_path))
-        #    elif os.name == 'nt':
-        #        os.startfile(download.local_path)
-        #    elif os.name == 'posix':
-        #        subprocess.call(('xdg-open', download.local_path))
+        download = self.getDownloads()[0]
+        if download:
+            open_file(download.local_path)
             
     def resizeEvent(self, event):
         maxSize = self.downloads_table.size().width()
