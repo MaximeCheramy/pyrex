@@ -1,5 +1,6 @@
 from xml.etree import ElementTree
 from xml.dom import minidom
+import sys, subprocess, os
 
 GIBI = 1024.0 * 1024 * 1024
 MEBI = 1024.0 * 1024
@@ -33,3 +34,12 @@ def prettify(elem):
     rough_string = ElementTree.tostring(elem, 'utf-8')
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="\t")
+
+def open_file(filepath):
+    if sys.platform.startswith('darwin'):
+        subprocess.call(('open', filepath))
+    elif os.name == 'nt':
+        os.startfile(filepath)
+    elif os.name == 'posix':
+        subprocess.call(('xdg-open', filepath))
+

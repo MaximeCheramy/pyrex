@@ -3,8 +3,6 @@
 
 import os
 import shutil
-import subprocess
-import sys
 import PyQt4.uic
 from PyQt4.QtCore import *
 from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication, QProgressBar, QBoxLayout
@@ -12,7 +10,7 @@ from PyQt4.QtGui import QWidget, QTableWidgetItem, QMenu, QApplication, QProgres
 from downloads import AnalyseDownloads, Downloads
 from configuration import Configuration
 
-from Tools import convert_speed_str
+from Tools import convert_speed_str, open_file
 
 class MyQTableWidgetItem(QTableWidgetItem):
     def __init__(self, string, download):
@@ -205,15 +203,9 @@ class TabDownloads(QWidget):
     def open_Action(self):
         download = self.getDownload()
         if download:
-            if sys.platform == 'linux2':
-                subprocess.check_call(['gnome-open', download.local_path.strip(download.file_share.name)])
-            elif sys.platform == 'windows':
-                subprocess.check_call(['explorer', download.local_path.strip(download.file_share.name)])
+            open_file(download.local_path.strip(download.file_share.name))
         else:
-            if sys.platform == 'linux2':
-                subprocess.check_call(['gnome-open', Configuration.save_dir])
-            elif sys.platform == 'windows':
-                subprocess.check_call(['explorer', Configuration.save_dir])
+            open_file(Configuration.save_dir)
         
     def abort_Action(self):
         download = self.getDownload()
