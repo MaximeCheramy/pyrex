@@ -197,9 +197,12 @@ class DownloadMultipleFtp(Download):
         self._speed = 0
         self.timer.stop()
         self.timer2.stop()
-        self._ftp.done.disconnect(self.download_finished)
-        self._ftp.stateChanged.disconnect(self.state_changed)
-        self._ftp.dataTransferProgress.disconnect(self.update_progress)
+        try:
+            self._ftp.done.disconnect(self.download_finished)
+            self._ftp.stateChanged.disconnect(self.state_changed)
+            self._ftp.dataTransferProgress.disconnect(self.update_progress)
+        except TypeError:
+            pass
         
     def pause(self):
         self._state = 5

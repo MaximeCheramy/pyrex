@@ -49,7 +49,8 @@ class DownloadPart(QThread):
                 self.dataTransferProgress.emit(data_read, self._to_read, self)
 
             # Histoire d'être certain de pas dépasser.
-            self.localfile.truncate(self._to_read)
+            if data_read > self._to_read:
+                self.localfile.truncate(self._to_read)
 
             self.stateChanged.emit(5)
             conn.close()
