@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
+    <width>646</width>
     <height>441</height>
    </rect>
   </property>
@@ -375,6 +375,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>downloads_table</sender>
+   <signal>cellClicked(int,int)</signal>
+   <receiver>Telechargements</receiver>
+   <slot>clicked(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>322</x>
+     <y>136</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>220</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open_Action()</slot>
@@ -384,5 +400,6 @@
   <slot>suppr_disk_Action()</slot>
   <slot>double_clicked(int,int)</slot>
   <slot>clean_list_Action()</slot>
+  <slot>clicked(int,int)</slot>
  </slots>
 </ui>

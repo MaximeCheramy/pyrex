@@ -57,8 +57,6 @@ class TabDownloads(QWidget):
             self.clean_list_Action()
         #########################################################
         # On désactive les boutons qui sont pas encore implantés
-        self.button_resume.setEnabled(False)
-        self.button_pause.setEnabled(False)
         self.button_stop_all.setEnabled(False)        
         self.button_resume_all.setEnabled(False)
         #########################################################
@@ -195,11 +193,13 @@ class TabDownloads(QWidget):
         for download in self.getDownloads():
             print "Resuming download"
             download.resume()
+        self.display_resume_pause()
         
     def pause_Action(self):
         for download in self.getDownloads():
             print "Pausing download"
-            download.stop()
+            download.pause()
+        self.display_resume_pause()
         
     def open_Action(self):
         for download in self.getDownloads():
@@ -221,7 +221,6 @@ class TabDownloads(QWidget):
         self.downloads.remove(download)    
         # On save
         self.downloads.save()
-
         if erase:
             try:
                 os.remove(download.local_path)
@@ -279,6 +278,29 @@ class TabDownloads(QWidget):
         if download:
             open_file(download.local_path)
             
+    def display_resume_pause(self):
+        downloads = self.getDownloads()
+        pause = False
+        resume = False
+        if downloads:
+            for download in downloads:
+                if download.state == 5:
+                    pause = True
+                elif download.state != 5:
+                    resume = True
+            if pause and not resume:
+                self.button_pause.setEnabled(False)
+                self.button_resume.setEnabled(True)
+            elif resume and not pause:
+                self.button_pause.setEnabled(True)
+                self.button_resume.setEnabled(False)
+            else:
+                self.button_pause.setEnabled(True)
+                self.button_resume.setEnabled(True)
+                    
+    def clicked(self, row, col):
+        self.display_resume_pause()    
+        
     def resizeEvent(self, event):
         maxSize = self.downloads_table.size().width()
         # Nom Ficher : 24%

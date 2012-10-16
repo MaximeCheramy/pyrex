@@ -165,7 +165,6 @@ class DownloadMultipleFtp(Download):
         self._ftp.get(self._urls, self.local_path)
         
     def resume(self):
-        self._ftp = QMultiSourceFtp(self)
         self.ask_for_URLs()
         self.timer.start(1000*60*2)
         self.timer.timeout.connect(self.ask_for_URLs)
@@ -201,6 +200,10 @@ class DownloadMultipleFtp(Download):
         self._ftp.done.disconnect(self.download_finished)
         self._ftp.stateChanged.disconnect(self.state_changed)
         self._ftp.dataTransferProgress.disconnect(self.update_progress)
+        
+    def pause(self):
+        self._state = 5
+        self.stop()
         
     def stop(self):
         try:
