@@ -135,7 +135,7 @@ class TabDownloads(QWidget):
             print "Erreur dans le téléchargement"
             item = self.downloads_table.findItems(download.file_share.name, Qt.MatchExactly)[0]
             row = self.downloads_table.row(item)
-            self.downloads_table.item(row, 2).setText("Error :(")
+            self.downloads_table.item(row, 2).setText("Error : invalid size :(")
             self.downloads_table.item(row, 3).setText("")
             # On save
             self.downloads.save()
@@ -167,8 +167,8 @@ class TabDownloads(QWidget):
         #########################################################
         # On désactive les boutons qui sont pas encore implantés
         forceAction.setEnabled(False)
-        continueAction.setEnabled(False)
-        pauseAction.setEnabled(False)        
+        #continueAction.setEnabled(False)
+        #pauseAction.setEnabled(False)        
         searchAction.setEnabled(False)        
         #########################################################
         # Signaux
@@ -192,10 +192,14 @@ class TabDownloads(QWidget):
         print "TODO"
         
     def continue_Action(self):
-        print "TODO"
+        for download in self.getDownloads():
+            print "Resuming download"
+            download.resume()
         
     def pause_Action(self):
-        print "TODO"
+        for download in self.getDownloads():
+            print "Pausing download"
+            download.stop()
         
     def open_Action(self):
         for download in self.getDownloads():

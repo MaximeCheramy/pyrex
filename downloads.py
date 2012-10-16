@@ -164,6 +164,18 @@ class DownloadMultipleFtp(Download):
         print "Starting download!"
         self._ftp.get(self._urls, self.local_path)
         
+    def resume(self):
+        self._ftp = QMultiSourceFtp(self)
+        self.ask_for_URLs()
+        self.timer.start(1000*60*2)
+        self.timer.timeout.connect(self.ask_for_URLs)
+        # Signaux
+        self._ftp.dataTransferProgress.connect(self.update_progress)
+        self._ftp.done.connect(self.download_finished)
+        self._ftp.stateChanged.connect(self.state_changed)
+        print "Resuming download!"
+        self._ftp.get(self._urls, self.local_path, True)
+        
     def ask_for_URLs(self):
         """ 1) Envoie une recherche en background de fichiers similaires
         2) Lorsque les urls sont arrivées, set_URLs met à jour les urls puis appelle manage_download

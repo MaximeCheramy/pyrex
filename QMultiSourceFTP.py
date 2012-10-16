@@ -57,7 +57,7 @@ class QMultiSourceFtp(QObject):
     # Récupère les bouts restants :
     def _get_whites(self):
         whites = []
-
+        
         chunks = sorted(self._data, key=lambda x: x['start'])
         print "c", chunks
         size = self._size
@@ -71,12 +71,21 @@ class QMultiSourceFtp(QObject):
                 if chunks[i]['end'] < chunks[i+1]['start']:
                     whites.append({'start': chunks[i]['end'],
                             'end': chunks[i+1]['start'], 'free': True})
+                #Resume            
+                elif chunks[i]['isFinished'] and chunks[i]['downloaded'] < chunks[i+1]['start']:
+                    whites.append({'start': chunks[i]['downloaded'],
+                            'end': chunks[i+1]['start'], 'free': True})
             
             if chunks[-1]['end'] < size:
                 whites.append({'start': chunks[-1]['end'], 'end': size,
                         'free': True})
+            #Resume            
+            elif chunks[-1]['isFinished'] and chunks[-1]['downloaded'] < size:
+                whites.append({'start': chunks[-1]['downloaded'], 'end': size,
+                        'free': True})
         else:
             whites.append({'start': 0, 'end': size, 'free': True})
+            
         return whites
 
     def _create_dir(self):
@@ -146,7 +155,8 @@ class QMultiSourceFtp(QObject):
             self._compteur += 1
 
         for w in whites:
-            self._data.append({'url': w['url'], 'out': w['out'],
+            if 'url' in w:
+                self._data.append({'url': w['url'], 'out': w['out'],
                     'start': w['start'], 'end': w['end'], 'isFinished': False})
 
     def _let_me_help(self, url):
@@ -193,6 +203,7 @@ class QMultiSourceFtp(QObject):
             return
 
         self._size = self._get_size(urls)
+        print "Size : ", self._size
         # Creating temporary folder
         if resume: # Resume download
             self._load_info()
@@ -217,7 +228,8 @@ class QMultiSourceFtp(QObject):
         self._is_stopped = True
         for data in self._data:
             # Stoppe tous les downloads
-            data['ftp'].cancel()
+            if 'ftp' in data:
+                data['ftp'].cancel()
         
     def _start_all(self):
         # Starting all downloads

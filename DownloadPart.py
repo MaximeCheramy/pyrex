@@ -56,10 +56,9 @@ class DownloadPart(QThread):
             self.localfile.close()
             self.done.emit(not self.canceled, self)
             self.stateChanged.emit(0)
-        except socket.error, (value, message):
-            # OLD : message au lieu de str(message)
-            # cf : http://grokbase.com/t/python/tutor/06bgn7jv0k/exception-problems-in-socket-programming
-            print "erreur", str(message)
+        except socket.error, e:
+            # OLD : (value, message) au lieu de e
+            print "erreur", e.message
             self.stateChanged.emit(0)
             self.done.emit(False, self)
         except ftplib.error_perm, message:
