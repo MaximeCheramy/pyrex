@@ -286,17 +286,10 @@ class TabDownloads(QWidget):
             for download in downloads:
                 if download.state == 5:
                     pause = True
-                elif download.state != 5:
+                else:
                     resume = True
-            if pause and not resume:
-                self.button_pause.setEnabled(False)
-                self.button_resume.setEnabled(True)
-            elif resume and not pause:
-                self.button_pause.setEnabled(True)
-                self.button_resume.setEnabled(False)
-            else:
-                self.button_pause.setEnabled(True)
-                self.button_resume.setEnabled(True)
+            self.button_pause.setEnabled(resume)
+            self.button_resume.setEnabled(pause)
                     
     def clicked(self, row, col):
         self.display_resume_pause()    
